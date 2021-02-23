@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:memorypath_app/src/MemoryPoint.dart';
-import 'package:memorypath_app/widgets/ImagePickerWidget.dart';
+import 'package:mobile/src/MemoryPoint.dart';
+import 'package:mobile/widgets/ImagePickerWidget.dart';
 
 class MemoryPointEditWidget extends StatefulWidget {
-
   final MemoryPoint memoryPoint;
   final Function onMemoryPointChanged;
 
@@ -14,7 +13,6 @@ class MemoryPointEditWidget extends StatefulWidget {
 }
 
 class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
-
   TextEditingController nameController = TextEditingController();
   TextEditingController questionController = TextEditingController();
   TextEditingController answerController = TextEditingController();
@@ -43,7 +41,9 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             controller: questionController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: memoryPointState.question!=null?memoryPointState.question: "Enter question...",
+              labelText: memoryPointState.question != null
+                  ? memoryPointState.question
+                  : "Enter question...",
             ),
           ),
           Text("Answer:"),
@@ -51,7 +51,9 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             controller: answerController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: memoryPointState.answer!=null?memoryPointState.answer: "Enter Answer...",
+              labelText: memoryPointState.answer != null
+                  ? memoryPointState.answer
+                  : "Enter Answer...",
             ),
           ),
           ButtonBar(
@@ -59,13 +61,13 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             children: [
               ElevatedButton.icon(
                 //toDo: Functionality
-                onPressed: (){},
+                onPressed: () {},
                 icon: Icon(Icons.delete),
                 label: Text(""),
               ),
               ElevatedButton.icon(
                 //toDo: Functionality
-                onPressed: (){},
+                onPressed: () {},
                 icon: Icon(Icons.check),
                 label: Text(""),
               ),
@@ -75,5 +77,4 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
       ),
     );
   }
-
 }
