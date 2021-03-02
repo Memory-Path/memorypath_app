@@ -4,8 +4,7 @@ import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/MemoryPointEditWidget.dart';
 
 class MemoryPointEditPage extends StatefulWidget {
-
-  static const String BASE_PATH = "/memorypoint/edit/";
+  static final RegExp routeMatch = RegExp(r'^\/memorypoint\/edit\/(\d+)$');
   final int memoryPointId;
   final int memoryPathId;
 
@@ -16,7 +15,6 @@ class MemoryPointEditPage extends StatefulWidget {
 }
 
 class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
-
   bool isLoading = true;
   MemoryPoint memoryPointState;
   MemoryPath memoryPathState;
@@ -24,10 +22,17 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   @override
   void initState() {
     //ToDo: Database Call
-    MemoryPoint memoryPoint = MemoryPoint(id: 1, name: "The big old tree", image: null, question: "Hello? ", answer: "no ones there..", latlng: null);
+    MemoryPoint memoryPoint = MemoryPoint(
+        id: 1,
+        name: "The big old tree",
+        image: null,
+        question: "Hello? ",
+        answer: "no ones there..",
+        latlng: null);
     List<MemoryPoint> memoryPoints = List.empty(growable: true);
     memoryPoints.add(memoryPoint);
-    MemoryPath memoryPath = MemoryPath(1, "The Way!", "Thermodynamics", memoryPoints);
+    MemoryPath memoryPath =
+        MemoryPath(1, "The Way!", "Thermodynamics", memoryPoints);
     memoryPointState = memoryPoint;
     memoryPathState = memoryPath;
 
@@ -35,14 +40,14 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
     super.initState();
   }
 
-  void deleteMemoryPoint(int memoryPointId){
+  void deleteMemoryPoint(int memoryPointId) {
     isLoading = true;
     //ToDo: Database Deletion
     //Navigator.pop(context);
     print(memoryPointId);
   }
 
-  void updateMemoryPoint(MemoryPoint memoryPoint){
+  void updateMemoryPoint(MemoryPoint memoryPoint) {
     isLoading = true;
     //ToDo: Database Update
     //Navigator.pop(context);
@@ -52,24 +57,23 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("demo"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Container(
-            width: 500,
-            height: 700,
-            child: MemoryPointEditWidget(
-              memoryPathName: memoryPathState.name,
-              memoryPathTopic: memoryPathState.topic,
-              memoryPoint: memoryPointState,
-              onMemoryPointUpdate: updateMemoryPoint,
-              onMemoryPointDelete: deleteMemoryPoint,
-            ),
+      appBar: AppBar(
+        title: Text("demo"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Container(
+          width: 500,
+          height: 700,
+          child: MemoryPointEditWidget(
+            memoryPathName: memoryPathState.name,
+            memoryPathTopic: memoryPathState.topic,
+            memoryPoint: memoryPointState,
+            onMemoryPointUpdate: updateMemoryPoint,
+            onMemoryPointDelete: deleteMemoryPoint,
           ),
         ),
+      ),
     );
   }
 }
-
