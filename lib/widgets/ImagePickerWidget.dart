@@ -6,7 +6,7 @@ class ImagePickerWidget extends StatefulWidget {
 
   //config:
   final int imageQuality = 50;
-  final String defaultImage = "";
+  final String defaultImage = "assets/images/blurry_background.jpg";
   // image that is lately filled by Gallery or Camera
   final FilePickerCross image;
   final Function onImageChanged;
@@ -35,6 +35,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
     setState(() {
       imageState = pickedFile;
+      widget.onImageChanged(pickedFile);
     });
   }
 
@@ -46,6 +47,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
     setState(() {
       imageState = pickedFile;
+      widget.onImageChanged(pickedFile);
     });
   }
 
@@ -98,10 +100,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(50)),
-              child: Icon(
-                Icons.camera_alt,
-                color: Colors.grey[700],
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.grey[700],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(64))),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 32,
+                  color: Colors.grey[700],
+                ),
               ),
             ),
             ),
