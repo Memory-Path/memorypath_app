@@ -4,6 +4,8 @@ import 'package:mobile/pages/MemoryPointEditPage.dart';
 import 'package:mobile/pages/SplashScreen.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
 
+bool initialized = false;
+
 void main() {
   runApp(MyApp());
 }
@@ -26,13 +28,19 @@ class MyApp extends StatelessWidget {
         // Navigator.of(context)
         //     .pushNamed('/whatever', arguments: widget.data); /// NO ARGUMENTS, only Strings please. Data is dynamically built based on the route name.
         // ```
-        if (SplashScreen.routeMatch.hasMatch(routeSettings.name)) {
+
+        // initialize whole application first before pushing any route
+        if (!initialized)
+          return MaterialPageRoute(
+              builder: (context) => SplashScreen(
+                    requestedRoute: routeSettings.name,
+                  ));
+        else if (SplashScreen.routeMatch.hasMatch(routeSettings.name)) {
           return MaterialPageRoute(builder: (context) => SplashScreen());
-        }
-        if (HomePage.routeMatch.hasMatch(routeSettings.name)) {
+        } else if (HomePage.routeMatch.hasMatch(routeSettings.name)) {
           return MaterialPageRoute(builder: (context) => HomePage());
-        }
-        if (MemoryPointEditPage.routeMatch.hasMatch(routeSettings.name)) {
+        } else if (MemoryPointEditPage.routeMatch
+            .hasMatch(routeSettings.name)) {
           final match =
               MemoryPointEditPage.routeMatch.firstMatch(routeSettings.name);
           int point = int.parse(match.group(1));
@@ -40,12 +48,16 @@ class MyApp extends StatelessWidget {
               builder: (context) => MemoryPointEditPage(
                     memoryPointId: point,
                   ));
+        } else {
+          print('Route not found: ${routeSettings.name}');
+          return MaterialPageRoute(
+              builder: (context) =>
+                  HomePage(data: RouteNotFoundException(routeSettings.name)));
         }
-        return MaterialPageRoute(
-            builder: (context) =>
-                SplashScreen(data: RouteNotFoundException(routeSettings.name)));
       },
-      home: SplashScreen(),
+      routes: {
+        '/': (context) => SplashScreen(),
+      },
     );
   }
 }
