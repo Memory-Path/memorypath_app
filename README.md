@@ -4,6 +4,10 @@
 
 Collaboration Base for the Memory-Path-Team
 
+## Getting started
+
+Register for the MapBox API, copy `lib/mapbox_api_key.dart.example` to `lib/mapbox_api_key.dart` and fill in your API key.
+
 ## Repository design
 
 Our default branch is called `main`. Here, you can always find the latest features. This branch should always be buildable using Flutter's `dev` channel.

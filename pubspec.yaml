@@ -11,14 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  latlng: any
+  latlong: ^0.6.1
   image_picker: ^0.6.7+22
   file_picker_cross: ^4.2.8
+  flutter_map: ^0.11.0
 
   map_api:
-    git:
-      url: https://github.com/Memory-Path/memorypath_map_api.git
-      ref: main
+    path: ../map_api
+#    git:
+#      url: https://github.com/Memory-Path/memorypath_map_api.git
+#      ref: main
   memorypath_db_api:
     git:
       url: https://github.com/Memory-Path/memorypath_database_api.git

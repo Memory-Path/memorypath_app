@@ -1,9 +1,7 @@
-import 'package:latlng/latlng.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
-
+import 'package:latlong/latlong.dart';
 
 class MemoryPoint {
-
   int id;
   String name;
   FilePickerCross image;
@@ -11,9 +9,15 @@ class MemoryPoint {
   String answer;
   LatLng latlng;
 
-  MemoryPoint({this.id,this.name, this.image, this.question, this.answer, this.latlng});
+  MemoryPoint(
+      {this.id,
+      this.name,
+      this.image,
+      this.question,
+      this.answer,
+      this.latlng});
 
-  MemoryPoint.fromDb(){
+  MemoryPoint.fromDb() {
     //toDo: Implement
   }
 }

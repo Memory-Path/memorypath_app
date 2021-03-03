@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/HeroTags.dart';
 import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/widgets/CenterProgress.dart';
+import 'package:mobile/widgets/CreateMemoryPathCard.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +18,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _manuallyHideRoutingError = false;
   bool _memoryPathsLoaded = false;
+
+  bool _addingPath = false;
 
   List<MemoryPath> _paths = [];
 
@@ -67,20 +71,27 @@ class _HomePageState extends State<HomePage> {
                   ? ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Container(
-                          constraints: BoxConstraints(minWidth: 64),
-                          child: AspectRatio(
-                            aspectRatio:
-                                MediaQuery.of(context).size.aspectRatio / 4,
-                            child: Card(
-                              child: IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {},
-                                tooltip: 'Create memory path',
-                              ),
-                            ),
-                          ),
-                        ),
+                        !_addingPath
+                            ? Container(
+                                constraints: BoxConstraints(minWidth: 64),
+                                child: AspectRatio(
+                                  aspectRatio:
+                                      MediaQuery.of(context).size.aspectRatio /
+                                          4,
+                                  child: Card(
+                                    child: Hero(
+                                      tag: HeroTags.AddPathIcon,
+                                      child: IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () =>
+                                            setState(() => _addingPath = true),
+                                        tooltip: 'Create memory path',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : CreateMemoryPathCard(),
                         if (_paths.isEmpty)
                           Container(
                             constraints: BoxConstraints(maxWidth: 393),

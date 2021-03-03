@@ -15,7 +15,7 @@ class MemoryPathCard extends StatelessWidget {
           child: Card(
             child: Center(
               child: Text(
-                'So lonely here...\nMaybe you would like to create a new Memory-Path?',
+                memoryPath.name,
               ),
             ),
           )),
