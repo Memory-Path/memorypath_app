@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/main.dart';
 
 class SplashScreen extends StatefulWidget {
-  static RegExp routeMatch = RegExp(r'^\/$');
+  static final RegExp routeMatch = RegExp(r'^\/$');
   final String requestedRoute;
 
   const SplashScreen({Key key, this.requestedRoute = '/home'})

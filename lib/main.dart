@@ -10,8 +10,12 @@ void main() {
   runApp(MyApp());
 }
 
-final baseTheme =
-    ThemeData(brightness: Brightness.dark, primaryColor: Colors.lightGreen);
+final baseTheme = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Colors.lightGreen,
+    cardTheme: CardTheme(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)))));
 
 class MyApp extends StatelessWidget {
   @override
@@ -30,6 +34,7 @@ class MyApp extends StatelessWidget {
         // ```
 
         // initialize whole application first before pushing any route
+        // then, the [SplashScreen] will redirect here to get to the actual route
         if (!initialized)
           return MaterialPageRoute(
               builder: (context) => SplashScreen(
@@ -49,7 +54,6 @@ class MyApp extends StatelessWidget {
                     memoryPointId: point,
                   ));
         } else {
-          print('Route not found: ${routeSettings.name}');
           return MaterialPageRoute(
               builder: (context) =>
                   HomePage(data: RouteNotFoundException(routeSettings.name)));
