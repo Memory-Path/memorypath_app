@@ -23,8 +23,9 @@ class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
           aspectRatio: MediaQuery.of(context).size.aspectRatio,
           child: Card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 children: [
                   TextField(
                     autofocus: true,

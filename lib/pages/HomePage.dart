@@ -112,24 +112,25 @@ class _HomePageState extends State<HomePage> {
                     )
                   : CenterProgress(),
             ),
-            Expanded(child: Container()),
-            Center(
-                child: Container(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                        'Here, some stats can be shown as soon as the DB is working properly.'),
-                  ),
-                ),
-              ),
-              constraints: BoxConstraints(
-                  maxWidth: 786,
-                  minHeight: MediaQuery.of(context).size.height / 5),
-            )),
           ],
         ),
+      ),
+      bottomNavigationBar: Container(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 786),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                    'Here, some stats can be shown as soon as the DB is working properly.'),
+              ),
+            ),
+          ),
+        ),
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 5),
       ),
     );
   }

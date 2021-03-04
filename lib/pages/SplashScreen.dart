@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:map_api/map_api.dart';
 import 'package:mobile/main.dart';
+import 'package:mobile/mapbox_api_key.dart';
 
 class SplashScreen extends StatefulWidget {
   static final RegExp routeMatch = RegExp(r'^\/$');
@@ -27,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void loadWhatever() async {
     // TODO: Login etc. may be handled here
-    await Future.delayed(Duration(seconds: 1), () {
-      initialized = true;
-      Navigator.of(context).pushReplacementNamed(widget.requestedRoute);
-    });
+    await Future.delayed(Duration(seconds: 1));
+    MapBoxApi.init(MAPBOX_API_KEY);
+    initialized = true;
+    Navigator.of(context).pushReplacementNamed(widget.requestedRoute);
   }
 }
