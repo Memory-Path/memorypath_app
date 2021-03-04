@@ -15,7 +15,7 @@ class MemoryPointEditPage extends StatefulWidget {
 }
 
 class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
-  bool isLoading = true;
+  bool dataLoaded = false;
   MemoryPoint memoryPointState;
   MemoryPath memoryPathState;
 
@@ -36,19 +36,19 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
     memoryPointState = memoryPoint;
     memoryPathState = memoryPath;
 
-    isLoading = false;
+    dataLoaded = true;
     super.initState();
   }
 
-  void deleteMemoryPoint(int memoryPointId) {
-    isLoading = true;
+  void deleteMemoryPoint(MemoryPoint memoryPoint) {
+    dataLoaded = false;
     //ToDo: Database Deletion
     //Navigator.pop(context);
-    print(memoryPointId);
+    print(memoryPoint);
   }
 
   void updateMemoryPoint(MemoryPoint memoryPoint) {
-    isLoading = true;
+    dataLoaded = false;
     //ToDo: Database Update
     //Navigator.pop(context);
     print(memoryPoint.answer);

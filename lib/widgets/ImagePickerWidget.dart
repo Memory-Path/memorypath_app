@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 
+typedef void OnUpdateImageCallback(FilePickerCross image);
+
 class ImagePickerWidget extends StatefulWidget {
 
   //config:
@@ -9,7 +11,7 @@ class ImagePickerWidget extends StatefulWidget {
   final String defaultImage = "assets/images/blurry_background.jpg";
   // image that is lately filled by Gallery or Camera
   final FilePickerCross image;
-  final Function onImageChanged;
+  final OnUpdateImageCallback onImageChanged;
 
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();

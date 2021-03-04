@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
 
+typedef void OnMemoryPointUpdateCallback(MemoryPoint memoryPoint);
+
 class MemoryPointEditWidget extends StatefulWidget {
   final String memoryPathName;
   final String memoryPathTopic;
   final MemoryPoint memoryPoint;
-  final Function(MemoryPoint) onMemoryPointUpdate;
-  final Function(int) onMemoryPointDelete;
+  final OnMemoryPointUpdateCallback onMemoryPointUpdate;
+  final OnMemoryPointUpdateCallback onMemoryPointDelete;
 
   @override
   _MemoryPointEditWidgetState createState() => _MemoryPointEditWidgetState();
@@ -64,7 +66,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
         autofocus: true,
         controller: nameController,
       );
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         setState(() {
           _isEditingName = true;
@@ -72,11 +74,12 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
       },
       child: Text(
         memoryPointState.name,
+        style: Theme.of(context).textTheme.headline3,
       ),
     );
   }
 
-  void updateImage (FilePickerCross image){
+  void updateImage(FilePickerCross image) {
     memoryPointState.image = image;
   }
 
@@ -89,22 +92,19 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //ToDo: Error Handling if Strings==null
-            Center(
-                child: Text(widget.memoryPathName != null
-                    ? widget.memoryPathName
-                    : "ToDo: Throw Error")),
+            Center(child: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
             SizedBox(height: 8),
-            Center(
-                child: Text(widget.memoryPathTopic != null
-                    ? widget.memoryPathTopic
-                    : "ToDo: Throw Error")),
+            Center(child: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
             SizedBox(height: 8),
             _editTitleTextField(),
             SizedBox(height: 8),
             Container(
                 height: 128,
                 width: 512,
-                child: ImagePickerWidget(image: memoryPointState.image, onImageChanged: updateImage,)),
+                child: ImagePickerWidget(
+                  image: memoryPointState.image,
+                  onImageChanged: updateImage,
+                )),
             Container(
               height: 64,
               width: 512,
@@ -121,6 +121,11 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
                     ? null
                     : "Enter question...",
               ),
+              onSubmitted: (String question) {
+                setState(() {
+                  memoryPointState.question = question;
+                });
+              },
             ),
             SizedBox(height: 8),
             Text("Answer:"),
@@ -129,22 +134,28 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               controller: answerController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: memoryPointState.answer != null
-                    ? null
-                    : "Enter Answer...",
+                labelText:
+                    memoryPointState.answer != null ? null : "Enter Answer...",
               ),
+              onSubmitted: (String answer) {
+                setState(() {
+                  memoryPointState.answer = answer;
+                });
+              },
             ),
             SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FloatingActionButton(
-                  onPressed: widget.onMemoryPointDelete(memoryPointState.id),
-                  child: Icon(Icons.delete),
+                FlatButton.icon(
+                  onPressed: () => widget.onMemoryPointDelete(memoryPointState),
+                  icon: Icon(Icons.delete),
+                  label: Text("Delete"),
                 ),
-                FloatingActionButton(
-                  onPressed: widget.onMemoryPointUpdate(memoryPointState),
-                  child: Icon(Icons.check),
+                FlatButton.icon(
+                  onPressed: () => widget.onMemoryPointUpdate(memoryPointState),
+                  icon: Icon(Icons.check),
+                  label: Text("Accept"),
                 ),
               ],
             )
