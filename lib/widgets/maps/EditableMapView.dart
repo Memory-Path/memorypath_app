@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:map_api/map_api.dart';
-import 'package:mobile/src/MemoryPoint.dart';
+import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class EditableMapView extends StatefulWidget {
-  final List<MemoryPoint> initialMemoryPoints;
+  final List<MemoryPointDb> initialMemoryPoints;
   final MemoryPointsUpdatedCallback onChange;
 
   const EditableMapView(
@@ -18,7 +18,7 @@ class EditableMapView extends StatefulWidget {
 class _EditableMapViewState extends State<EditableMapView> {
   MapViewController _controller = MapViewController();
 
-  List<MemoryPoint> points = [];
+  List<MemoryPointDb> points = [];
 
   TextEditingController _newPOIController = TextEditingController();
 
@@ -58,10 +58,10 @@ class _EditableMapViewState extends State<EditableMapView> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        points.add(MemoryPoint(
-                          name: _newPOIController.text,
-                          latlng: coordinates,
-                        ));
+                        points.add(MemoryPointDb(
+                            name: _newPOIController.text,
+                            lat: coordinates.latitude,
+                            long: coordinates.longitude));
                         _newPOIController.text = '';
                         _controller.waypoints = mp2m(points);
                       });
@@ -73,10 +73,10 @@ class _EditableMapViewState extends State<EditableMapView> {
             ));
   }
 
-  List<Marker> mp2m(List<MemoryPoint> points) {
+  List<Marker> mp2m(List<MemoryPointDb> points) {
     return points
         .map((e) => Marker(
-            point: e.latlng,
+            point: LatLng(e.lat, e.long),
             builder: (context) => IconButton(
                   icon: Icon(
                     Icons.location_pin,
@@ -89,4 +89,4 @@ class _EditableMapViewState extends State<EditableMapView> {
   }
 }
 
-typedef void MemoryPointsUpdatedCallback(List<MemoryPoint> memoryPoints);
+typedef void MemoryPointsUpdatedCallback(List<MemoryPointDb> memoryPoints);

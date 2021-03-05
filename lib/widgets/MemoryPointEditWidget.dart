@@ -147,12 +147,12 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FlatButton.icon(
+                TextButton.icon(
                   onPressed: () => widget.onMemoryPointDelete(memoryPointState),
                   icon: Icon(Icons.delete),
                   label: Text("Delete"),
                 ),
-                FlatButton.icon(
+                TextButton.icon(
                   onPressed: () => widget.onMemoryPointUpdate(memoryPointState),
                   icon: Icon(Icons.check),
                   label: Text("Accept"),

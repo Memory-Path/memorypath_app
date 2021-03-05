@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/src/MemoryPath.dart';
+import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class MemoryPathCard extends StatelessWidget {
-  final MemoryPath memoryPath;
+  final MemoryPathDb memoryPath;
 
   const MemoryPathCard({Key key, this.memoryPath}) : super(key: key);
 

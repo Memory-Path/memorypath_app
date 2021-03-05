@@ -1,9 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/src/HeroTags.dart';
-import 'package:mobile/src/MemoryPath.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/pages/CreateMemoryPathPage.dart';
+//import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
-import 'package:mobile/widgets/CenterProgress.dart';
-import 'package:mobile/widgets/CreateMemoryPathCard.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,18 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _manuallyHideRoutingError = false;
-  bool _memoryPathsLoaded = false;
-
-  bool _addingPath = false;
-
-  List<MemoryPath> _paths = [];
-
-  // TODO: wait for DB fixes
-  //MemoryPathDatabaseApi db = MemoryPathDatabaseApi();
 
   @override
   void initState() {
-    loadMemoryPaths();
+    //loadMemoryPaths();
     super.initState();
   }
 
@@ -65,53 +59,68 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headline3,
             ),
             Container(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 2),
-              child: _memoryPathsLoaded
-                  ? ListView(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height / 2),
+                child: ValueListenableBuilder(
+                  valueListenable: Hive.box(HIVE_MEMORY_PATHS).listenable(),
+                  builder: (context, Box box, widget) {
+                    final List<MemoryPathDb> paths = box
+                        .get(HIVE_MEMORY_PATHS, defaultValue: <MemoryPathDb>[]);
+                    return ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        !_addingPath
-                            ? Container(
-                                constraints: BoxConstraints(minWidth: 64),
-                                child: AspectRatio(
-                                  aspectRatio:
-                                      MediaQuery.of(context).size.aspectRatio /
-                                          4,
-                                  child: Card(
-                                    child: Hero(
-                                      tag: HeroTags.AddPathIcon,
-                                      child: IconButton(
-                                        icon: Icon(Icons.add),
-                                        onPressed: () =>
-                                            setState(() => _addingPath = true),
-                                        tooltip: 'Create memory path',
-                                      ),
-                                    ),
-                                  ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: OpenContainer(
+                            closedColor: Theme.of(context).cardColor,
+                            closedShape: Theme.of(context).cardTheme.shape,
+                            closedBuilder: (c, f) => Container(
+                              constraints: BoxConstraints(minWidth: 64),
+                              child: AspectRatio(
+                                aspectRatio:
+                                    MediaQuery.of(context).size.aspectRatio / 4,
+                                child: Tooltip(
+                                  child: Icon(Icons.add),
+                                  message: 'Create memory path',
                                 ),
-                              )
-                            : CreateMemoryPathCard(),
-                        if (_paths.isEmpty)
+                                /*onPressed: () {
+                                      */ /*setState(
+                                              () => _addingPath = true);*/ /*
+                                    },*/
+                              ),
+                            ),
+                            routeSettings: RouteSettings(name: '/createPath'),
+                            openBuilder: (c, f) => CreateMemoryPathPage(
+                              onCreated: (data) {
+                                print('Data!');
+                              },
+                            ),
+                            openColor: Theme.of(context).backgroundColor,
+                          ),
+                        ),
+                        if (paths.isEmpty)
                           Container(
                             constraints: BoxConstraints(maxWidth: 393),
                             child: AspectRatio(
                                 aspectRatio:
                                     MediaQuery.of(context).size.aspectRatio,
                                 child: Card(
-                                  child: Center(
-                                    child: Text(
-                                      'So lonely here...\nMaybe you would like to create a new Memory-Path?',
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        'So lonely here...\nMaybe you would like to create a new Memory-Path?',
+                                      ),
                                     ),
                                   ),
                                 )),
                           )
-                      ]..addAll(_paths.map((e) => MemoryPathCard(
+                      ]..addAll(paths.map((e) => MemoryPathCard(
                             memoryPath: e,
                           ))),
-                    )
-                  : CenterProgress(),
-            ),
+                    );
+                  },
+                )),
           ],
         ),
       ),
@@ -133,13 +142,5 @@ class _HomePageState extends State<HomePage> {
             BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 5),
       ),
     );
-  }
-
-  void loadMemoryPaths() async {
-    //db;
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      _memoryPathsLoaded = true;
-    });
   }
 }
