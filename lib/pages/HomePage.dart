@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/pages/CreateMemoryPathPage.dart';
+import 'package:mobile/src/HeroTags.dart';
 //import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
@@ -80,7 +81,9 @@ class _HomePageState extends State<HomePage> {
                                 aspectRatio:
                                     MediaQuery.of(context).size.aspectRatio / 4,
                                 child: Tooltip(
-                                  child: Icon(Icons.add),
+                                  child: Hero(
+                                      tag: HeroTags.AddPathIcon,
+                                      child: Icon(Icons.add)),
                                   message: 'Create memory path',
                                 ),
                                 /*onPressed: () {

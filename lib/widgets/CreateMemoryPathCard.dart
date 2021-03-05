@@ -53,21 +53,19 @@ class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
                   ),
                   ButtonBar(
                     children: [
-                      Hero(
-                        tag: HeroTags.AddPathIcon,
-                        child: OutlinedButton.icon(
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            widget.onCreated(
-                                // TODO: fix
-                                MemoryPathDb(
-                                    id: 42,
-                                    name: _newMemoryPathController.text,
-                                    topic: _topicController.text,
-                                    memoryPoints: points));
-                          },
-                          label: Text('Create Memory-Path'),
-                        ),
+                      OutlinedButton.icon(
+                        icon: Hero(
+                            tag: HeroTags.AddPathIcon, child: Icon(Icons.add)),
+                        onPressed: () {
+                          widget.onCreated(
+                              // TODO: fix
+                              MemoryPathDb(
+                                  id: 42,
+                                  name: _newMemoryPathController.text,
+                                  topic: _topicController.text,
+                                  memoryPoints: points));
+                        },
+                        label: Text('Create Memory-Path'),
                       ),
                     ],
                   )
