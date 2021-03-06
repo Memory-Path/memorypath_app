@@ -12,8 +12,8 @@ bool initialized = false;
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox(HIVE_SETTINGS);
-  await Hive.openBox(HIVE_MEMORY_PATHS);
+  Hive.registerAdapter(MemoryPathDbAdapter());
+  Hive.registerAdapter(MemoryPointDbAdapter());
   runApp(MyApp());
 }
 

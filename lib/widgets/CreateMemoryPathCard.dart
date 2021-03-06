@@ -60,7 +60,6 @@ class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
                           widget.onCreated(
                               // TODO: fix
                               MemoryPathDb(
-                                  id: 42,
                                   name: _newMemoryPathController.text,
                                   topic: _topicController.text,
                                   memoryPoints: points));

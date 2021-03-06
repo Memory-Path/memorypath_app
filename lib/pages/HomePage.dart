@@ -63,10 +63,10 @@ class _HomePageState extends State<HomePage> {
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height / 2),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box(HIVE_MEMORY_PATHS).listenable(),
+                  valueListenable: Hive.box<MemoryPathDb>(HIVE_MEMORY_PATHS).listenable(),
                   builder: (context, Box box, widget) {
-                    final List<MemoryPathDb> paths = box
-                        .get(HIVE_MEMORY_PATHS, defaultValue: <MemoryPathDb>[]);
+                    //Added Quickfix
+                     List<MemoryPathDb> paths = listAllMemoryPath(box);
                     return ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
@@ -145,5 +145,12 @@ class _HomePageState extends State<HomePage> {
             BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 5),
       ),
     );
+  }
+
+  //ToDo: Functionality Check
+  List<MemoryPathDb> listAllMemoryPath(Box box){
+    List<MemoryPathDb> memoryPaths = [];
+    memoryPaths.addAll(box.values);
+    return memoryPaths;
   }
 }
