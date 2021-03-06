@@ -10,11 +10,20 @@ import 'package:mobile/src/RouteNotFoundException.dart';
 
 bool initialized = false;
 
+
+
 void main() async {
+  await initHive();
+  runApp(MyApp());
+}
+
+Future<void> initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(MemoryPathDbAdapter());
   Hive.registerAdapter(MemoryPointDbAdapter());
-  runApp(MyApp());
+  await Hive.openBox(HIVE_SETTINGS);
+  await Hive.openBox<MemoryPathDb> (HIVE_MEMORY_PATHS);
+  await Hive.openBox<MemoryPointDb> (HIVE_MEMORY_POINTS);
 }
 
 final baseTheme = ThemeData(
@@ -32,6 +41,7 @@ final lightTheme = ThemeData(
             borderRadius: BorderRadius.all(Radius.circular(16)))));
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -84,9 +94,12 @@ class MyApp extends StatelessWidget {
           },
           routes: {
             '/': (context) => SplashScreen(),
+
           },
         );
       },
     );
   }
+
+
 }

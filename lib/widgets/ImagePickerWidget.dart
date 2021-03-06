@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 
-typedef void OnUpdateImageCallback(FilePickerCross image);
+typedef void OnUpdateImageCallback(String image);
 
 class ImagePickerWidget extends StatefulWidget {
 
@@ -10,46 +10,46 @@ class ImagePickerWidget extends StatefulWidget {
   final int imageQuality = 50;
   final String defaultImage = "assets/images/blurry_background.jpg";
   // image that is lately filled by Gallery or Camera
-  final FilePickerCross image;
+  final String imagePath;
   final OnUpdateImageCallback onImageChanged;
 
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
 
-  ImagePickerWidget({this.image, this.onImageChanged});
+  ImagePickerWidget({this.imagePath, this.onImageChanged});
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
-  FilePickerCross imageState;
-  final ImagePicker imagePicker = ImagePicker();
+  FilePickerCross _imageState;
+  final ImagePicker _imagePicker = ImagePicker();
 
-  void initState(){
-    imageState = widget.image;
+  void initState() async {
+    _imageState = await FilePickerCross.fromInternalPath(path: widget.imagePath);
     super.initState();
   }
 
   _imgFromCamera() async {
-    final PickedFile image = await imagePicker.getImage(
+    final PickedFile image = await _imagePicker.getImage(
         source: ImageSource.camera,
         imageQuality: widget.imageQuality
     );
     FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
     setState(() {
-      imageState = pickedFile;
-      widget.onImageChanged(pickedFile);
+      _imageState = pickedFile;
+      widget.onImageChanged(image.path);
     });
   }
 
   _imgFromGallery() async {
-    final PickedFile image = await imagePicker.getImage(
+    final PickedFile image = await _imagePicker.getImage(
         source: ImageSource.gallery,
         imageQuality: widget.imageQuality
     );
     FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
     setState(() {
-      imageState = pickedFile;
-      widget.onImageChanged(pickedFile);
+      _imageState = pickedFile;
+      widget.onImageChanged(image.path);
     });
   }
 
@@ -94,7 +94,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: imageState!=null ? imageState : AssetImage(widget.defaultImage),
+              image: _imageState!=null ? _imageState : AssetImage(widget.defaultImage),
               fit: BoxFit.cover,
             ),
           ),

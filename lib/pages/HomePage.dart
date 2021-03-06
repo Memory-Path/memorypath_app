@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final Box<MemoryPathDb> _box = Hive.box<MemoryPathDb>(HIVE_MEMORY_PATHS);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
@@ -63,8 +64,8 @@ class _HomePageState extends State<HomePage> {
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height / 2),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box<MemoryPathDb>(HIVE_MEMORY_PATHS).listenable(),
-                  builder: (context, Box box, widget) {
+                  valueListenable: _box.listenable(),
+                  builder: (context, box, widget) {
                     //Added Quickfix
                      List<MemoryPathDb> paths = listAllMemoryPath(box);
                     return ListView(
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //ToDo: Functionality Check
-  List<MemoryPathDb> listAllMemoryPath(Box box){
+  List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box){
     List<MemoryPathDb> memoryPaths = [];
     memoryPaths.addAll(box.values);
     return memoryPaths;

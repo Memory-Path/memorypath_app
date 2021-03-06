@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/src/MemoryPath.dart';
-import 'package:mobile/src/MemoryPoint.dart';
+import 'package:hive/hive.dart';
+import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/widgets/MemoryPointEditWidget.dart';
 
 class MemoryPointEditPage extends StatefulWidget {
@@ -15,43 +15,14 @@ class MemoryPointEditPage extends StatefulWidget {
 }
 
 class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
-  bool dataLoaded = false;
-  MemoryPoint memoryPointState;
-  MemoryPath memoryPathState;
+  MemoryPathDb _memoryPathState;
+  Box _memoryPathBox;
 
   @override
-  void initState() {
-    //ToDo: Database Call
-    MemoryPoint memoryPoint = MemoryPoint(
-        id: 1,
-        name: "The big old tree",
-        image: null,
-        question: "Hello? ",
-        answer: "no ones there..",
-        latlng: null);
-    List<MemoryPoint> memoryPoints = List.empty(growable: true);
-    memoryPoints.add(memoryPoint);
-    MemoryPath memoryPath =
-        MemoryPath(1, "The Way!", "Thermodynamics", memoryPoints);
-    memoryPointState = memoryPoint;
-    memoryPathState = memoryPath;
-
-    dataLoaded = true;
+  void initState() async {
+    _memoryPathBox = Hive.box<MemoryPathDb>(HIVE_MEMORY_PATHS);
+    _memoryPathState = _memoryPathBox.get(widget.memoryPathId);
     super.initState();
-  }
-
-  void deleteMemoryPoint(MemoryPoint memoryPoint) {
-    dataLoaded = false;
-    //ToDo: Database Deletion
-    //Navigator.pop(context);
-    print(memoryPoint);
-  }
-
-  void updateMemoryPoint(MemoryPoint memoryPoint) {
-    dataLoaded = false;
-    //ToDo: Database Update
-    //Navigator.pop(context);
-    print(memoryPoint.answer);
   }
 
   @override
@@ -66,11 +37,9 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
           width: 500,
           height: 700,
           child: MemoryPointEditWidget(
-            memoryPathName: memoryPathState.name,
-            memoryPathTopic: memoryPathState.topic,
-            memoryPoint: memoryPointState,
-            onMemoryPointUpdate: updateMemoryPoint,
-            onMemoryPointDelete: deleteMemoryPoint,
+            memoryPathName: _memoryPathState.name,
+            memoryPathTopic: _memoryPathState.topic,
+            memoryPointId: widget.memoryPointId,
           ),
         ),
       ),
