@@ -25,11 +25,8 @@ jobs:
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
         sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
     - run: |
-        flutter pub global activate dartdoc
-        cat << EOF > temp.sh
-        echo "\${\$(which flutter)%/bin/flutter}"
-        EOF
-        FLUTTER_ROOT="$(bash temp.sh)" dartdoc
+        flutter pub get
+        flutter pub run dartdoc
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@4.0.0
       with:
