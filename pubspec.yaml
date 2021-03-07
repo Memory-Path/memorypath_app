@@ -20,15 +20,15 @@ dependencies:
   animations: ^2.0.0
 
   map_api:
-    path: ../memorypath_map_api
-#    git:
-#      url: https://github.com/Memory-Path/memorypath_map_api.git
-#      ref: main
+    #    path: ../memorypath_map_api
+    git:
+      url: https://github.com/Memory-Path/memorypath_map_api.git
+      ref: main
   memorypath_db_api:
-    path: ../memorypath_database_api
-#    git:
-#      url: https://github.com/Memory-Path/memorypath_database_api.git
-#      ref: main
+    #    path: ../memorypath_database_api
+    git:
+      url: https://github.com/Memory-Path/memorypath_database_api.git
+      ref: main
 
 dev_dependencies:
   flutter_test:
