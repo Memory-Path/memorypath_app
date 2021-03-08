@@ -7,13 +7,14 @@ import 'package:mobile/pages/HomePage.dart';
 import 'package:mobile/pages/MemoryPointEditPage.dart';
 import 'package:mobile/pages/SplashScreen.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
+import 'package:mobile/src/theme.dart';
 
 bool initialized = false;
 
-
-
 void main() async {
   await initHive();
+  //Hive.registerAdapter(MemoryPathDbAdapter());
+  //Hive.registerAdapter(MemoryPointDbAdapter());
   runApp(MyApp());
 }
 
@@ -22,37 +23,22 @@ Future<void> initHive() async {
   Hive.registerAdapter(MemoryPathDbAdapter());
   Hive.registerAdapter(MemoryPointDbAdapter());
   await Hive.openBox(HIVE_SETTINGS);
-  await Hive.openBox<MemoryPathDb> (HIVE_MEMORY_PATHS);
-  await Hive.openBox<MemoryPointDb> (HIVE_MEMORY_POINTS);
+  await Hive.openBox<MemoryPathDb>(HIVE_MEMORY_PATHS);
+  await Hive.openBox<MemoryPointDb>(HIVE_MEMORY_POINTS);
 }
 
-final baseTheme = ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Colors.lightGreen,
-    cardTheme: CardTheme(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)))));
-
-final lightTheme = ThemeData(
-    brightness: Brightness.light,
-    primaryColor: Colors.lightGreen,
-    cardTheme: CardTheme(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)))));
-
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: Hive.box(HIVE_SETTINGS).listenable(),
       builder: (context, box, widget) {
-        final darkTheme = box.get('darkMode', defaultValue: true);
+        final isDarkTheme = box.get('darkMode', defaultValue: true);
 
         return MaterialApp(
           title: 'Memory-Path',
-          theme: darkTheme ? baseTheme : lightTheme,
-          darkTheme: baseTheme,
+          theme: isDarkTheme ? darkTheme : lightTheme,
+          darkTheme: darkTheme,
           initialRoute:
               '/', // this can be used during development to access a requested page right when opening the app
           onGenerateRoute: (routeSettings) {
@@ -94,12 +80,9 @@ class MyApp extends StatelessWidget {
           },
           routes: {
             '/': (context) => SplashScreen(),
-
           },
         );
       },
     );
   }
-
-
 }
