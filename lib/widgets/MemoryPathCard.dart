@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPathCard extends StatelessWidget {
   final MemoryPathDb memoryPath;
@@ -13,10 +14,13 @@ class MemoryPathCard extends StatelessWidget {
       child: AspectRatio(
           aspectRatio: MediaQuery.of(context).size.aspectRatio,
           child: Card(
-            child: Center(
-              child: Text(
-                memoryPath.name,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  memoryPath.name,
+                ),
+                StaticMapView(points: memoryPath.memoryPoints),
+              ],
             ),
           )),
     );

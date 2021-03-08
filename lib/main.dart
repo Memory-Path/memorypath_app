@@ -11,6 +11,9 @@ import 'package:mobile/src/theme.dart';
 
 bool initialized = false;
 
+Box<MemoryPathDb> databaseBox;
+Box settingsBox;
+
 void main() async {
   await initHive();
   //Hive.registerAdapter(MemoryPathDbAdapter());
@@ -22,9 +25,8 @@ Future<void> initHive() async {
   await Hive.initFlutter();
   Hive.registerAdapter(MemoryPathDbAdapter());
   Hive.registerAdapter(MemoryPointDbAdapter());
-  await Hive.openBox(HIVE_SETTINGS);
-  await Hive.openBox<MemoryPathDb>(HIVE_MEMORY_PATHS);
-  await Hive.openBox<MemoryPointDb>(HIVE_MEMORY_POINTS);
+  settingsBox = await Hive.openBox(HIVE_SETTINGS);
+  databaseBox = await Hive.openBox<MemoryPathDb>(HIVE_MEMORY_PATHS);
 }
 
 class MyApp extends StatelessWidget {

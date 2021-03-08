@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:memorypath_db_api/src/MemoryPath.dart';
+import 'package:mobile/main.dart';
 import 'package:mobile/widgets/CreateMemoryPathCard.dart';
 
 class CreateMemoryPathPage extends StatefulWidget {
@@ -28,11 +29,9 @@ class _CreateMemoryPathPageState extends State<CreateMemoryPathPage> {
     );
   }
 
-  void createPath(MemoryPathDb memoryPath) {
-    final List<MemoryPathDb> paths = Hive.box(HIVE_MEMORY_PATHS)
-        .get(HIVE_MEMORY_PATHS, defaultValue: <MemoryPathDb>[]);
-    paths.add(memoryPath);
-    Hive.box(HIVE_MEMORY_PATHS).put(HIVE_MEMORY_PATHS, paths);
+  Future<void> createPath(MemoryPathDb memoryPath) async {
+    final id = await databaseBox.add(memoryPath);
+    print('New path\'s id: $id');
     backToHome();
   }
 
