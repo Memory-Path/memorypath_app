@@ -5,9 +5,14 @@ import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class StaticMapView extends StatefulWidget {
+  /// all points to be displayed
   final List<MemoryPointDb> points;
 
-  const StaticMapView({Key key, this.points = const []}) : super(key: key);
+  /// a point to be emphasized
+  final int emphasizePointId;
+
+  const StaticMapView({Key key, this.points = const [], this.emphasizePointId})
+      : super(key: key);
   @override
   _StaticMapViewState createState() => _StaticMapViewState();
 }
@@ -16,33 +21,38 @@ class _StaticMapViewState extends State<StaticMapView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        /*onHorizontalDragStart: (d) {},
-        onVerticalDragStart: (d) {},*/
-        onDoubleTap: () {},
-        onPanStart: (d) {},
-        child: MapView(
-          showLocationButton: false,
-          waypoints: mp2m(widget.points),
-        ),
+      child: Stack(
+        children: [
+          MapView(
+            showLocationButton: false,
+            waypoints: mp2m(widget.points),
+          ),
+          Container(
+            color: Colors.transparent,
+          ),
+        ],
       ),
       height: MediaQuery.of(context).size.height / 4,
     );
   }
 
   List<Marker> mp2m(List<MemoryPointDb> points) {
-    return points
-        .map((e) => Marker(
-            point: LatLng(e.lat, e.long),
-            builder: (context) => IconButton(
-                  icon: Icon(
-                    Icons.location_pin,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () {},
-                  tooltip: e.name,
-                )))
-        .toList();
+    List<Marker> markers = [];
+    for (int i = 0; i < points.length; i++) {
+      final e = points[i];
+      markers.add(Marker(
+          point: LatLng(e.lat, e.long),
+          builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.location_pin,
+                  color: (widget.emphasizePointId == i)
+                      ? Colors.deepOrange
+                      : Theme.of(context).primaryColor,
+                ),
+                onPressed: () {},
+                tooltip: e.name,
+              )));
+    }
+    return markers;
   }
 }
