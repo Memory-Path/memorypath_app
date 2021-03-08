@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the initHive function from the main library, for the Dart programming language.">
-  <title>initHive function - main library - Dart API</title>
+  <meta name="description" content="API docs for the settingsBox property from the main library, for the Dart programming language.">
+  <title>settingsBox property - main library - Dart API</title>
 
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -27,9 +27,9 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">mobile</a></li>
     <li><a href="../main/main-library.html">main</a></li>
-    <li class="self-crumb">initHive function</li>
+    <li class="self-crumb">settingsBox property</li>
   </ol>
-  <div class="self-name">initHive</div>
+  <div class="self-name">settingsBox</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -47,7 +47,7 @@
     <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
       <li><a href="../index.html">mobile</a></li>
       <li><a href="../main/main-library.html">main</a></li>
-      <li class="self-crumb">initHive function</li>
+      <li class="self-crumb">settingsBox property</li>
     </ol>
     
     <h5>main library</h5>
@@ -74,24 +74,18 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="main-content">
-      <div><h1><span class="kind-function">initHive</span> function  </h1></div>
+      <div><h1><span class="kind-top-level-property">settingsBox</span> top-level property  </h1></div>
 
-    <section class="multi-line-signature">
-        <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
-                <span class="name ">initHive</span>
-(<wbr>)
-    </section>
-    
-    <section class="summary source-code" id="source">
-      <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; initHive() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(MemoryPathDbAdapter());
-  Hive.registerAdapter(MemoryPointDbAdapter());
-  settingsBox = await Hive.openBox(HIVE_SETTINGS);
-  databaseBox = await Hive.openBox&lt;MemoryPathDb&gt;(HIVE_MEMORY_PATHS);
-}</code></pre>
-    </section>
+        <section class="multi-line-signature">
+          <span class="returntype"><a href="https://pub.dev/documentation/hive/1.4.4+1/hive/Box-class.html">Box</a></span>
+          <span class="name ">settingsBox</span>
+          <div class="features">read / write</div>
+        </section>
+                <section class="summary source-code" id="source">
+          <h2><span>Implementation</span></h2>
+          <pre class="language-dart"><code class="language-dart">Box settingsBox;</code></pre>
+        </section>
+
 
   </div> <!-- /.main-content -->
 

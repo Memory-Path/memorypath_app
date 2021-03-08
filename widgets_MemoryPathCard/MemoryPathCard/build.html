@@ -149,10 +149,13 @@ Widget build(BuildContext context) {
     child: AspectRatio(
         aspectRatio: MediaQuery.of(context).size.aspectRatio,
         child: Card(
-          child: Center(
-            child: Text(
-              memoryPath.name,
-            ),
+          child: Column(
+            children: [
+              Text(
+                memoryPath.name,
+              ),
+              StaticMapView(points: memoryPath.memoryPoints),
+            ],
           ),
         )),
   );
