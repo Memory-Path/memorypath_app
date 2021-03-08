@@ -4,6 +4,7 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/MemoryPointEditWidget.dart';
+import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPointEditPage extends StatefulWidget {
   static final RegExp routeMatch = RegExp(r'^\/memorypoint\/edit\/(\d+)$');
@@ -27,17 +28,17 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
     super.initState();
   }
 
-  void onMemoryPointUpdate(MemoryPoint memoryPoint) {
+  void onMemoryPointUpdate(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints[widget.memoryPointId] =
         memoryPoint.toMemoryPointDb();
-    _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
-    Navigator.pop(context);
+    await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    Navigator.of(context).pop();
   }
 
-  void onMemoryPointDelete(MemoryPoint memoryPoint) {
+  void onMemoryPointDelete(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
-    _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
-    Navigator.pop(context);
+    await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -45,6 +46,17 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Memory-Point"),
+        leading: IconButton(
+            icon: Icon(Icons.close),
+            tooltip: 'Discard',
+            onPressed: () {
+              if (_memoryPathDbState.memoryPoints[widget.memoryPointId].name ==
+                  null) {
+                _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
+                _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+              }
+              Navigator.pop(context);
+            }),
       ),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -54,6 +66,10 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
           child: MemoryPointEditWidget(
             memoryPathName: _memoryPathDbState.name,
             memoryPathTopic: _memoryPathDbState.topic,
+            mapView: StaticMapView(
+              emphasizePointId: widget.memoryPointId,
+              points: _memoryPathDbState.memoryPoints,
+            ),
             memoryPoint: MemoryPoint.fromDb(
                 _memoryPathDbState.memoryPoints[widget.memoryPointId]),
             onMemoryPointUpdate: onMemoryPointUpdate,

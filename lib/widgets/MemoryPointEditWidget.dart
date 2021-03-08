@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
+import 'package:mobile/widgets/maps/StaticMapView.dart';
 
-typedef void OnMemoryPointChanged(MemoryPoint memoryPoint);
+typedef Future<void> OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
 
 class MemoryPointEditWidget extends StatefulWidget {
   final String memoryPathName;
   final String memoryPathTopic;
   final MemoryPoint memoryPoint;
-  final OnMemoryPointChanged onMemoryPointUpdate;
-  final OnMemoryPointChanged onMemoryPointDelete;
+  final StaticMapView mapView;
+  final OnMemoryPointChangedCallback onMemoryPointUpdate;
+  final OnMemoryPointChangedCallback onMemoryPointDelete;
 
   @override
   _MemoryPointEditWidgetState createState() => _MemoryPointEditWidgetState();
@@ -18,6 +20,7 @@ class MemoryPointEditWidget extends StatefulWidget {
       {this.memoryPathName,
       this.memoryPathTopic,
       this.memoryPoint,
+      this.mapView,
       this.onMemoryPointUpdate,
       this.onMemoryPointDelete});
 }
@@ -81,6 +84,20 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     _memoryPointState.image = image;
   }
 
+  bool _memoryPointIsValid() {
+    if (_memoryPointState.name != null &&
+        _memoryPointState.name.isNotEmpty &&
+        _memoryPointState.image != null &&
+        _memoryPointState.latlng != null &&
+        _memoryPointState.answer != null &&
+        _memoryPointState.answer.isNotEmpty &&
+        _memoryPointState.question != null &&
+        _memoryPointState.question.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,7 +106,6 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //ToDo: Error Handling if Strings==null
             Center(child: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
             SizedBox(height: 8),
             Center(child: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
@@ -103,11 +119,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
                   imagePath: _memoryPointState.image,
                   onImageChanged: updateImage,
                 )),
-            Container(
-              height: 64,
-              width: 512,
-              //toDo: child: MapView(),
-            ),
+            Container(height: 64, width: 512, child: widget.mapView),
             SizedBox(height: 8),
             Text("Question:"),
             SizedBox(height: 8),
@@ -146,14 +158,30 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton.icon(
-                  onPressed: () => widget.onMemoryPointDelete,
+                  onPressed: () async {
+                    await widget.onMemoryPointDelete;
+                  },
                   icon: Icon(Icons.delete),
                   label: Text("Delete"),
                 ),
                 TextButton.icon(
-                  onPressed: () => widget.onMemoryPointUpdate,
                   icon: Icon(Icons.check),
                   label: Text("Accept"),
+                  onPressed: () async {
+                    if (_memoryPointIsValid()) {
+                      await widget.onMemoryPointUpdate;
+                    }
+                    throw AlertDialog(
+                      title: Text("Memory-Point not valid"),
+                      content: Text(
+                          "You have to set all Parameters before submitting!"),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("ok"))
+                      ],
+                    );
+                  },
                 ),
               ],
             )
