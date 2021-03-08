@@ -11,7 +11,13 @@ class StaticMapView extends StatefulWidget {
   /// a point to be emphasized
   final int emphasizePointId;
 
-  const StaticMapView({Key key, this.points = const [], this.emphasizePointId})
+  final MBDirectionsCallback onDirectionsUpdate;
+
+  const StaticMapView(
+      {Key key,
+      this.points = const [],
+      this.emphasizePointId,
+      this.onDirectionsUpdate})
       : super(key: key);
   @override
   _StaticMapViewState createState() => _StaticMapViewState();
@@ -26,6 +32,7 @@ class _StaticMapViewState extends State<StaticMapView> {
           MapView(
             showLocationButton: false,
             waypoints: mp2m(widget.points),
+            onDirectionsUpdate: widget?.onDirectionsUpdate ?? (d) {},
           ),
           Container(
             color: Colors.transparent,

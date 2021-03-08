@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:map_api/src/mapbox_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/widgets/CenterProgress.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
-class MemoryPathCard extends StatelessWidget {
+class MemoryPathCard extends StatefulWidget {
   final MemoryPathDb memoryPath;
 
   const MemoryPathCard({Key key, this.memoryPath}) : super(key: key);
+
+  @override
+  _MemoryPathCardState createState() => _MemoryPathCardState();
+}
+
+class _MemoryPathCardState extends State<MemoryPathCard> {
+  MBDirections directions;
+  bool loadingDirections = true;
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +27,40 @@ class MemoryPathCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  memoryPath.name,
+                  widget.memoryPath.name,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
-                StaticMapView(points: memoryPath.memoryPoints),
+                StaticMapView(
+                  points: widget.memoryPath.memoryPoints,
+                  onDirectionsUpdate: setDirections,
+                ),
+                !loadingDirections
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.height),
+                            title: Text(
+                                'Total distance: ${(directions.distance / 1000).round()} km'),
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.timer),
+                            title: Text(
+                                'Walking time: ${directions.duration.inMinutes} min'),
+                          ),
+                        ],
+                      )
+                    : CenterProgress()
               ],
             ),
           )),
     );
+  }
+
+  void setDirections(MBDirections newDirections) {
+    setState(() {
+      directions = newDirections;
+      loadingDirections = false;
+    });
   }
 }
