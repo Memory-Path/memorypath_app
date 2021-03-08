@@ -24,7 +24,6 @@ Future<void> initHive() async {
   Hive.registerAdapter(MemoryPointDbAdapter());
   await Hive.openBox(HIVE_SETTINGS);
   await Hive.openBox<MemoryPathDb>(HIVE_MEMORY_PATHS);
-  await Hive.openBox<MemoryPointDb>(HIVE_MEMORY_POINTS);
 }
 
 class MyApp extends StatelessWidget {
