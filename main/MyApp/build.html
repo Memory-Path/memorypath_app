@@ -146,12 +146,12 @@ Widget build(BuildContext context) {
   return ValueListenableBuilder(
     valueListenable: Hive.box(HIVE_SETTINGS).listenable(),
     builder: (context, box, widget) {
-      final darkTheme = box.get(&#39;darkMode&#39;, defaultValue: true);
+      final isDarkTheme = box.get(&#39;darkMode&#39;, defaultValue: true);
 
       return MaterialApp(
         title: &#39;Memory-Path&#39;,
-        theme: darkTheme ? baseTheme : lightTheme,
-        darkTheme: baseTheme,
+        theme: isDarkTheme ? darkTheme : lightTheme,
+        darkTheme: darkTheme,
         initialRoute:
             &#39;&#47;&#39;, &#47;&#47; this can be used during development to access a requested page right when opening the app
         onGenerateRoute: (routeSettings) {
@@ -193,7 +193,6 @@ Widget build(BuildContext context) {
         },
         routes: {
           &#39;&#47;&#39;: (context) =&gt; SplashScreen(),
-
         },
       );
     },

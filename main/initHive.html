@@ -59,9 +59,7 @@
 
 
   <li class="section-title"><a href="../main/main-library.html#properties">Properties</a></li>
-  <li><a href="../main/baseTheme.html">baseTheme</a></li>
   <li><a href="../main/initialized.html">initialized</a></li>
-  <li><a href="../main/lightTheme.html">lightTheme</a></li>
 
   <li class="section-title"><a href="../main/main-library.html#functions">Functions</a></li>
   <li><a href="../main/initHive.html">initHive</a></li>
@@ -89,8 +87,8 @@
   Hive.registerAdapter(MemoryPathDbAdapter());
   Hive.registerAdapter(MemoryPointDbAdapter());
   await Hive.openBox(HIVE_SETTINGS);
-  await Hive.openBox&lt;MemoryPathDb&gt; (HIVE_MEMORY_PATHS);
-  await Hive.openBox&lt;MemoryPointDb&gt; (HIVE_MEMORY_POINTS);
+  await Hive.openBox&lt;MemoryPathDb&gt;(HIVE_MEMORY_PATHS);
+  await Hive.openBox&lt;MemoryPointDb&gt;(HIVE_MEMORY_POINTS);
 }</code></pre>
     </section>
 
