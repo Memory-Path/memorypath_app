@@ -65,6 +65,7 @@
     <li><a href="../../widgets_maps_StaticMapView/StaticMapView/emphasizePointId.html">emphasizePointId</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
+    <li><a href="../../widgets_maps_StaticMapView/StaticMapView/onDirectionsUpdate.html">onDirectionsUpdate</a></li>
     <li><a href="../../widgets_maps_StaticMapView/StaticMapView/points.html">points</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
@@ -97,14 +98,19 @@
       const
       <span class="name ">StaticMapView</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-key">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a></span> <span class="parameter-name">key</span>, </span></li>
 <li><span class="parameter" id="-param-points"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">MemoryPointDb</span>&gt;</span></span> <span class="parameter-name">points</span> = <span class="default-value">const []</span>, </span></li>
-<li><span class="parameter" id="-param-emphasizePointId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">emphasizePointId</span>}</span></li>
+<li><span class="parameter" id="-param-emphasizePointId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">emphasizePointId</span>, </span></li>
+<li><span class="parameter" id="-param-onDirectionsUpdate"><span class="type-annotation">MBDirectionsCallback</span> <span class="parameter-name">onDirectionsUpdate</span>}</span></li>
 </ol>)
     </section>
 
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">const StaticMapView({Key key, this.points = const [], this.emphasizePointId})
+      <pre class="language-dart"><code class="language-dart">const StaticMapView(
+    {Key key,
+    this.points = const [],
+    this.emphasizePointId,
+    this.onDirectionsUpdate})
     : super(key: key);</code></pre>
     </section>
 
