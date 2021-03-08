@@ -23,6 +23,9 @@ jobs:
         channel: dev
     - run: flutter config --enable-macos-desktop
     - run: |
+        cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
+        sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
+    - run: |
         flutter pub get
         flutter build ios --release --no-codesign
         flutter build macos --release | true # fixing issues with missing credentials
@@ -47,6 +50,9 @@ jobs:
     - run: |
         flutter config --enable-web
         flutter config --enable-linux-desktop
+    - run: |
+        cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
+        sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
     - run: |
         flutter pub get
         flutter build web
@@ -73,6 +79,9 @@ jobs:
       with:
         channel: dev
     - run: flutter config --enable-windows-desktop
+    - run: |
+        cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
+        ReplaceText "lib/mapbox_api_key.dart" WHATEVER %MAPBOX_API_KEY%
     - run: |
         flutter pub get
         flutter build windows
