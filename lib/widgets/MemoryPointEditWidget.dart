@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
+
+typedef void OnMemoryPointChanged(MemoryPoint memoryPoint);
 
 class MemoryPointEditWidget extends StatefulWidget {
   final String memoryPathName;
   final String memoryPathTopic;
-  final int memoryPointId;
+  final MemoryPoint memoryPoint;
+  final OnMemoryPointChanged onMemoryPointUpdate;
+  final OnMemoryPointChanged onMemoryPointDelete;
 
   @override
   _MemoryPointEditWidgetState createState() => _MemoryPointEditWidgetState();
 
   MemoryPointEditWidget(
-      {this.memoryPathName, this.memoryPathTopic, this.memoryPointId});
+      {this.memoryPathName,
+      this.memoryPathTopic,
+      this.memoryPoint,
+      this.onMemoryPointUpdate,
+      this.onMemoryPointDelete});
 }
 
 class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
@@ -20,14 +27,11 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   bool _isEditingName = false;
   TextEditingController _questionController;
   TextEditingController _answerController;
-  MemoryPointDb _memoryPointState;
-  Box _memoryPointBox;
+  MemoryPoint _memoryPointState;
 
   @override
   void initState() {
     //Setting Values for Widget-State
-    //_memoryPointBox = Hive.box<MemoryPointDb>(HIVE_MEMORY_POINTS);
-    _memoryPointState = _memoryPointBox.get(widget.memoryPointId);
     _nameController = _memoryPointState.name != null
         ? TextEditingController(text: _memoryPointState.name)
         : TextEditingController();
@@ -142,12 +146,12 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => widget.onMemoryPointDelete,
                   icon: Icon(Icons.delete),
                   label: Text("Delete"),
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => widget.onMemoryPointUpdate,
                   icon: Icon(Icons.check),
                   label: Text("Accept"),
                 ),
