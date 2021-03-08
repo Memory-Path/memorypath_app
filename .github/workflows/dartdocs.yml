@@ -6,7 +6,7 @@ name: dartdoc
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: ['*']
+    branches: ['prototype']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,7 +23,6 @@ jobs:
         channel: dev
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
     - run: |
         flutter pub get
         flutter pub run dartdoc
