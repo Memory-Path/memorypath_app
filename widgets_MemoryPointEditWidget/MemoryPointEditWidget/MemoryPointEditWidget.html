@@ -66,7 +66,9 @@
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
     <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/memoryPathName.html">memoryPathName</a></li>
     <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/memoryPathTopic.html">memoryPathTopic</a></li>
-    <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/memoryPointId.html">memoryPointId</a></li>
+    <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/memoryPoint.html">memoryPoint</a></li>
+    <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/onMemoryPointDelete.html">onMemoryPointDelete</a></li>
+    <li><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget/onMemoryPointUpdate.html">onMemoryPointUpdate</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
     <li class="section-title"><a href="../../widgets_MemoryPointEditWidget/MemoryPointEditWidget-class.html#instance-methods">Methods</a></li>
@@ -98,7 +100,9 @@
       
       <span class="name ">MemoryPointEditWidget</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-memoryPathName">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">memoryPathName</span>, </span></li>
 <li><span class="parameter" id="-param-memoryPathTopic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">memoryPathTopic</span>, </span></li>
-<li><span class="parameter" id="-param-memoryPointId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">memoryPointId</span>}</span></li>
+<li><span class="parameter" id="-param-memoryPoint"><span class="type-annotation">MemoryPoint</span> <span class="parameter-name">memoryPoint</span>, </span></li>
+<li><span class="parameter" id="-param-onMemoryPointUpdate"><span class="type-annotation"><a href="../../widgets_MemoryPointEditWidget/OnMemoryPointChanged.html">OnMemoryPointChanged</a></span> <span class="parameter-name">onMemoryPointUpdate</span>, </span></li>
+<li><span class="parameter" id="-param-onMemoryPointDelete"><span class="type-annotation"><a href="../../widgets_MemoryPointEditWidget/OnMemoryPointChanged.html">OnMemoryPointChanged</a></span> <span class="parameter-name">onMemoryPointDelete</span>}</span></li>
 </ol>)
     </section>
 
@@ -106,7 +110,11 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">MemoryPointEditWidget(
-    {this.memoryPathName, this.memoryPathTopic, this.memoryPointId});</code></pre>
+    {this.memoryPathName,
+    this.memoryPathTopic,
+    this.memoryPoint,
+    this.onMemoryPointUpdate,
+    this.onMemoryPointDelete});</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
