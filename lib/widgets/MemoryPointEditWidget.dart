@@ -35,15 +35,11 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   @override
   void initState() {
     //Setting Values for Widget-State
-    _nameController = _memoryPointState.name != null
-        ? TextEditingController(text: _memoryPointState.name)
-        : TextEditingController();
-    _questionController = _memoryPointState.question != null
-        ? TextEditingController(text: _memoryPointState.question)
-        : TextEditingController();
-    _answerController = _memoryPointState.answer != null
-        ? TextEditingController(text: _memoryPointState.answer)
-        : TextEditingController();
+    _memoryPointState = widget.memoryPoint;
+    _nameController = TextEditingController(text: _memoryPointState.name);
+    _questionController =
+        TextEditingController(text: _memoryPointState.question);
+    _answerController = TextEditingController(text: _memoryPointState.answer);
     super.initState();
   }
 
@@ -74,7 +70,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
         });
       },
       child: Text(
-        _memoryPointState.name,
+        _memoryPointState.name ?? "",
         style: Theme.of(context).textTheme.headline3,
       ),
     );
@@ -101,92 +97,79 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
-            SizedBox(height: 8),
-            Center(child: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
-            SizedBox(height: 8),
-            _editTitleTextField(),
-            SizedBox(height: 8),
-            Container(
-                height: 128,
-                width: 512,
-                child: ImagePickerWidget(
-                  imagePath: _memoryPointState.image,
-                  onImageChanged: updateImage,
-                )),
-            Container(height: 64, width: 512, child: widget.mapView),
-            SizedBox(height: 8),
-            Text("Question:"),
-            SizedBox(height: 8),
-            TextField(
-              controller: _questionController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: _memoryPointState.question != null
-                    ? null
-                    : "Enter question...",
-              ),
-              onSubmitted: (String question) {
-                setState(() {
-                  _memoryPointState.question = question;
-                });
-              },
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          ListTile(title: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
+          ListTile(title: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
+          _editTitleTextField(),
+          ListTile(
+              title: ImagePickerWidget(
+            imagePath: _memoryPointState.image,
+            onImageChanged: updateImage,
+          )),
+          ListTile(title: widget.mapView),
+          ListTile(title: Text("Question:")),
+          TextField(
+            controller: _questionController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: _memoryPointState.question != null
+                  ? null
+                  : "Enter question...",
             ),
-            SizedBox(height: 8),
-            Text("Answer:"),
-            SizedBox(height: 8),
-            TextField(
-              controller: _answerController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText:
-                    _memoryPointState.answer != null ? null : "Enter Answer...",
-              ),
-              onSubmitted: (String answer) {
-                setState(() {
-                  _memoryPointState.answer = answer;
-                });
-              },
+            onSubmitted: (String question) {
+              setState(() {
+                _memoryPointState.question = question;
+              });
+            },
+          ),
+          ListTile(title: Text("Answer:")),
+          TextField(
+            controller: _answerController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText:
+                  _memoryPointState.answer != null ? null : "Enter Answer...",
             ),
-            SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton.icon(
-                  onPressed: () async {
-                    await widget.onMemoryPointDelete;
-                  },
-                  icon: Icon(Icons.delete),
-                  label: Text("Delete"),
-                ),
-                TextButton.icon(
-                  icon: Icon(Icons.check),
-                  label: Text("Accept"),
-                  onPressed: () async {
-                    if (_memoryPointIsValid()) {
-                      await widget.onMemoryPointUpdate;
-                    }
-                    throw AlertDialog(
-                      title: Text("Memory-Point not valid"),
-                      content: Text(
-                          "You have to set all Parameters before submitting!"),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text("ok"))
-                      ],
-                    );
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
+            onSubmitted: (String answer) {
+              setState(() {
+                _memoryPointState.answer = answer;
+              });
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton.icon(
+                onPressed: () async {
+                  await widget.onMemoryPointDelete;
+                },
+                icon: Icon(Icons.delete),
+                label: Text("Delete"),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.check),
+                label: Text("Accept"),
+                onPressed: () async {
+                  if (_memoryPointIsValid()) {
+                    await widget.onMemoryPointUpdate;
+                  }
+                  throw AlertDialog(
+                    title: Text("Memory-Point not valid"),
+                    content: Text(
+                        "You have to set all Parameters before submitting!"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("ok"))
+                    ],
+                  );
+                },
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

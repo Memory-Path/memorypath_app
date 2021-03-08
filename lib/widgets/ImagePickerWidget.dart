@@ -1,11 +1,10 @@
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker_cross/file_picker_cross.dart';
 
 typedef void OnUpdateImageCallback(String image);
 
 class ImagePickerWidget extends StatefulWidget {
-
   //config:
   final int imageQuality = 50;
   final String defaultImage = "assets/images/blurry_background.jpg";
@@ -20,36 +19,36 @@ class ImagePickerWidget extends StatefulWidget {
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-
-  FilePickerCross _imageState;
+  Future<FilePickerCross> _imageState;
+  String _imagePathState;
   final ImagePicker _imagePicker = ImagePicker();
 
-  void initState() async {
-    _imageState = await FilePickerCross.fromInternalPath(path: widget.imagePath);
+  void initState() {
+    _imagePathState = widget.imagePath;
+    if (_imagePathState != null) {
+      _imageState = FilePickerCross.fromInternalPath(path: _imagePathState);
+    }
     super.initState();
   }
 
   _imgFromCamera() async {
     final PickedFile image = await _imagePicker.getImage(
-        source: ImageSource.camera,
-        imageQuality: widget.imageQuality
-    );
-    FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
+        source: ImageSource.camera, imageQuality: widget.imageQuality);
     setState(() {
-      _imageState = pickedFile;
-      widget.onImageChanged(image.path);
+      _imagePathState = image.path;
+      _imageState = FilePickerCross.fromInternalPath(path: _imagePathState);
+      widget.onImageChanged(_imagePathState);
     });
   }
 
   _imgFromGallery() async {
     final PickedFile image = await _imagePicker.getImage(
-        source: ImageSource.gallery,
-        imageQuality: widget.imageQuality
-    );
-    FilePickerCross pickedFile = await FilePickerCross.fromInternalPath(path: image.path);
+        source: ImageSource.gallery, imageQuality: widget.imageQuality);
+
     setState(() {
-      _imageState = pickedFile;
-      widget.onImageChanged(image.path);
+      _imagePathState = image.path;
+      _imageState = FilePickerCross.fromInternalPath(path: _imagePathState);
+      widget.onImageChanged(_imagePathState);
     });
   }
 
@@ -57,7 +56,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext bc) {
+        builder: (BuildContext context) {
           return SafeArea(
             child: Container(
               child: new Wrap(
@@ -81,8 +80,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   @override
@@ -91,33 +89,72 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         onTap: () {
           _showPicker(context);
         },
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: _imageState!=null ? _imageState : AssetImage(widget.defaultImage),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border.all(
-                    width: 2,
-                    color: Colors.grey[700],
+        child: _imagePathState != null //|| _imagePathState.isEmpty
+            ? FutureBuilder(
+                future: _imageState,
+                builder: (BuildContext context,
+                    AsyncSnapshot<FilePickerCross> snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: MemoryImage(snapshot.data.toUint8List()),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.grey[700],
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(64))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 32,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                        child: Center(child: CircularProgressIndicator()));
+                  }
+                })
+            : Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(widget.defaultImage),
+                    fit: BoxFit.cover,
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(64))),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 32,
-                  color: Colors.grey[700],
                 ),
-              ),
-            ),
-            ),
-          )
-        );
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(
+                          width: 2,
+                          color: Colors.grey[700],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(64))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 32,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ),
+              ));
   }
 }
