@@ -172,10 +172,14 @@ Widget build(BuildContext context) {
             return MaterialPageRoute(builder: (context) =&gt; SplashScreen());
           } else if (HomePage.routeMatch.hasMatch(routeSettings.name)) {
             return MaterialPageRoute(builder: (context) =&gt; HomePage());
-          } else if (CreateMemoryPathPage.routeMatch
+          } else if (EditMemoryPathPage.routeMatch
               .hasMatch(routeSettings.name)) {
+            final match =
+                EditMemoryPathPage.routeMatch.firstMatch(routeSettings.name);
+            int path;
+            if (match.group(2) != null) path = int.parse(match.group(2));
             return MaterialPageRoute(
-                builder: (context) =&gt; CreateMemoryPathPage());
+                builder: (context) =&gt; EditMemoryPathPage(path: path));
           } else if (MemoryPointEditPage.routeMatch
               .hasMatch(routeSettings.name)) {
             final match =
