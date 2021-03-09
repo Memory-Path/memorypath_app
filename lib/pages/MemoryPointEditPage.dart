@@ -24,18 +24,21 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   @override
   void initState() {
     _memoryPathBox = databaseBox;
-    _memoryPathDbState = _memoryPathBox.get(widget.memoryPathId);
+    //_memoryPathDbState = _memoryPathBox.get(widget.memoryPathId);
+    MemoryPointDb memoryPointDb = MemoryPointDb(lat: 20, long: 30);
+    _memoryPathDbState = MemoryPathDb(
+        name: "Hahahahhaa", topic: "blabla", memoryPoints: [memoryPointDb]);
     super.initState();
   }
 
-  void onMemoryPointUpdate(MemoryPoint memoryPoint) async {
+  Future<void> onMemoryPointUpdate(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints[widget.memoryPointId] =
         memoryPoint.toMemoryPointDb();
     await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
     Navigator.of(context).pop();
   }
 
-  void onMemoryPointDelete(MemoryPoint memoryPoint) async {
+  Future<void> onMemoryPointDelete(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
     await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
     Navigator.of(context).pop();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
-import 'package:mobile/pages/CreateMemoryPathPage.dart';
+import 'package:mobile/pages/EditMemoryPathPage.dart';
 import 'package:mobile/pages/HomePage.dart';
 import 'package:mobile/pages/MemoryPointEditPage.dart';
 import 'package:mobile/pages/PracticePage.dart';
@@ -62,10 +62,14 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (context) => SplashScreen());
             } else if (HomePage.routeMatch.hasMatch(routeSettings.name)) {
               return MaterialPageRoute(builder: (context) => HomePage());
-            } else if (CreateMemoryPathPage.routeMatch
+            } else if (EditMemoryPathPage.routeMatch
                 .hasMatch(routeSettings.name)) {
+              final match =
+                  EditMemoryPathPage.routeMatch.firstMatch(routeSettings.name);
+              int path;
+              if (match.group(2) != null) path = int.parse(match.group(2));
               return MaterialPageRoute(
-                  builder: (context) => CreateMemoryPathPage());
+                  builder: (context) => EditMemoryPathPage(path: path));
             } else if (MemoryPointEditPage.routeMatch
                 .hasMatch(routeSettings.name)) {
               final match =
