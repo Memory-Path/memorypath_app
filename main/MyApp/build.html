@@ -189,6 +189,14 @@ Widget build(BuildContext context) {
                 builder: (context) =&gt; MemoryPointEditPage(
                       memoryPointId: point,
                     ));
+          } else if (PracticePage.routeMatch.hasMatch(routeSettings.name)) {
+            final match =
+                PracticePage.routeMatch.firstMatch(routeSettings.name);
+            int path = int.parse(match.group(1));
+            return MaterialPageRoute(
+                builder: (context) =&gt; PracticePage(
+                      memoryPath: path,
+                    ));
           } else {
             return MaterialPageRoute(
                 builder: (context) =&gt; HomePage(
