@@ -3,20 +3,31 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/src/HeroTags.dart';
 import 'package:mobile/widgets/maps/EditableMapView.dart';
 
-class CreateMemoryPathCard extends StatefulWidget {
+class EditMemoryPathCard extends StatefulWidget {
   final MemoryPathCreatedCallback onCreated;
+  final MemoryPathDb path;
 
-  const CreateMemoryPathCard({Key key, @required this.onCreated})
+  const EditMemoryPathCard({Key key, @required this.onCreated, this.path})
       : super(key: key);
   @override
-  _CreateMemoryPathCardState createState() => _CreateMemoryPathCardState();
+  _EditMemoryPathCardState createState() => _EditMemoryPathCardState();
 }
 
-class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
+class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
   TextEditingController _newMemoryPathController = TextEditingController();
   TextEditingController _topicController = TextEditingController();
 
-  List<MemoryPointDb> points = [];
+  List<MemoryPointDb> _points = [];
+
+  @override
+  void initState() {
+    if (widget.path != null) {
+      _newMemoryPathController.text = widget.path.name;
+      _topicController.text = widget.path.topic;
+      _points = widget.path.memoryPoints;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +51,9 @@ class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: EditableMapView(
+                      initialMemoryPoints: _points,
                       onChange: (memoryPoints) {
-                        points = memoryPoints;
+                        _points = memoryPoints;
                       },
                     ),
                   ),
@@ -57,14 +69,24 @@ class _CreateMemoryPathCardState extends State<CreateMemoryPathCard> {
                         icon: Hero(
                             tag: HeroTags.AddPathIcon, child: Icon(Icons.add)),
                         onPressed: () {
-                          widget.onCreated(
-                              // TODO: fix
-                              MemoryPathDb(
-                                  name: _newMemoryPathController.text,
-                                  topic: _topicController.text,
-                                  memoryPoints: points));
+                          if (_newMemoryPathController.text.trim() == '' ||
+                              _topicController.text.trim() == '' ||
+                              _points.length < 2) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Pleas fill in all fields and add at least 2 memory points.')));
+                          }
+                          if (widget.path != null) {
+                            widget.path.name = _newMemoryPathController.text;
+                            widget.path.name = _newMemoryPathController.text;
+                            widget.path.name = _newMemoryPathController.text;
+                          }
+                          widget.onCreated(MemoryPathDb(
+                              name: _newMemoryPathController.text,
+                              topic: _topicController.text,
+                              memoryPoints: _points));
                         },
-                        label: Text('Create Memory-Path'),
+                        label: Text('Save Memory-Path'),
                       ),
                     ],
                   )

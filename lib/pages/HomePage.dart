@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
-import 'package:mobile/pages/CreateMemoryPathPage.dart';
+import 'package:mobile/pages/EditMemoryPathPage.dart';
 import 'package:mobile/src/HeroTags.dart';
 //import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                   valueListenable: _box.listenable(),
                   builder: (context, box, widget) {
                     //Added Quickfix
-                     List<MemoryPathDb> paths = listAllMemoryPath(box);
+                    List<MemoryPathDb> paths = listAllMemoryPath(box);
                     return ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             routeSettings: RouteSettings(name: '/createPath'),
-                            openBuilder: (c, f) => CreateMemoryPathPage(
+                            openBuilder: (c, f) => EditMemoryPathPage(
                               onCreated: (data) {
                                 print('Data!');
                               },
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //ToDo: Functionality Check
-  List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box){
+  List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box) {
     List<MemoryPathDb> memoryPaths = [];
     memoryPaths.addAll(box.values);
     return memoryPaths;
