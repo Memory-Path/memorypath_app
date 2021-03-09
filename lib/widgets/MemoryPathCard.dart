@@ -50,7 +50,14 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
                           ),
                         ],
                       )
-                    : CenterProgress()
+                    : CenterProgress(),
+                ButtonBar(
+                  children: [
+                    OutlinedButton.icon(onPressed: (){
+                      Navigator.of(context).pushNamed("/practice/${widget.memoryPath.key}");
+                    }, icon: Icon(Icons.fitness_center), label: Text("Practice")),
+                  ],
+                )
               ],
             ),
           )),

@@ -5,6 +5,7 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/pages/CreateMemoryPathPage.dart';
 import 'package:mobile/pages/HomePage.dart';
 import 'package:mobile/pages/MemoryPointEditPage.dart';
+import 'package:mobile/pages/PracticePage.dart';
 import 'package:mobile/pages/SplashScreen.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/src/theme.dart';
@@ -73,6 +74,14 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                   builder: (context) => MemoryPointEditPage(
                         memoryPointId: point,
+                      ));
+            } else if (PracticePage.routeMatch.hasMatch(routeSettings.name)) {
+              final match =
+                  PracticePage.routeMatch.firstMatch(routeSettings.name);
+              int path = int.parse(match.group(1));
+              return MaterialPageRoute(
+                  builder: (context) => PracticePage(
+                        memoryPath: path,
                       ));
             } else {
               return MaterialPageRoute(
