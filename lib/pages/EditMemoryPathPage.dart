@@ -31,6 +31,34 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
         title: Text((path != null ? 'Edit' : 'Create') + ' Memory-Path'),
         leading: IconButton(
             icon: Icon(Icons.close), tooltip: 'Discard', onPressed: backToHome),
+        actions: [
+          if (widget.path != null)
+            IconButton(
+              icon: Icon(Icons.delete_forever),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (c) {
+                      return AlertDialog(
+                        title: Text('Are your sure to delete ${path.name}?'),
+                        actions: [
+                          TextButton(
+                              onPressed: Navigator.of(context).pop,
+                              child: Text('Cancel')),
+                          TextButton(
+                              onPressed: () {
+                                databaseBox.delete(path.key);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Delete'))
+                        ],
+                      );
+                    });
+              },
+              tooltip: 'Delete Memory-Path...',
+            )
+        ],
       ),
       body: EditMemoryPathCard(onCreated: createPath, path: path),
     );

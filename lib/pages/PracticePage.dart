@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
+import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
   static final RegExp routeMatch = RegExp(r'^\/practice\/(\d+)$');
@@ -38,6 +39,14 @@ class _PracticePageState extends State<PracticePage> {
             children: [
               Column(
                 children: [
+                  Hero(
+                    tag: StaticMapView,
+                    child: StaticMapView(
+                      points: memoryPath.memoryPoints,
+                      emphasizePointId: _currentPoint,
+                      key: GlobalKey(),
+                    ),
+                  ), // TODO: dirty code
                   Expanded(
                     child: PageTransitionSwitcher(
                       duration: const Duration(milliseconds: 300),

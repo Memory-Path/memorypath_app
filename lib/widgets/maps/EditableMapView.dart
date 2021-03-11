@@ -46,6 +46,7 @@ class _EditableMapViewState extends State<EditableMapView> {
         builder: (context) => AlertDialog(
               title: Text('Add new Memory-Point'),
               content: TextField(
+                autofocus: true,
                 controller: _newPOIController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),

@@ -69,9 +69,12 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
           child: MemoryPointEditWidget(
             memoryPathName: _memoryPathDbState.name,
             memoryPathTopic: _memoryPathDbState.topic,
-            mapView: StaticMapView(
-              emphasizePointId: widget.memoryPointId,
-              points: _memoryPathDbState.memoryPoints,
+            mapView: Hero(
+              tag: StaticMapView,
+              child: StaticMapView(
+                emphasizePointId: widget.memoryPointId,
+                points: _memoryPathDbState.memoryPoints,
+              ),
             ),
             memoryPoint: MemoryPoint.fromDb(
                 _memoryPathDbState.memoryPoints[widget.memoryPointId]),

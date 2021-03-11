@@ -1,6 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:map_api/src/mapbox_api.dart';
+import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/pages/PracticePage.dart';
 import 'package:mobile/widgets/CenterProgress.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
@@ -22,50 +24,72 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
     return Container(
       constraints: BoxConstraints(maxWidth: 393),
       child: AspectRatio(
-          aspectRatio: MediaQuery.of(context).size.aspectRatio,
-          child: Card(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Text(
+        aspectRatio: MediaQuery.of(context).size.aspectRatio,
+        child: OpenContainer(
+          closedColor: Theme.of(context).cardColor,
+          closedShape: Theme.of(context).cardTheme.shape,
+          closedBuilder: (c, f) => ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: Text(
                   widget.memoryPath.name,
                   style: Theme.of(context).textTheme.headline5,
                 ),
-                StaticMapView(
+                trailing: IconButton(
+                    tooltip: 'Edit path',
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed('/editPath/${widget.memoryPath.key}');
+                    }),
+              ),
+              Hero(
+                tag: StaticMapView,
+                child: StaticMapView(
                   points: widget.memoryPath.memoryPoints,
                   onDirectionsUpdate: setDirections,
                 ),
-                !loadingDirections
-                    ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.height),
-                            title: Text(
-                                'Total distance: ${(directions.distance / 1000).round()} km'),
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.timer),
-                            title: Text(
-                                'Walking time: ${directions.duration.inMinutes} min'),
-                          ),
-                        ],
-                      )
-                    : CenterProgress(),
-                ButtonBar(
-                  children: [
-                    OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed("/practice/${widget.memoryPath.key}");
-                        },
-                        icon: Icon(Icons.fitness_center),
-                        label: Text("Practice")),
-                  ],
-                )
-              ],
-            ),
-          )),
+              ),
+              !loadingDirections
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.height),
+                          title: Text(
+                              'Total distance: ${(directions.distance / 1000).round()} km'),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.timer),
+                          title: Text(
+                              'Walking time: ${directions.duration.inMinutes} min'),
+                        ),
+                      ],
+                    )
+                  : CenterProgress(),
+              /*ButtonBar(
+                children: [
+                  Stack(
+                    fit: StackFit.passthrough,
+                    children: [
+                      OutlinedButton.icon(
+                          icon: Icon(Icons.fitness_center),
+                          label: Text("Practice")),
+                    ],
+                  ),
+                ],
+              )*/
+            ],
+          ),
+          routeSettings:
+              RouteSettings(name: '/practice/${widget.memoryPath.key}'),
+          openBuilder: (c, f) => PracticePage(
+            memoryPath: widget.memoryPath.key,
+          ),
+          openColor: Theme.of(context).backgroundColor,
+        ),
+      ),
     );
   }
 

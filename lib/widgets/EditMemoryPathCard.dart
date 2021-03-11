@@ -67,7 +67,8 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                     children: [
                       OutlinedButton.icon(
                         icon: Hero(
-                            tag: HeroTags.AddPathIcon, child: Icon(Icons.add)),
+                            tag: HeroTags.AddPathIcon,
+                            child: Icon(Icons.check)),
                         onPressed: () {
                           if (_newMemoryPathController.text.trim() == '' ||
                               _topicController.text.trim() == '' ||
@@ -79,13 +80,14 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                           }
                           if (widget.path != null) {
                             widget.path.name = _newMemoryPathController.text;
-                            widget.path.name = _newMemoryPathController.text;
-                            widget.path.name = _newMemoryPathController.text;
-                          }
-                          widget.onCreated(MemoryPathDb(
-                              name: _newMemoryPathController.text,
-                              topic: _topicController.text,
-                              memoryPoints: _points));
+                            widget.path.topic = _topicController.text;
+                            widget.path.memoryPoints = _points;
+                            Navigator.of(context).pop(); // TODO: that's dirty
+                          } else
+                            widget.onCreated(MemoryPathDb(
+                                name: _newMemoryPathController.text,
+                                topic: _topicController.text,
+                                memoryPoints: _points));
                         },
                         label: Text('Save Memory-Path'),
                       ),
