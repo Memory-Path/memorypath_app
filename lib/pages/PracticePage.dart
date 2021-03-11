@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
+import 'package:mobile/src/HeroTags.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _PracticePageState extends State<PracticePage> {
               Column(
                 children: [
                   Hero(
-                    tag: StaticMapView,
+                    tag: "${HeroTags.MapView}${memoryPath.key}",
                     child: StaticMapView(
                       points: memoryPath.memoryPoints,
                       emphasizePointId: _currentPoint,

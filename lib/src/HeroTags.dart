@@ -1,1 +1,4 @@
-enum HeroTags { AddPathIcon }
+enum HeroTags {
+  AddPathIcon,
+  MapView,
+}
