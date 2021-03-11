@@ -63,44 +63,15 @@ class _PracticePageState extends State<PracticePage> {
                   ),
                 ],
               ),
-              Container(
-                width: 64,
-                child: Card(
-                  color: Theme.of(context).cardColor.withAlpha(64),
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return IconButton(
-                          color: index == _currentPoint
-                              ? Theme.of(context).primaryColor
-                              : null,
-                          tooltip: index >= memoryPath.memoryPoints.length
-                              ? 'Summary'
-                              : 'Point ${index + 1}: ${memoryPath.memoryPoints[index].name ?? 'unknown'}',
-                          icon: index >= memoryPath.memoryPoints.length
-                              ? Icon(Icons.format_list_bulleted)
-                              : Icon(Icons.lightbulb),
-                          onPressed: () {
-                            setState(() {
-                              _reverse = index < _currentPoint;
-                              _currentPoint = index;
-                            });
-                          });
-                    },
-                    itemCount: memoryPath.memoryPoints.length + 1,
-                    separatorBuilder: (context, index) {
-                      return Center(
-                        child: Container(
-                          width: 4,
-                          height: (MediaQuery.of(context).size.height / 2) /
-                              memoryPath.memoryPoints.length,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+              _RouteSidebar(
+                currentPoint: _currentPoint,
+                points: memoryPath.memoryPoints,
+                onPointSelected: (index) {
+                  setState(() {
+                    _reverse = index < _currentPoint;
+                    _currentPoint = index;
+                  });
+                },
               )
             ],
           ),
@@ -117,6 +88,58 @@ class _PracticePageState extends State<PracticePage> {
                 },
               )
             : null);
+  }
+}
+
+class _RouteSidebar extends StatelessWidget {
+  @required
+  final List<MemoryPointDb> points;
+  @required
+  final int currentPoint;
+  @required
+  final Function(int) onPointSelected;
+
+  const _RouteSidebar(
+      {Key key, this.currentPoint, this.onPointSelected, this.points})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 64,
+      child: Card(
+        color: Theme.of(context).cardColor.withAlpha(64),
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return IconButton(
+                color: index == currentPoint
+                    ? Theme.of(context).primaryColor
+                    : null,
+                tooltip: index >= points.length
+                    ? 'Summary'
+                    : 'Point ${index + 1}: ${points[index].name ?? 'unknown'}',
+                icon: index >= points.length
+                    ? Icon(Icons.format_list_bulleted)
+                    : Icon(Icons.lightbulb),
+                onPressed: () {
+                  if (currentPoint != index) onPointSelected(index);
+                });
+          },
+          itemCount: points.length + 1,
+          separatorBuilder: (context, index) {
+            return Center(
+              child: Container(
+                width: 4,
+                height:
+                    (MediaQuery.of(context).size.height / 2) / points.length,
+                color: Theme.of(context).primaryColor,
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 
