@@ -74,7 +74,8 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                               _points.length < 2) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
-                                    'Pleas fill in all fields and add at least 2 memory points.')));
+                                    'Please fill in all fields and add at least 2 memory points.')));
+                            return;
                           }
                           if (widget.path != null) {
                             widget.path.name = _newMemoryPathController.text;

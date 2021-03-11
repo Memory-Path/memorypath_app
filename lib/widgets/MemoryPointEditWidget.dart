@@ -51,6 +51,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     super.dispose();
   }
 
+  /// TODO: move into separate class
   Widget _editTitleTextField() {
     if (_isEditingName)
       return TextField(
@@ -101,6 +102,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
         shrinkWrap: true,
         children: [
           ListTile(title: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
+
+          /// TODO: use `TODO:` instead of `ToDo:`
           ListTile(title: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
           _editTitleTextField(),
           ListTile(
@@ -110,11 +113,15 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
           )),
           ListTile(title: widget.mapView),
           ListTile(title: Text("Question:")),
+
+          /// TODO: Semantics: Should use label and helper instead of `Text`
           TextField(
             controller: _questionController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: _memoryPointState.question != null
+
+                  /// TODO: Nope, just kick out the null check and leave the label there. Semantics: strike away the trailing `...`
                   ? null
                   : "Enter question...",
             ),
@@ -130,6 +137,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText:
+
+                  /// TODO: Nope, just kick out the null check and leave the label there. Semantics: strike away the trailing `...`
                   _memoryPointState.answer != null ? null : "Enter Answer...",
             ),
             onSubmitted: (String answer) {
@@ -143,6 +152,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             children: [
               TextButton.icon(
                 onPressed: () async {
+                  /// TODO: No await, no async
                   await widget.onMemoryPointDelete;
                 },
                 icon: Icon(Icons.delete),
@@ -155,6 +165,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
                   if (_memoryPointIsValid()) {
                     await widget.onMemoryPointUpdate;
                   }
+
+                  /// TODO: Throw proper exception. Alert dialogue should be shown instead of thrown
                   throw AlertDialog(
                     title: Text("Memory-Point not valid"),
                     content: Text(

@@ -1,13 +1,13 @@
 {
-    "name": "mobile",
-    "short_name": "mobile",
+    "name": "Memory-Path",
+    "short_name": "Memory-Path",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
-    "prefer_related_applications": false,
+    "description": "Learn it (on) your way.",
+    "orientation": "any",
+    "prefer_related_applications": true,
     "icons": [
         {
             "src": "icons/Icon-192.png",

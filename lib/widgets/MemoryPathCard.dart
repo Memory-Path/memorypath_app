@@ -24,7 +24,8 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
       child: AspectRatio(
           aspectRatio: MediaQuery.of(context).size.aspectRatio,
           child: Card(
-            child: Column(
+            child: ListView(
+              shrinkWrap: true,
               children: [
                 Text(
                   widget.memoryPath.name,
@@ -53,9 +54,13 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
                     : CenterProgress(),
                 ButtonBar(
                   children: [
-                    OutlinedButton.icon(onPressed: (){
-                      Navigator.of(context).pushNamed("/practice/${widget.memoryPath.key}");
-                    }, icon: Icon(Icons.fitness_center), label: Text("Practice")),
+                    OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed("/practice/${widget.memoryPath.key}");
+                        },
+                        icon: Icon(Icons.fitness_center),
+                        label: Text("Practice")),
                   ],
                 )
               ],
