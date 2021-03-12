@@ -24,10 +24,7 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   @override
   void initState() {
     _memoryPathBox = databaseBox;
-    //_memoryPathDbState = _memoryPathBox.get(widget.memoryPathId);
-    MemoryPointDb memoryPointDb = MemoryPointDb(lat: 20, long: 30);
-    _memoryPathDbState = MemoryPathDb(
-        name: "Hahahahhaa", topic: "blabla", memoryPoints: [memoryPointDb]);
+    _memoryPathDbState = _memoryPathBox.get(widget.memoryPathId);
     super.initState();
   }
 
