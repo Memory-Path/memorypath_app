@@ -24,7 +24,7 @@ jobs:
     - run: flutter config --enable-macos-desktop
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
+        sed -i '' "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
     - run: |
         flutter pub get
         flutter build ios --release --no-codesign
@@ -56,7 +56,7 @@ jobs:
     - run: |
         flutter pub get
         flutter build web
-        sed -i "s/base href="/base href="/memorypath_app/g" build/web/index.html
+        sed -i "s/base\ href="/base\ href="\/memorypath_app/g" build/web/index.html
         flutter build apk --debug # waiting for shared credentials on GitHub
         flutter build linux
     - name: Archive production artifacts
@@ -87,7 +87,7 @@ jobs:
     - run: flutter config --enable-windows-desktop
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        ReplaceText "lib/mapbox_api_key.dart" WHATEVER %MAPBOX_API_KEY%
+        powershell -Command "(gc lib/mapbox_api_key.dart) -replace 'WHATEVER', '%MAPBOX_API_KEY%' | Out-File -encoding UTF8 lib/mapbox_api_key.dart"
     - run: |
         flutter pub get
         flutter build windows
