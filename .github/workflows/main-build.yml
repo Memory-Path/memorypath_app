@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: macos-artifacts
-        path: build/macos
+        path: build/darwin
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: linux-artifacts
-        path: build/linux/release/bundle
+        path: build/linux/x64/release/bundle
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -95,4 +95,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: windows-artifacts
-        path: build/windows
+        path: build/windows/runner/Release
