@@ -78,27 +78,32 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                         ),
                   Container(
                     constraints: BoxConstraints(
-                        maxHeight: (_points.length * 48).toDouble()),
+                        maxHeight: (_points.length * 56).toDouble()),
                     child: ReorderableListView.builder(
                         shrinkWrap: true,
                         primary: false,
                         physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (c, i) => ListTile(
+                        itemBuilder: (c, i) => Container(
                               key: ValueKey(_points[i]),
-                              onTap: () {
-                                if (widget.path != null)
-                                  Navigator.of(context).pushNamed(
-                                      '/edit/${widget.path.key}/point/$i');
-                              },
-                              leading: Icon(Icons.lightbulb),
-                              title: Text(_points[i].name),
+                              height: 56,
+                              alignment: Alignment.center,
+                              child: ListTile(
+                                onTap: () {
+                                  if (widget.path != null)
+                                    Navigator.of(context).pushNamed(
+                                        '/edit/${widget.path.key}/point/$i');
+                                },
+                                leading: Icon(Icons.lightbulb),
+                                title: Text(_points[i].name),
+                              ),
                             ),
                         itemCount: _points.length,
                         onReorder: (oldIndex, newIndex) {
-                          final point = _points[oldIndex];
-
+                          if (newIndex > oldIndex) {
+                            newIndex--;
+                          }
+                          final point = _points.removeAt(oldIndex);
                           _points.insert(newIndex, point);
-                          _points.removeAt(oldIndex);
                           if (widget.path != null)
                             widget.path.memoryPoints = _points;
                           setState(() {});
