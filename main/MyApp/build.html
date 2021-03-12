@@ -184,10 +184,12 @@ Widget build(BuildContext context) {
               .hasMatch(routeSettings.name)) {
             final match =
                 MemoryPointEditPage.routeMatch.firstMatch(routeSettings.name);
-            int point = int.parse(match.group(1));
+            int path = int.parse(match.group(1));
+            int point = int.parse(match.group(2));
             return MaterialPageRoute(
                 builder: (context) =&gt; MemoryPointEditPage(
                       memoryPointId: point,
+                      memoryPathId: path,
                     ));
           } else if (PracticePage.routeMatch.hasMatch(routeSettings.name)) {
             final match =
