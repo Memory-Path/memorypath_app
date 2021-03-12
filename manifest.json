@@ -1,0 +1,23 @@
+{
+    "name": "Memory-Path",
+    "short_name": "Memory-Path",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Learn it (on) your way.",
+    "orientation": "any",
+    "prefer_related_applications": true,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
