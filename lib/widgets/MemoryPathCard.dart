@@ -97,6 +97,12 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
     );
   }
 
+  @override
+  void didUpdateWidget(covariant MemoryPathCard oldWidget) {
+    setState(() {});
+    super.didUpdateWidget(oldWidget);
+  }
+
   void setDirections(MBDirections newDirections) {
     setState(() {
       directions = newDirections;

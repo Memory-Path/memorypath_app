@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/src/HeroTags.dart';
@@ -34,13 +35,14 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
     return Container(
       alignment: Alignment.topCenter,
       child: Container(
-        constraints: BoxConstraints(maxWidth: 393),
+        constraints: BoxConstraints(maxWidth: 768),
         child: SingleChildScrollView(
           child: Card(
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     autofocus: true,
@@ -53,9 +55,54 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                     child: EditableMapView(
                       initialMemoryPoints: _points,
                       onChange: (memoryPoints) {
-                        _points = memoryPoints;
+                        setState(() {
+                          _points = memoryPoints;
+
+                          if (widget.path != null)
+                            widget.path.memoryPoints = _points;
+                        });
                       },
                     ),
+                  ),
+                  _points.isNotEmpty
+                      ? ListTile(
+                          leading: Icon(Icons.info),
+                          title: widget.path != null
+                              ? Text('Tap on list item to edit point details')
+                              : Text(
+                                  'Save your path and come back to edit point details'),
+                        )
+                      : ListTile(
+                          leading: Icon(Icons.touch_app),
+                          title: Text('Tap on map to add Memory-Points'),
+                        ),
+                  Container(
+                    constraints: BoxConstraints(
+                        maxHeight: (_points.length * 48).toDouble()),
+                    child: ReorderableListView.builder(
+                        shrinkWrap: true,
+                        primary: false,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (c, i) => ListTile(
+                              key: ValueKey(_points[i]),
+                              onTap: () {
+                                if (widget.path != null)
+                                  Navigator.of(context).pushNamed(
+                                      '/edit/${widget.path.key}/point/$i');
+                              },
+                              leading: Icon(Icons.lightbulb),
+                              title: Text(_points[i].name),
+                            ),
+                        itemCount: _points.length,
+                        onReorder: (oldIndex, newIndex) {
+                          final point = _points[oldIndex];
+
+                          _points.insert(newIndex, point);
+                          _points.removeAt(oldIndex);
+                          if (widget.path != null)
+                            widget.path.memoryPoints = _points;
+                          setState(() {});
+                        }),
                   ),
                   TextField(
                     autofocus: true,
@@ -81,7 +128,7 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                           if (widget.path != null) {
                             widget.path.name = _newMemoryPathController.text;
                             widget.path.topic = _topicController.text;
-                            widget.path.memoryPoints = _points;
+                            //widget.path.memoryPoints = _points;
                             Navigator.of(context).pop(); // TODO: that's dirty
                           } else
                             widget.onCreated(MemoryPathDb(

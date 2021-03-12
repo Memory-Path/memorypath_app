@@ -7,7 +7,7 @@ import 'package:mobile/widgets/MemoryPointEditWidget.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPointEditPage extends StatefulWidget {
-  static final RegExp routeMatch = RegExp(r'^\/memorypoint\/edit\/(\d+)$');
+  static final RegExp routeMatch = RegExp(r'^\/edit\/(\d+)\/point\/(\d+)$');
   final int memoryPointId;
   final int memoryPathId;
 

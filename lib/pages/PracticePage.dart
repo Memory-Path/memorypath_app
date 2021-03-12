@@ -45,7 +45,7 @@ class _PracticePageState extends State<PracticePage> {
                     child: StaticMapView(
                       points: memoryPath.memoryPoints,
                       emphasizePointId: _currentPoint,
-                      key: GlobalKey(),
+                      //key: GlobalKey(),
                     ),
                   ), // TODO: dirty code
                   Expanded(

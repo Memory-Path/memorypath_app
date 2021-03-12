@@ -24,12 +24,14 @@ class StaticMapView extends StatefulWidget {
 }
 
 class _StaticMapViewState extends State<StaticMapView> {
+  MapViewController _controller = MapViewController();
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
         children: [
           MapView(
+            controller: _controller,
             showLocationButton: false,
             waypoints: mp2m(widget.points),
             onDirectionsUpdate: widget?.onDirectionsUpdate ?? (d) {},
@@ -41,6 +43,13 @@ class _StaticMapViewState extends State<StaticMapView> {
       ),
       height: MediaQuery.of(context).size.height / 4,
     );
+  }
+
+  @override
+  didUpdateWidget(StaticMapView oldWidget) {
+    if (oldWidget.points != widget.points)
+      _controller.waypoints = mp2m(widget.points);
+    super.didUpdateWidget(oldWidget);
   }
 
   List<Marker> mp2m(List<MemoryPointDb> points) {
