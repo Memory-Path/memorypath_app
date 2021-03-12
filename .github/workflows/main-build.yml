@@ -56,7 +56,7 @@ jobs:
     - run: |
         flutter pub get
         flutter build web
-        sed -i "s/base href="/base href="/memorypath_app/g"
+        sed -i "s/base href="/base href="/memorypath_app/g" build/web/index.html
         flutter build apk --debug # waiting for shared credentials on GitHub
         flutter build linux
     - name: Archive production artifacts
