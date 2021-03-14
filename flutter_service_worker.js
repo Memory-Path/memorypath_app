@@ -6,14 +6,14 @@ const RESOURCES = {
   "manifest.json": "6c3dcbd7de98b2e3650cab4860062752",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"assets/NOTICES": "c6bc00906066677c00c14558f0766462",
+"assets/NOTICES": "20d9fa1cac6123226742f0e515a37c2b",
 "assets/assets/images/blurry_background.jpg": "ce8c903b7e84daa095e2157c3f97c8f8",
 "assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac",
 "assets/AssetManifest.json": "ea6974cf9d575fe822172151c856681c",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"index.html": "e5616ddad68d0d1913c1e641153b13a3",
-"/": "e5616ddad68d0d1913c1e641153b13a3",
-"main.dart.js": "8b1646c5dc10487a41152354b45a6640",
+"index.html": "85c68e8aba4229e863f73d92cd795e25",
+"/": "85c68e8aba4229e863f73d92cd795e25",
+"main.dart.js": "1ad4bd95b77283d4b8cd9209c4a07e22",
 "version.json": "d75b5ea4d59e2aafe556a5d9ddc482f3",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796"
 };
