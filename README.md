@@ -2,7 +2,7 @@
 
 ![Coveralls github](https://img.shields.io/coveralls/github/Memory-Path/memorypath_app?style=for-the-badge) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Memory-Path/memorypath_app/CI?label=tests&style=for-the-badge) 
 
-Collaboration Base for the Memory-Path-Team
+**Try [the online demo](https://memory-path.github.io/memorypath_app/#/)!**
 
 ## Getting started
 
