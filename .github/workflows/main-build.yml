@@ -24,7 +24,7 @@ jobs:
     - run: flutter config --enable-macos-desktop
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        sed -i '' "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
+        sed -i '' "s/WHATEVER/${{secrets.MAPBOX_API_KEY}}/g" lib/mapbox_api_key.dart
     - run: |
         flutter pub get
         flutter build ios --release --no-codesign
@@ -52,7 +52,7 @@ jobs:
         flutter config --enable-linux-desktop
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        sed -i "s/WHATEVER/$MAPBOX_API_KEY/g" lib/mapbox_api_key.dart
+        sed -i "s/WHATEVER/${{secrets.MAPBOX_API_KEY}}/g" lib/mapbox_api_key.dart
     - run: |
         flutter pub get
         flutter build web
@@ -87,7 +87,7 @@ jobs:
     - run: flutter config --enable-windows-desktop
     - run: |
         cp lib/mapbox_api_key.dart.example lib/mapbox_api_key.dart
-        powershell -Command "(gc lib/mapbox_api_key.dart) -replace 'WHATEVER', '%MAPBOX_API_KEY%' | Out-File -encoding UTF8 lib/mapbox_api_key.dart"
+        powershell -Command "(gc lib/mapbox_api_key.dart) -replace 'WHATEVER', '%{{secrets.MAPBOX_API_KEY}}%' | Out-File -encoding UTF8 lib/mapbox_api_key.dart"
     - run: |
         flutter pub get
         flutter build windows
