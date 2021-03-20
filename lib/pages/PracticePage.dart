@@ -1,9 +1,12 @@
 import 'package:animations/animations.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/HeroTags.dart';
+import 'package:mobile/widgets/ResponsiveCard.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
@@ -21,6 +24,8 @@ class _PracticePageState extends State<PracticePage> {
   int _currentPoint = 0;
   bool _reverse = false;
 
+  Map<int, bool> _pointsAnswered = {};
+
   @override
   void initState() {
     memoryPath = databaseBox.get(widget.memoryPath);
@@ -30,6 +35,14 @@ class _PracticePageState extends State<PracticePage> {
 
   @override
   Widget build(BuildContext context) {
+    double percentage;
+    if (_pointsAnswered.isNotEmpty) {
+      percentage = 0;
+      _pointsAnswered.forEach((key, value) {
+        if (value) percentage++;
+      });
+      percentage /= _pointsAnswered.length;
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text('Practice Memory-Path ${memoryPath.name}'),
@@ -50,26 +63,33 @@ class _PracticePageState extends State<PracticePage> {
                   ), // TODO: dirty code
                   Expanded(
                     child: PageTransitionSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      reverse: _reverse,
-                      transitionBuilder:
-                          (child, animation, secondaryAnimation) {
-                        return SharedAxisTransition(
-                            child: child,
-                            animation: animation,
-                            secondaryAnimation: secondaryAnimation,
-                            transitionType: SharedAxisTransitionType.vertical);
-                      },
-                      layoutBuilder:
-                          PageTransitionSwitcher.defaultLayoutBuilder,
-                      child: _currentPoint < memoryPath.memoryPoints.length
-                          ? new _PointView(
-                              key: GlobalKey(),
-                              point: memoryPath.memoryPoints[_currentPoint])
-                          : Center(
-                              child: Text('Summary'),
-                            ),
-                    ),
+                        duration: const Duration(milliseconds: 300),
+                        reverse: _reverse,
+                        transitionBuilder:
+                            (child, animation, secondaryAnimation) {
+                          return SharedAxisTransition(
+                              child: child,
+                              animation: animation,
+                              secondaryAnimation: secondaryAnimation,
+                              transitionType:
+                                  SharedAxisTransitionType.vertical);
+                        },
+                        layoutBuilder:
+                            PageTransitionSwitcher.defaultLayoutBuilder,
+                        child: _currentPoint < memoryPath.memoryPoints.length
+                            ? new _PointView(
+                                key: GlobalKey(),
+                                point: memoryPath.memoryPoints[_currentPoint],
+                                onAnswered: (correct) {
+                                  _pointsAnswered[_currentPoint] = correct;
+                                  setState(() {
+                                    _currentPoint++;
+                                  });
+                                },
+                              )
+                            : SummaryCard(
+                                percentage: percentage,
+                              )),
                   ),
                 ],
               ),
@@ -98,6 +118,26 @@ class _PracticePageState extends State<PracticePage> {
                 },
               )
             : null);
+  }
+}
+
+class SummaryCard extends StatelessWidget {
+  final double percentage;
+
+  const SummaryCard({Key key, this.percentage}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveCard(
+      child: percentage != null
+          ? ListTile(
+              leading: Icon(Icons.pie_chart),
+              title: Text('${(percentage * 100).round()} % correct'),
+            )
+          : ListTile(
+              leading: Icon(Icons.info),
+              title: Text('Try to answer some questions...'),
+            ),
+    );
   }
 }
 
@@ -155,8 +195,9 @@ class _RouteSidebar extends StatelessWidget {
 
 class _PointView extends StatefulWidget {
   final MemoryPointDb point;
+  final Function(bool correct) onAnswered;
 
-  const _PointView({Key key, this.point}) : super(key: key);
+  const _PointView({Key key, this.point, this.onAnswered}) : super(key: key);
 
   @override
   __PointViewState createState() => __PointViewState();
@@ -167,51 +208,68 @@ class __PointViewState extends State<_PointView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(32),
-      alignment: Alignment.topCenter,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 768),
-        child: Card(
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  widget.point.name ?? "unknown",
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.question_answer),
-                title: Text(widget.point.question ?? "unknown"),
-              ),
-              PageTransitionSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation, secondaryAnimation) {
-                    return SharedAxisTransition(
-                        child: child,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical);
-                  },
-                  layoutBuilder: PageTransitionSwitcher.defaultLayoutBuilder,
-                  child: _showAnswer
-                      ? ListTile(
+    return ResponsiveCard(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              widget.point.name ?? "unknown",
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.question_answer),
+            title: Text(widget.point.question ?? "unknown"),
+          ),
+          PageTransitionSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation, secondaryAnimation) {
+                return SharedAxisTransition(
+                    child: child,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    transitionType: SharedAxisTransitionType.vertical);
+              },
+              layoutBuilder: PageTransitionSwitcher.defaultLayoutBuilder,
+              child: _showAnswer
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
                           leading: Icon(Icons.edit_location),
                           title: Text(widget.point.answer ?? "unknown"),
-                        )
-                      : ButtonBar(
+                        ),
+                        Divider(),
+                        ListTile(
+                          title: Text(
+                            'Did you know the correct answer?',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        ButtonBar(
+                          //mainAxisSize: MainAxisSize.min,
                           children: [
-                            OutlinedButton(
-                                onPressed: () =>
-                                    setState(() => _showAnswer = true),
-                                child: Text("Show answer")),
+                            TextButton.icon(
+                                icon: Icon(Icons.thumb_up),
+                                onPressed: () => widget.onAnswered(true),
+                                label: Text("Yes")),
+                            TextButton.icon(
+                                icon: Icon(Icons.thumb_down),
+                                onPressed: () => widget.onAnswered(false),
+                                label: Text("No")),
                           ],
-                        )),
-            ],
-            mainAxisSize: MainAxisSize.min,
-          ),
-        ),
+                        ),
+                      ],
+                    )
+                  : ButtonBar(
+                      children: [
+                        OutlinedButton(
+                            onPressed: () => setState(() => _showAnswer = true),
+                            child: Text("Show answer")),
+                      ],
+                    )),
+        ],
+        mainAxisSize: MainAxisSize.min,
       ),
     );
   }
