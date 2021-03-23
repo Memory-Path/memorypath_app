@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/MemoryPoint.dart';
-import 'package:mobile/widgets/MemoryPointEditWidget.dart';
+import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPointEditPage extends StatefulWidget {
@@ -19,25 +18,23 @@ class MemoryPointEditPage extends StatefulWidget {
 
 class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   MemoryPathDb _memoryPathDbState;
-  Box _memoryPathBox;
 
   @override
   void initState() {
-    _memoryPathBox = databaseBox;
-    _memoryPathDbState = _memoryPathBox.get(widget.memoryPathId);
+    _memoryPathDbState = databaseBox.get(widget.memoryPathId);
     super.initState();
   }
 
-  Future<void> onMemoryPointUpdate(MemoryPoint memoryPoint) async {
+  void onMemoryPointUpdate(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints[widget.memoryPointId] =
         memoryPoint.toMemoryPointDb();
-    await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
     Navigator.of(context).pop();
   }
 
-  Future<void> onMemoryPointDelete(MemoryPoint memoryPoint) async {
+  void onMemoryPointDelete(MemoryPoint memoryPoint) async {
     _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
-    await _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
     Navigator.of(context).pop();
   }
 
@@ -53,16 +50,17 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
               if (_memoryPathDbState.memoryPoints[widget.memoryPointId].name ==
                   null) {
                 _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
-                _memoryPathBox.putAt(widget.memoryPathId, _memoryPathDbState);
+                databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
               }
               Navigator.pop(context);
             }),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(16.0),
         child: Container(
-          width: 500,
-          height: 700,
+          constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height,
+              maxWidth: MediaQuery.of(context).size.width),
           child: MemoryPointEditWidget(
             memoryPathName: _memoryPathDbState.name,
             memoryPathTopic: _memoryPathDbState.topic,

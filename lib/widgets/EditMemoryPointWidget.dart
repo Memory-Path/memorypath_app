@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
+import 'package:mobile/widgets/TitleTextField.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
-typedef Future<void> OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
+typedef void OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
 
 class MemoryPointEditWidget extends StatefulWidget {
   final String memoryPathName;
@@ -27,7 +28,6 @@ class MemoryPointEditWidget extends StatefulWidget {
 
 class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   TextEditingController _nameController;
-  bool _isEditingName = false;
   TextEditingController _questionController;
   TextEditingController _answerController;
   MemoryPoint _memoryPointState;
@@ -51,32 +51,6 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     super.dispose();
   }
 
-  /// TODO: move into separate class
-  Widget _editTitleTextField() {
-    if (_isEditingName)
-      return TextField(
-        onSubmitted: (newName) {
-          setState(() {
-            _memoryPointState.name = newName;
-            _isEditingName = false;
-          });
-        },
-        autofocus: true,
-        controller: _nameController,
-      );
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isEditingName = true;
-        });
-      },
-      child: Text(
-        _memoryPointState.name ?? "",
-        style: Theme.of(context).textTheme.headline3,
-      ),
-    );
-  }
-
   void updateImage(String image) {
     _memoryPointState.image = image;
   }
@@ -95,21 +69,33 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     return false;
   }
 
+  void _onMemoryPointNameChanged(String title) {
+    _memoryPointState.name = title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height,
+          maxWidth: MediaQuery.of(context).size.width),
       child: ListView(
         shrinkWrap: true,
         children: [
-          ListTile(title: Text(widget.memoryPathName ?? "ToDo: Throw Error")),
-
-          /// TODO: use `TODO:` instead of `ToDo:`
-          ListTile(title: Text(widget.memoryPathTopic ?? "ToDo: Throw Error")),
-          _editTitleTextField(),
+          /// TODO: Throw Error when String is null
           ListTile(
-              title: ImagePickerWidget(
-            imagePath: _memoryPointState.image,
-            onImageChanged: updateImage,
+            title: Text(widget.memoryPathName ?? ""),
+            subtitle: Text(widget.memoryPathTopic ?? ""),
+          ),
+
+          TitleTextField(_onMemoryPointNameChanged, _memoryPointState.name),
+          ListTile(
+              title: Container(
+            constraints: BoxConstraints(minHeight: 128),
+            child: ImagePickerWidget(
+              imagePath: _memoryPointState.image,
+              onImageChanged: updateImage,
+            ),
           )),
           ListTile(title: widget.mapView),
           ListTile(title: Text("Question:")),
@@ -151,9 +137,9 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton.icon(
-                onPressed: () async {
+                onPressed: () {
                   /// TODO: No await, no async
-                  await widget.onMemoryPointDelete;
+                  widget.onMemoryPointDelete;
                 },
                 icon: Icon(Icons.delete),
                 label: Text("Delete"),
@@ -161,9 +147,10 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               TextButton.icon(
                 icon: Icon(Icons.check),
                 label: Text("Accept"),
-                onPressed: () async {
+                onPressed: () {
+                  print("xxx");
                   if (_memoryPointIsValid()) {
-                    await widget.onMemoryPointUpdate;
+                    widget.onMemoryPointUpdate;
                   }
 
                   /// TODO: Throw proper exception. Alert dialogue should be shown instead of thrown

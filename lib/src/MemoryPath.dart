@@ -1,4 +1,4 @@
-import 'MemoryPoint.dart';
+import 'package:mobile/src/MemoryPoint.dart';
 
 class MemoryPath {
   int id;
@@ -6,12 +6,9 @@ class MemoryPath {
   String topic;
   List<MemoryPoint> memoryPoints;
 
-
   MemoryPath(this.id, this.name, this.topic, this.memoryPoints);
 
-  MemoryPath.fromDb(){
+  MemoryPath.fromDb() {
     //toDo: Implement
   }
 }
-
-
