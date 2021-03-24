@@ -4,7 +4,7 @@ import 'package:mobile/widgets/ImagePickerWidget.dart';
 import 'package:mobile/widgets/TitleTextField.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
-typedef void OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
+typedef Future<void> OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
 
 class MemoryPointEditWidget extends StatefulWidget {
   final String memoryPathName;
@@ -27,7 +27,6 @@ class MemoryPointEditWidget extends StatefulWidget {
 }
 
 class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
-  TextEditingController _nameController;
   TextEditingController _questionController;
   TextEditingController _answerController;
   MemoryPoint _memoryPointState;
@@ -36,41 +35,10 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   void initState() {
     //Setting Values for Widget-State
     _memoryPointState = widget.memoryPoint;
-    _nameController = TextEditingController(text: _memoryPointState.name);
     _questionController =
         TextEditingController(text: _memoryPointState.question);
     _answerController = TextEditingController(text: _memoryPointState.answer);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _questionController.dispose();
-    _answerController.dispose();
-    super.dispose();
-  }
-
-  void updateImage(String image) {
-    _memoryPointState.image = image;
-  }
-
-  bool _memoryPointIsValid() {
-    if (_memoryPointState.name != null &&
-        _memoryPointState.name.isNotEmpty &&
-        _memoryPointState.image != null &&
-        _memoryPointState.latlng != null &&
-        _memoryPointState.answer != null &&
-        _memoryPointState.answer.isNotEmpty &&
-        _memoryPointState.question != null &&
-        _memoryPointState.question.isNotEmpty) {
-      return true;
-    }
-    return false;
-  }
-
-  void _onMemoryPointNameChanged(String title) {
-    _memoryPointState.name = title;
   }
 
   @override
@@ -87,7 +55,6 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             title: Text(widget.memoryPathName ?? ""),
             subtitle: Text(widget.memoryPathTopic ?? ""),
           ),
-
           TitleTextField(_onMemoryPointNameChanged, _memoryPointState.name),
           ListTile(
               title: Container(
@@ -138,8 +105,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             children: [
               TextButton.icon(
                 onPressed: () {
-                  /// TODO: No await, no async
-                  widget.onMemoryPointDelete;
+                  widget.onMemoryPointDelete(_memoryPointState);
                 },
                 icon: Icon(Icons.delete),
                 label: Text("Delete"),
@@ -148,22 +114,14 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
                 icon: Icon(Icons.check),
                 label: Text("Accept"),
                 onPressed: () {
-                  print("xxx");
                   if (_memoryPointIsValid()) {
-                    widget.onMemoryPointUpdate;
+                    widget.onMemoryPointUpdate(_memoryPointState);
                   }
 
-                  /// TODO: Throw proper exception. Alert dialogue should be shown instead of thrown
-                  throw AlertDialog(
-                    title: Text("Memory-Point not valid"),
-                    content: Text(
-                        "You have to set all Parameters before submitting!"),
-                    actions: [
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text("ok"))
-                    ],
-                  );
+                  /// TODO: SnackBarStyle
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "Memory-Point not valid!\n You have to set all Parameters before submitting.")));
                 },
               ),
             ],
@@ -171,5 +129,34 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _questionController.dispose();
+    _answerController.dispose();
+    super.dispose();
+  }
+
+  void updateImage(String image) {
+    _memoryPointState.image = image;
+  }
+
+  bool _memoryPointIsValid() {
+    if (_memoryPointState.name != null &&
+        _memoryPointState.name.isNotEmpty &&
+        _memoryPointState.image != null &&
+        _memoryPointState.latlng != null &&
+        _memoryPointState.answer != null &&
+        _memoryPointState.answer.isNotEmpty &&
+        _memoryPointState.question != null &&
+        _memoryPointState.question.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  void _onMemoryPointNameChanged(String title) {
+    _memoryPointState.name = title;
   }
 }

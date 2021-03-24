@@ -25,19 +25,6 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
     super.initState();
   }
 
-  void onMemoryPointUpdate(MemoryPoint memoryPoint) async {
-    _memoryPathDbState.memoryPoints[widget.memoryPointId] =
-        memoryPoint.toMemoryPointDb();
-    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
-    Navigator.of(context).pop();
-  }
-
-  void onMemoryPointDelete(MemoryPoint memoryPoint) async {
-    _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
-    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,5 +63,18 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
         ),
       ),
     );
+  }
+
+  Future<void> onMemoryPointUpdate(MemoryPoint memoryPoint) async {
+    _memoryPathDbState.memoryPoints[widget.memoryPointId] =
+        memoryPoint.toMemoryPointDb();
+    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    Navigator.of(context).pop();
+  }
+
+  Future<void> onMemoryPointDelete(MemoryPoint memoryPoint) async {
+    _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
+    await databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
+    Navigator.of(context).pop();
   }
 }

@@ -53,4 +53,10 @@ class _TitleTextFieldState extends State<TitleTextField> {
     );
     return Container();
   }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
 }
