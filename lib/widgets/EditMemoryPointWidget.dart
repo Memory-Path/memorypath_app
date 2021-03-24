@@ -66,6 +66,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
           )),
           ListTile(title: widget.mapView),
           ListTile(title: Text("Question:")),
+          //RichTextField(),
 
           /// TODO: Semantics: Should use label and helper instead of `Text`
           TextField(

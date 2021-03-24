@@ -18,6 +18,8 @@ dependencies:
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
   animations: ^2.0.0
+  zefyr: ^1.0.0-dev.2.0
+  quill_delta: ^2.0.0
 
   map_api:
     #    path: ../memorypath_map_api
