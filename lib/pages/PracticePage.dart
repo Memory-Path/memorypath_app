@@ -6,6 +6,7 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/HeroTags.dart';
+import 'package:mobile/widgets/FlippingCard.dart';
 import 'package:mobile/widgets/ResponsiveCard.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
@@ -208,8 +209,8 @@ class __PointViewState extends State<_PointView> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveCard(
-      child: Column(
+    return FlippingCard(
+      front: Column(
         children: [
           ListTile(
             title: Text(
@@ -221,53 +222,49 @@ class __PointViewState extends State<_PointView> {
             leading: Icon(Icons.question_answer),
             title: Text(widget.point.question ?? "unknown"),
           ),
-          PageTransitionSwitcher(
-              duration: const Duration(milliseconds: 300),
-              transitionBuilder: (child, animation, secondaryAnimation) {
-                return SharedAxisTransition(
-                    child: child,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    transitionType: SharedAxisTransitionType.vertical);
-              },
-              layoutBuilder: PageTransitionSwitcher.defaultLayoutBuilder,
-              child: _showAnswer
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.edit_location),
-                          title: Text(widget.point.answer ?? "unknown"),
-                        ),
-                        Divider(),
-                        ListTile(
-                          title: Text(
-                            'Did you know the correct answer?',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                        ButtonBar(
-                          //mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton.icon(
-                                icon: Icon(Icons.thumb_up),
-                                onPressed: () => widget.onAnswered(true),
-                                label: Text("Yes")),
-                            TextButton.icon(
-                                icon: Icon(Icons.thumb_down),
-                                onPressed: () => widget.onAnswered(false),
-                                label: Text("No")),
-                          ],
-                        ),
-                      ],
-                    )
-                  : ButtonBar(
-                      children: [
-                        OutlinedButton(
-                            onPressed: () => setState(() => _showAnswer = true),
-                            child: Text("Show answer")),
-                      ],
-                    )),
+          ListTile(
+            title: Text(
+              'Tap to show answer.',
+              style: Theme.of(context).textTheme.caption,
+            ),
+          )
+        ],
+        mainAxisSize: MainAxisSize.min,
+      ),
+      rear: Column(
+        children: [
+          ListTile(
+            title: Text(
+              (widget.point.name ?? "unknown") +
+                  ' - ' +
+                  (widget.point.question ?? "unknown"),
+              style: Theme.of(context).textTheme.caption,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.edit_location),
+            title: Text(widget.point.answer ?? "unknown"),
+          ),
+          Divider(),
+          ListTile(
+            title: Text(
+              'Did you know the correct answer?',
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+          ButtonBar(
+            //mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton.icon(
+                  icon: Icon(Icons.thumb_up),
+                  onPressed: () => widget.onAnswered(true),
+                  label: Text("Yes")),
+              TextButton.icon(
+                  icon: Icon(Icons.thumb_down),
+                  onPressed: () => widget.onAnswered(false),
+                  label: Text("No")),
+            ],
+          ),
         ],
         mainAxisSize: MainAxisSize.min,
       ),

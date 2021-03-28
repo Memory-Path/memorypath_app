@@ -3,6 +3,7 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/EditMemoryPointWidget.dart';
+import 'package:mobile/widgets/RichTextField.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPointEditPage extends StatefulWidget {

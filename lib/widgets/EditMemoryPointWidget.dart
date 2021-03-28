@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/MemoryPoint.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
+import 'package:mobile/widgets/RichTextField.dart';
 import 'package:mobile/widgets/TitleTextField.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
