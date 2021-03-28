@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 class FlippingCard extends StatefulWidget {
   final Widget front;
   final Widget rear;
+  final double height;
 
-  const FlippingCard({Key key, this.front, this.rear}) : super(key: key);
+  const FlippingCard({Key key, this.front, this.rear, this.height})
+      : super(key: key);
 
   @override
   _FlippingCardState createState() => _FlippingCardState();
@@ -54,6 +56,7 @@ class _FlippingCardState extends State<FlippingCard> {
     setState(() {
       _showFrontSide = !_showFrontSide;
     });
+    _changeRotationAxis();
   }
 
   Widget __transitionBuilder(Widget widget, Animation<double> animation) {
@@ -79,13 +82,18 @@ class _FlippingCardState extends State<FlippingCard> {
   }
 
   Widget _buildFront() {
-    return Card(key: ValueKey(true), child: widget.front);
+    return Card(
+        key: ValueKey(true),
+        child: Container(
+          child: widget.front,
+          height: widget.height,
+        ));
   }
 
   Widget _buildRear() {
     return Card(
       key: ValueKey(false),
-      child: widget.rear,
+      child: Container(child: widget.rear, height: widget.height),
     );
   }
 }

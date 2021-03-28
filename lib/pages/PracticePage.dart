@@ -210,6 +210,7 @@ class __PointViewState extends State<_PointView> {
   @override
   Widget build(BuildContext context) {
     return FlippingCard(
+      height: MediaQuery.of(context).size.height / 2,
       front: Column(
         children: [
           ListTile(
