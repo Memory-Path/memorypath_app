@@ -205,8 +205,6 @@ class _PointView extends StatefulWidget {
 }
 
 class __PointViewState extends State<_PointView> {
-  bool _showAnswer = false;
-
   @override
   Widget build(BuildContext context) {
     return FlippingCard(
@@ -223,12 +221,13 @@ class __PointViewState extends State<_PointView> {
             leading: Icon(Icons.question_answer),
             title: Text(widget.point.question ?? "unknown"),
           ),
+          Expanded(child: Container()),
           ListTile(
             title: Text(
               'Tap to show answer.',
               style: Theme.of(context).textTheme.caption,
             ),
-          )
+          ),
         ],
         mainAxisSize: MainAxisSize.min,
       ),
@@ -246,6 +245,7 @@ class __PointViewState extends State<_PointView> {
             leading: Icon(Icons.edit_location),
             title: Text(widget.point.answer ?? "unknown"),
           ),
+          Expanded(child: Container()),
           Divider(),
           ListTile(
             title: Text(
@@ -270,11 +270,5 @@ class __PointViewState extends State<_PointView> {
         mainAxisSize: MainAxisSize.min,
       ),
     );
-  }
-
-  @override
-  void didUpdateWidget(covariant _PointView oldWidget) {
-    _showAnswer = false;
-    super.didUpdateWidget(oldWidget);
   }
 }
