@@ -46,17 +46,10 @@ class _FlippingCardState extends State<FlippingCard> {
             )));
   }
 
-  void _changeRotationAxis() {
-    setState(() {
-      _flipXAxis = !_flipXAxis;
-    });
-  }
-
   void _switchCard() {
     setState(() {
       _showFrontSide = !_showFrontSide;
     });
-    _changeRotationAxis();
   }
 
   Widget __transitionBuilder(Widget widget, Animation<double> animation) {
