@@ -1,44 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/src/MemoryPoint.dart';
+import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
-import 'package:mobile/widgets/RichTextField.dart';
 import 'package:mobile/widgets/TitleTextField.dart';
-import 'package:mobile/widgets/maps/StaticMapView.dart';
-
-typedef Future<void> OnMemoryPointChangedCallback(MemoryPoint memoryPoint);
 
 class MemoryPointEditWidget extends StatefulWidget {
-  final String memoryPathName;
-  final String memoryPathTopic;
-  final MemoryPoint memoryPoint;
-  final StaticMapView mapView;
-  final OnMemoryPointChangedCallback onMemoryPointUpdate;
-  final OnMemoryPointChangedCallback onMemoryPointDelete;
+  final MemoryPointDb memoryPoint;
 
   @override
   _MemoryPointEditWidgetState createState() => _MemoryPointEditWidgetState();
 
-  MemoryPointEditWidget(
-      {this.memoryPathName,
-      this.memoryPathTopic,
-      this.memoryPoint,
-      this.mapView,
-      this.onMemoryPointUpdate,
-      this.onMemoryPointDelete});
+  MemoryPointEditWidget({
+    this.memoryPoint,
+  });
 }
 
 class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   TextEditingController _questionController;
   TextEditingController _answerController;
-  MemoryPoint _memoryPointState;
+  MemoryPointDb _memoryPointDbState;
 
   @override
   void initState() {
     //Setting Values for Widget-State
-    _memoryPointState = widget.memoryPoint;
+    _memoryPointDbState = widget.memoryPoint;
     _questionController =
-        TextEditingController(text: _memoryPointState.question);
-    _answerController = TextEditingController(text: _memoryPointState.answer);
+        TextEditingController(text: _memoryPointDbState.question);
+    _answerController = TextEditingController(text: _memoryPointDbState.answer);
     super.initState();
   }
 
@@ -51,53 +38,34 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
       child: ListView(
         shrinkWrap: true,
         children: [
-          /// TODO: Throw Error when String is null
-          ListTile(
-            title: Text(widget.memoryPathName ?? ""),
-            subtitle: Text(widget.memoryPathTopic ?? ""),
-          ),
-          TitleTextField(_onMemoryPointNameChanged, _memoryPointState.name),
+          TitleTextField(_onMemoryPointNameChanged, _memoryPointDbState.name),
           ListTile(
               title: Container(
             constraints: BoxConstraints(minHeight: 128),
             child: ImagePickerWidget(
-              imagePath: _memoryPointState.image,
+              imagePath: _memoryPointDbState.image,
               onImageChanged: updateImage,
             ),
           )),
-          ListTile(title: widget.mapView),
-          ListTile(title: Text("Question:")),
-
-          /// TODO: Semantics: Should use label and helper instead of `Text`
           TextField(
             controller: _questionController,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: _memoryPointState.question != null
-
-                  /// TODO: Nope, just kick out the null check and leave the label there. Semantics: strike away the trailing `...`
-                  ? null
-                  : "Enter question...",
-            ),
+                border: OutlineInputBorder(),
+                labelText: 'Question, Keyword or Note'),
             onSubmitted: (String question) {
               setState(() {
-                _memoryPointState.question = question;
+                _memoryPointDbState.question = question;
               });
             },
           ),
-          ListTile(title: Text("Answer:")),
           TextField(
             controller: _answerController,
+            maxLines: null,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText:
-
-                  /// TODO: Nope, just kick out the null check and leave the label there. Semantics: strike away the trailing `...`
-                  _memoryPointState.answer != null ? null : "Enter Answer...",
-            ),
+                border: OutlineInputBorder(), labelText: 'Answer'),
             onSubmitted: (String answer) {
               setState(() {
-                _memoryPointState.answer = answer;
+                _memoryPointDbState.answer = answer;
               });
             },
           ),
@@ -106,7 +74,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
             children: [
               TextButton.icon(
                 onPressed: () {
-                  widget.onMemoryPointDelete(_memoryPointState);
+                  _onMemoryPointDelete();
+                  Navigator.of(context).pop();
                 },
                 icon: Icon(Icons.delete),
                 label: Text("Delete"),
@@ -116,7 +85,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
                 label: Text("Accept"),
                 onPressed: () {
                   if (_memoryPointIsValid()) {
-                    widget.onMemoryPointUpdate(_memoryPointState);
+                    _onMemoryPointUpdate(_memoryPointDbState);
+                    Navigator.of(context).pop();
                   }
 
                   /// TODO: SnackBarStyle
@@ -140,24 +110,34 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
   }
 
   void updateImage(String image) {
-    _memoryPointState.image = image;
+    _memoryPointDbState.image = image;
   }
 
   bool _memoryPointIsValid() {
-    if (_memoryPointState.name != null &&
-        _memoryPointState.name.isNotEmpty &&
-        _memoryPointState.image != null &&
-        _memoryPointState.latlng != null &&
-        _memoryPointState.answer != null &&
-        _memoryPointState.answer.isNotEmpty &&
-        _memoryPointState.question != null &&
-        _memoryPointState.question.isNotEmpty) {
+    if (_memoryPointDbState.name != null &&
+        _memoryPointDbState.name.isNotEmpty &&
+        _memoryPointDbState.image != null &&
+        _memoryPointDbState.answer != null &&
+        _memoryPointDbState.answer.isNotEmpty &&
+        _memoryPointDbState.question != null &&
+        _memoryPointDbState.question.isNotEmpty) {
       return true;
     }
     return false;
   }
 
+  void _onMemoryPointDelete() {
+    widget.memoryPoint.delete();
+  }
+
+  void _onMemoryPointUpdate(MemoryPointDb memoryPointDbState) {
+    widget.memoryPoint.name = _memoryPointDbState.name;
+    widget.memoryPoint.image = _memoryPointDbState.image;
+    widget.memoryPoint.question = _memoryPointDbState.question;
+    widget.memoryPoint.answer = _memoryPointDbState.answer;
+  }
+
   void _onMemoryPointNameChanged(String title) {
-    _memoryPointState.name = title;
+    _memoryPointDbState.name = title;
   }
 }
