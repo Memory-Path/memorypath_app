@@ -1,6 +1,6 @@
+import 'package:camera_camera/camera_camera.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 typedef void OnUpdateImageCallback(String image);
 
@@ -9,7 +9,6 @@ const String STORAGE_PATH = "assets/images/";
 class ImagePickerWidget extends StatefulWidget {
   //config:
 
-  final int imageQuality = 50;
   final String defaultImage = "assets/images/blurry_background.jpg";
 
   // image that is lately filled by Gallery or Camera
@@ -26,40 +25,46 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Future<FilePickerCross> _imageStateFuture;
   FilePickerCross _imageState;
   String _imagePathState;
-  final ImagePicker _imagePicker = ImagePicker();
 
   void initState() {
     _imagePathState = widget.imagePath;
     if (_imagePathState != null) {
       _imageStateFuture =
           FilePickerCross.fromInternalPath(path: _imagePathState);
-      print(_imagePathState);
     }
     super.initState();
   }
 
   _imgFromCamera() async {
-    final PickedFile image = await _imagePicker.getImage(
-        source: ImageSource.camera, imageQuality: widget.imageQuality);
-    final FilePickerCross imageData =
-        FilePickerCross(await image.readAsBytes());
-    await imageData.saveToPath(path: "$STORAGE_PATH/x.jpg");
-    setState(() {
-      _imagePathState = "$STORAGE_PATH/x.jpg";
-      _imageState = imageData;
-      widget.onImageChanged(_imagePathState);
-    });
+    print("im here");
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => CameraCamera(
+                  onFile: (file) async {
+                    final FilePickerCross imageData =
+                        FilePickerCross(await file.readAsBytes());
+                    final String path =
+                        STORAGE_PATH + DateTime.now().toString() + ".png";
+                    await imageData.saveToPath(path: path);
+                    Navigator.pop(context);
+                    setState(() {
+                      _imagePathState = path;
+                      _imageState = imageData;
+                      widget.onImageChanged(_imagePathState);
+                    });
+                  },
+                )));
   }
 
-  _imgFromGallery() async {
-    final PickedFile image = await _imagePicker.getImage(
-        source: ImageSource.gallery, imageQuality: widget.imageQuality);
-    final FilePickerCross imageData =
-        FilePickerCross(await image.readAsBytes());
-    imageData.saveToPath(path: _imagePathState ?? "$STORAGE_PATH /x");
+  _imgFromStorage() async {
+    FilePickerCross image =
+        await FilePickerCross.importFromStorage(type: FileTypeCross.image);
+    final String path = STORAGE_PATH + DateTime.now().toString() + ".png";
+    image.saveToPath(path: path);
     setState(() {
-      _imagePathState = "$STORAGE_PATH/x";
-      _imageState = imageData;
+      _imageState = image;
+      _imagePathState = path;
       widget.onImageChanged(_imagePathState);
     });
   }
@@ -69,34 +74,28 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     if (Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.linux ||
         Theme.of(context).platform == TargetPlatform.macOS) {
-      FilePickerCross image = await FilePickerCross.importFromStorage(
-          fileExtension: "jpg, png", type: FileTypeCross.image);
-      image.saveToPath(path: "$STORAGE_PATH/x");
-      setState(() {
-        _imageState = image;
-        _imagePathState = _imagePathState ?? "$STORAGE_PATH/x";
-      });
+      await _imgFromStorage();
     } else {
       showModalBottomSheet(
           context: context,
           builder: (BuildContext context) {
             return SafeArea(
               child: Container(
-                child: new Wrap(
+                child: Wrap(
                   children: <Widget>[
-                    new ListTile(
-                        leading: new Icon(Icons.photo_library),
-                        title: new Text('Photo Library'),
+                    ListTile(
+                        leading: Icon(Icons.photo_library),
+                        title: Text('Photo Library'),
                         onTap: () async {
-                          await _imgFromGallery();
+                          await _imgFromStorage();
                           Navigator.of(context).pop();
                         }),
-                    new ListTile(
-                      leading: new Icon(Icons.photo_camera),
-                      title: new Text('Camera'),
+                    ListTile(
+                      leading: Icon(Icons.photo_camera),
+                      title: Text('Camera'),
                       onTap: () async {
-                        await _imgFromCamera();
                         Navigator.of(context).pop();
+                        await _imgFromCamera();
                       },
                     ),
                   ],

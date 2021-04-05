@@ -60,7 +60,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
           ),
           TextField(
             controller: _answerController,
-            maxLines: null,
+            // maxLines: null,
+            // keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
                 border: OutlineInputBorder(), labelText: 'Answer'),
             onSubmitted: (String answer) {
@@ -122,8 +123,9 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
         _memoryPointDbState.question != null &&
         _memoryPointDbState.question.isNotEmpty) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   void _onMemoryPointDelete() {
