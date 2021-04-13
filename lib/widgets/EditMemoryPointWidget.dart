@@ -3,25 +3,31 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/widgets/ImagePickerWidget.dart';
 import 'package:mobile/widgets/TitleTextField.dart';
 
-class MemoryPointEditWidget extends StatefulWidget {
+/// Draft of the MemoryPointSheet, where it is possible to fill in the Learning-Content for Memorization in the [PracticePage]
+
+class EditMemoryPointWidget extends StatefulWidget {
+  /// The actual Memory-Point ([MemoryPointDb]) that is edited in this Widget
   final MemoryPointDb memoryPoint;
 
   @override
-  _MemoryPointEditWidgetState createState() => _MemoryPointEditWidgetState();
+  _EditMemoryPointWidgetState createState() => _EditMemoryPointWidgetState();
 
-  MemoryPointEditWidget({
+  EditMemoryPointWidget({
     this.memoryPoint,
   });
 }
 
-class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
+class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
+  /// TextController to track the User-Input
   TextEditingController _questionController;
   TextEditingController _answerController;
+
+  /// MemoryPoint-State to track the actual values that the User inserted/edited
   MemoryPointDb _memoryPointDbState;
 
   @override
   void initState() {
-    //Setting Values for Widget-State
+    ///Initial setting of the values for the Widget-State
     _memoryPointDbState = widget.memoryPoint;
     _questionController =
         TextEditingController(text: _memoryPointDbState.question);
@@ -38,6 +44,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
       child: ListView(
         shrinkWrap: true,
         children: [
+          ///TextField to edit the Title of the MemoryPoint
           TitleTextField(_onMemoryPointNameChanged, _memoryPointDbState.name),
           ListTile(
               title: Container(
@@ -58,6 +65,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               });
             },
           ),
+
+          ///lately replaced by a RichTextEditor-Field
           TextField(
             controller: _answerController,
             // maxLines: null,
@@ -70,6 +79,8 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
               });
             },
           ),
+
+          /// Button Row for either Deletion or Accepting the MemoryPoint
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -103,6 +114,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     );
   }
 
+  ///dispose the TextController when Widget is disposed
   @override
   void dispose() {
     _questionController.dispose();
@@ -110,10 +122,12 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     super.dispose();
   }
 
+  ///Callback for the [ImagePickerWidget] to track the new Path of the Image, selected from the User
   void updateImage(String image) {
     _memoryPointDbState.image = image;
   }
 
+  ///Logic check, if all fields are set properly
   bool _memoryPointIsValid() {
     if (_memoryPointDbState.name != null &&
         _memoryPointDbState.name.isNotEmpty &&
@@ -128,10 +142,12 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     }
   }
 
+  ///Callback, when a MemoryPoint is deleted
   void _onMemoryPointDelete() {
     widget.memoryPoint.delete();
   }
 
+  ///Callback, when a MemoryPoint is updated
   void _onMemoryPointUpdate(MemoryPointDb memoryPointDbState) {
     widget.memoryPoint.name = _memoryPointDbState.name;
     widget.memoryPoint.image = _memoryPointDbState.image;
@@ -139,6 +155,7 @@ class _MemoryPointEditWidgetState extends State<MemoryPointEditWidget> {
     widget.memoryPoint.answer = _memoryPointDbState.answer;
   }
 
+  /// Callback for the [TitleTExtField]
   void _onMemoryPointNameChanged(String title) {
     _memoryPointDbState.name = title;
   }

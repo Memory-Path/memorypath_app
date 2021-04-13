@@ -3,6 +3,9 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 
+/// deprecated class of the EditMemoryPointPage
+/// just for overall functionality-reasons - will be replaced soon
+
 class MemoryPointEditPage extends StatefulWidget {
   static final RegExp routeMatch = RegExp(r'^\/edit\/(\d+)\/point\/(\d+)$');
   final int memoryPointId;
@@ -46,7 +49,7 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height,
               maxWidth: MediaQuery.of(context).size.width),
-          child: MemoryPointEditWidget(
+          child: EditMemoryPointWidget(
             memoryPoint:
                 _memoryPathDbState.memoryPoints.elementAt(widget.memoryPointId),
           ),

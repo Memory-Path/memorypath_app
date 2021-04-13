@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 
 typedef void OnUpdateImageCallback(String image);
 
+///Configuration for the Storage-Path, where images, that are used in the App, are stored.
 const String STORAGE_PATH = "assets/images/";
 
 class ImagePickerWidget extends StatefulWidget {
-  //config:
-
+  ///Configuration of the default image, that is displayed, when no image is set yet
   final String defaultImage = "assets/images/blurry_background.jpg";
 
-  // image that is lately filled by Gallery or Camera
+  ///The Image of a MemoryPoint - can be null
   final String imagePath;
+
+  /// Callback for [EditMemoryPointWidget]
   final OnUpdateImageCallback onImageChanged;
 
   @override
@@ -22,11 +24,17 @@ class ImagePickerWidget extends StatefulWidget {
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
+  ///image, that is not yet loaded
   Future<FilePickerCross> _imageStateFuture;
+
+  ///loaded image
   FilePickerCross _imageState;
+
+  ///actual imagePath, that can be modified by the User
   String _imagePathState;
 
   void initState() {
+    ///set the actual values passed by the constructor
     _imagePathState = widget.imagePath;
     if (_imagePathState != null) {
       _imageStateFuture =
@@ -35,84 +43,20 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     super.initState();
   }
 
-  _imgFromCamera() async {
-    print("im here");
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => CameraCamera(
-                  onFile: (file) async {
-                    final FilePickerCross imageData =
-                        FilePickerCross(await file.readAsBytes());
-                    final String path =
-                        STORAGE_PATH + DateTime.now().toString() + ".png";
-                    await imageData.saveToPath(path: path);
-                    Navigator.pop(context);
-                    setState(() {
-                      _imagePathState = path;
-                      _imageState = imageData;
-                      widget.onImageChanged(_imagePathState);
-                    });
-                  },
-                )));
-  }
-
-  _imgFromStorage() async {
-    FilePickerCross image =
-        await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-    final String path = STORAGE_PATH + DateTime.now().toString() + ".png";
-    image.saveToPath(path: path);
-    setState(() {
-      _imageState = image;
-      _imagePathState = path;
-      widget.onImageChanged(_imagePathState);
-    });
-  }
-
-  //displays menu to select from Gallery or take new Picture from Camera
-  void _showPicker(BuildContext context) async {
-    if (Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.linux ||
-        Theme.of(context).platform == TargetPlatform.macOS) {
-      await _imgFromStorage();
-    } else {
-      showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return SafeArea(
-              child: Container(
-                child: Wrap(
-                  children: <Widget>[
-                    ListTile(
-                        leading: Icon(Icons.photo_library),
-                        title: Text('Photo Library'),
-                        onTap: () async {
-                          await _imgFromStorage();
-                          Navigator.of(context).pop();
-                        }),
-                    ListTile(
-                      leading: Icon(Icons.photo_camera),
-                      title: Text('Camera'),
-                      onTap: () async {
-                        Navigator.of(context).pop();
-                        await _imgFromCamera();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    //TODO: Make size of Elements responsive
     return GestureDetector(
         onTap: () async {
           _showPicker(context);
         },
-        child: _imagePathState != null //|| _imagePathState.isEmpty
+
+        ///3 Cases:
+        ///ImagePath is not set -> defaultImage
+        ///ImagePath is set already but Image not loaded -> Loading Indicator
+        ///ImagePath is set and Image loaded -> display Image
+        child: _imagePathState != null
+            //TODO: What to do with empty Path? "|| _imagePathState.isEmpty"
             ? _imageState == null
                 ? FutureBuilder(
                     future: _imageStateFuture,
@@ -209,5 +153,80 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   ),
                 ),
               ));
+  }
+
+  //TODO: Delete unused Images from Storage
+  ///Handling of the process of taking an Image via Camera
+  _imgFromCamera() async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => CameraCamera(
+                  onFile: (file) async {
+                    final FilePickerCross imageData =
+                        FilePickerCross(await file.readAsBytes());
+                    final String path =
+                        STORAGE_PATH + DateTime.now().toString() + ".png";
+                    await imageData.saveToPath(path: path);
+                    Navigator.pop(context);
+                    setState(() {
+                      _imagePathState = path;
+                      _imageState = imageData;
+                      widget.onImageChanged(_imagePathState);
+                    });
+                  },
+                )));
+  }
+
+  ///Handling the Process of selecting an Image from User-Storage
+  _imgFromStorage() async {
+    FilePickerCross image =
+        await FilePickerCross.importFromStorage(type: FileTypeCross.image);
+    final String path = STORAGE_PATH + DateTime.now().toString() + ".png";
+    image.saveToPath(path: path);
+    setState(() {
+      _imageState = image;
+      _imagePathState = path;
+      widget.onImageChanged(_imagePathState);
+    });
+  }
+
+  ///Handling the kind of Selection of an Image
+  ///for mobile devices: displays menu to select from Gallery or take new Picture from Camera
+  ///for desktop/web: only Picture from Storage
+  void _showPicker(BuildContext context) async {
+    if (Theme.of(context).platform == TargetPlatform.windows ||
+        Theme.of(context).platform == TargetPlatform.linux ||
+        Theme.of(context).platform == TargetPlatform.macOS) {
+      await _imgFromStorage();
+    } else {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: Container(
+                child: Wrap(
+                  children: <Widget>[
+                    ListTile(
+                        leading: Icon(Icons.photo_library),
+                        title: Text('Photo Library'),
+                        onTap: () async {
+                          await _imgFromStorage();
+                          Navigator.of(context).pop();
+                        }),
+                    ListTile(
+                      leading: Icon(Icons.photo_camera),
+                      title: Text('Camera'),
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await _imgFromCamera();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    }
   }
 }
