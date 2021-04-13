@@ -7,8 +7,8 @@ const RESOURCES = {
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "manifest.json": "6c3dcbd7de98b2e3650cab4860062752",
-"index.html": "0f9bc9e88f1c4c4fe8cf284a451764b6",
-"/": "0f9bc9e88f1c4c4fe8cf284a451764b6",
+"index.html": "eea80a656147dda89ca511806d16ac5c",
+"/": "eea80a656147dda89ca511806d16ac5c",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-solid-900.ttf": "dffd9504fcb1894620fa41c700172994",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-regular-400.ttf": "4b6a9b7c20913279a3ad3dd9c96e155b",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf": "00bb2b684be61e89d1bc7d75dee30b58",
@@ -17,7 +17,7 @@ const RESOURCES = {
 "assets/AssetManifest.json": "94a7fee61c36ec956183a1091eeaaff6",
 "assets/assets/images/blurry_background.jpg": "ce8c903b7e84daa095e2157c3f97c8f8",
 "assets/FontManifest.json": "3ddd9b2ab1c2ae162d46e3cc7b78ba88",
-"main.dart.js": "f0f9f99c440c2a32e78ce1abacca5fbf",
+"main.dart.js": "a1a53b3859d59280a645c439debe1172",
 "version.json": "d75b5ea4d59e2aafe556a5d9ddc482f3"
 };
 
