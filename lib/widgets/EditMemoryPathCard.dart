@@ -1,7 +1,9 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/src/HeroTags.dart';
+import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 import 'package:mobile/widgets/maps/EditableMapView.dart';
 
 class EditMemoryPathCard extends StatefulWidget {
@@ -20,23 +22,27 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
 
   List<MemoryPointDb> _points = [];
 
+  Map<int, double> _height = {};
+
   @override
   void initState() {
     if (widget.path != null) {
       _newMemoryPathController.text = widget.path.name;
       _topicController.text = widget.path.topic;
       _points = widget.path.memoryPoints;
+      for (int i = 0; i < _points.length; i++) {
+        _height[0] = 56;
+      }
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topCenter,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 768),
-        child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 768),
           child: Card(
             child: Padding(
               padding:
@@ -78,24 +84,15 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                         ),
                   Container(
                     constraints: BoxConstraints(
-                        maxHeight: (_points.length * 56).toDouble()),
+                        maxHeight: _points.length * 56.toDouble()),
                     child: ReorderableListView.builder(
                         shrinkWrap: true,
                         primary: false,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (c, i) => Container(
+                        //physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (c, i) => MemoryPointListTile(
                               key: ValueKey(_points[i]),
-                              height: 56,
-                              alignment: Alignment.center,
-                              child: ListTile(
-                                onTap: () {
-                                  if (widget.path != null)
-                                    Navigator.of(context).pushNamed(
-                                        '/edit/${widget.path.key}/point/$i');
-                                },
-                                leading: Icon(Icons.lightbulb),
-                                title: Text(_points[i].name),
-                              ),
+                              point: _points[i],
+                              onHeightChange: (value) => _height[i] = value,
                             ),
                         itemCount: _points.length,
                         onReorder: (oldIndex, newIndex) {
@@ -152,6 +149,47 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
         ),
       ),
     );
+  }
+}
+
+class MemoryPointListTile extends StatefulWidget {
+  final MemoryPointDb point;
+  final HeightChangeCallback onHeightChange;
+
+  const MemoryPointListTile({Key key, this.point, this.onHeightChange})
+      : super(key: key);
+  @override
+  _MemoryPointListTileState createState() => _MemoryPointListTileState();
+}
+
+typedef HeightChangeCallback(double height);
+
+class _MemoryPointListTileState extends State<MemoryPointListTile>
+    with AfterLayoutMixin {
+  GlobalKey _heightKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: _heightKey,
+      child: ExpansionTile(
+        trailing: Container(
+          constraints: BoxConstraints.loose(Size(0, 0)),
+        ),
+        leading: Icon(Icons.lightbulb),
+        title: Text(widget.point.name),
+        children: [
+          EditMemoryPointWidget(
+            memoryPoint: widget.point,
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    final newHeight = _heightKey.currentContext.size.height;
+    widget.onHeightChange(newHeight);
   }
 }
 

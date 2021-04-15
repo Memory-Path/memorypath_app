@@ -27,7 +27,13 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
     ///Initial setting of the values for the Widget-State
     _questionController =
         TextEditingController(text: widget.memoryPoint.question);
+    _questionController.addListener(() {
+      widget.memoryPoint.question = _questionController.text;
+    });
     _answerController = TextEditingController(text: widget.memoryPoint.answer);
+    _answerController.addListener(() {
+      widget.memoryPoint.answer = _answerController.text;
+    });
     super.initState();
   }
 
@@ -55,11 +61,6 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Question, Keyword or Note'),
-            onSubmitted: (String question) {
-              setState(() {
-                widget.memoryPoint.question = question;
-              });
-            },
           ),
 
           ///lately replaced by a RichTextEditor-Field
