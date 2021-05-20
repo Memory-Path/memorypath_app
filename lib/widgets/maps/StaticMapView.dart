@@ -5,6 +5,13 @@ import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class StaticMapView extends StatefulWidget {
+  const StaticMapView(
+      {Key key,
+      this.points = const <MemoryPointDb>[],
+      this.emphasizePointId,
+      this.onDirectionsUpdate})
+      : super(key: key);
+
   /// all points to be displayed
   final List<MemoryPointDb> points;
 
@@ -13,28 +20,23 @@ class StaticMapView extends StatefulWidget {
 
   final MBDirectionsCallback onDirectionsUpdate;
 
-  const StaticMapView(
-      {Key key,
-      this.points = const [],
-      this.emphasizePointId,
-      this.onDirectionsUpdate})
-      : super(key: key);
   @override
   _StaticMapViewState createState() => _StaticMapViewState();
 }
 
 class _StaticMapViewState extends State<StaticMapView> {
-  MapViewController _controller = MapViewController();
+  final MapViewController _controller = MapViewController();
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Stack(
-        children: [
+        children: <Widget>[
           MapView(
             controller: _controller,
             showLocationButton: false,
             waypoints: mp2m(widget.points),
-            onDirectionsUpdate: widget?.onDirectionsUpdate ?? (d) {},
+            onDirectionsUpdate:
+                widget?.onDirectionsUpdate ?? (MBDirections d) {},
           ),
           Container(
             color: Colors.transparent,
@@ -46,19 +48,19 @@ class _StaticMapViewState extends State<StaticMapView> {
   }
 
   @override
-  didUpdateWidget(StaticMapView oldWidget) {
+  void didUpdateWidget(StaticMapView oldWidget) {
     if (oldWidget.points != widget.points)
       _controller.waypoints = mp2m(widget.points);
     super.didUpdateWidget(oldWidget);
   }
 
   List<Marker> mp2m(List<MemoryPointDb> points) {
-    List<Marker> markers = [];
+    final List<Marker> markers = <Marker>[];
     for (int i = 0; i < points.length; i++) {
-      final e = points[i];
+      final MemoryPointDb e = points[i];
       markers.add(Marker(
           point: LatLng(e.lat, e.long),
-          builder: (context) => IconButton(
+          builder: (BuildContext context) => IconButton(
                 icon: Icon(
                   Icons.location_pin,
                   color: (widget.emphasizePointId == i)

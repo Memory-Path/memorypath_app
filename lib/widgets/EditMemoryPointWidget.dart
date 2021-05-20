@@ -6,15 +6,15 @@ import 'package:mobile/widgets/TitleTextField.dart';
 /// Draft of the MemoryPointSheet, where it is possible to fill in the Learning-Content for Memorization in the [PracticePage]
 
 class EditMemoryPointWidget extends StatefulWidget {
+  const EditMemoryPointWidget({
+    this.memoryPoint,
+  });
+
   /// The actual Memory-Point ([MemoryPointDb]) that is edited in this Widget
   final MemoryPointDb memoryPoint;
 
   @override
   _EditMemoryPointWidgetState createState() => _EditMemoryPointWidgetState();
-
-  EditMemoryPointWidget({
-    this.memoryPoint,
-  });
 }
 
 class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
@@ -45,12 +45,12 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
           maxWidth: MediaQuery.of(context).size.width),
       child: ListView(
         shrinkWrap: true,
-        children: [
+        children: <Widget>[
           ///TextField to edit the Title of the MemoryPoint
           TitleTextField(_onMemoryPointNameChanged, widget.memoryPoint.name),
           ListTile(
               title: Container(
-            constraints: BoxConstraints(minHeight: 128),
+            constraints: const BoxConstraints(minHeight: 128),
             child: ImagePickerWidget(
               imagePath: widget.memoryPoint.image,
               onImageChanged: updateImage,
@@ -58,7 +58,7 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
           )),
           TextField(
             controller: _questionController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Question, Keyword or Note'),
           ),
@@ -68,7 +68,7 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
             controller: _answerController,
             // maxLines: null,
             // keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(), labelText: 'Answer'),
             onSubmitted: (String answer) {
               setState(() {

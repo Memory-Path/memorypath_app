@@ -1,15 +1,19 @@
+import 'dart:io';
+
 import 'package:camera_camera/camera_camera.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 
-typedef void OnUpdateImageCallback(String image);
+typedef OnUpdateImageCallback = void Function(String image);
 
 ///Configuration for the Storage-Path, where images, that are used in the App, are stored.
-const String STORAGE_PATH = "assets/images/";
+const String STORAGE_PATH = 'assets/images/';
 
 class ImagePickerWidget extends StatefulWidget {
+  const ImagePickerWidget({this.imagePath, this.onImageChanged});
+
   ///Configuration of the default image, that is displayed, when no image is set yet
-  final String defaultImage = "assets/images/blurry_background.jpg";
+  static const String defaultImage='assets/images/blurry_background.jpg';
 
   ///The Image of a MemoryPoint - can be null
   final String imagePath;
@@ -19,8 +23,6 @@ class ImagePickerWidget extends StatefulWidget {
 
   @override
   _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
-
-  ImagePickerWidget({this.imagePath, this.onImageChanged});
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
@@ -33,6 +35,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   ///actual imagePath, that can be modified by the User
   String _imagePathState;
 
+  @override
   void initState() {
     ///set the actual values passed by the constructor
     _imagePathState = widget.imagePath;
@@ -45,7 +48,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Make size of Elements responsive
+    // TODO(MemoryPath): Make size of Elements responsive,
     return GestureDetector(
         onTap: () async {
           _showPicker(context);
@@ -56,9 +59,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         ///ImagePath is set already but Image not loaded -> Loading Indicator
         ///ImagePath is set and Image loaded -> display Image
         child: _imagePathState != null
-            //TODO: What to do with empty Path? "|| _imagePathState.isEmpty"
+            // TODO(MemoryPath): What to do with empty Path? "|| _imagePathState.isEmpty",
             ? _imageState == null
-                ? FutureBuilder(
+                ? FutureBuilder<FilePickerCross>(
                     future: _imageStateFuture,
                     builder: (BuildContext context,
                         AsyncSnapshot<FilePickerCross> snapshot) {
@@ -79,8 +82,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                     width: 2,
                                     color: Colors.grey[700],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(64))),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(64))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
@@ -94,7 +97,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         );
                       } else {
                         return Container(
-                            child: Center(child: CircularProgressIndicator()));
+                            child: const Center(
+                                child: CircularProgressIndicator()));
                       }
                     })
                 : Container(
@@ -114,7 +118,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               color: Colors.grey[700],
                             ),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(64))),
+                                const BorderRadius.all(Radius.circular(64))),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
@@ -127,9 +131,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ),
                   )
             : Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(widget.defaultImage),
+                    image: AssetImage(ImagePickerWidget.defaultImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -141,7 +145,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                           width: 2,
                           color: Colors.grey[700],
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(64))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(64))),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
@@ -155,18 +160,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
               ));
   }
 
-  //TODO: Delete unused Images from Storage
+  // TODO(MemoryPath): Delete unused Images from Storage,
   ///Handling of the process of taking an Image via Camera
-  _imgFromCamera() async {
+  Future<void> _imgFromCamera() async {
     Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<CameraCamera>(
             builder: (_) => CameraCamera(
-                  onFile: (file) async {
+                  onFile: (File file) async {
                     final FilePickerCross imageData =
                         FilePickerCross(await file.readAsBytes());
                     final String path =
-                        STORAGE_PATH + DateTime.now().toString() + ".png";
+                        STORAGE_PATH + DateTime.now().toString() + '.png';
                     await imageData.saveToPath(path: path);
                     Navigator.pop(context);
                     setState(() {
@@ -179,10 +184,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   ///Handling the Process of selecting an Image from User-Storage
-  _imgFromStorage() async {
-    FilePickerCross image =
+  Future<void> _imgFromStorage() async {
+    final FilePickerCross image =
         await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-    final String path = STORAGE_PATH + DateTime.now().toString() + ".png";
+    final String path = STORAGE_PATH + DateTime.now().toString() + '.png';
     image.saveToPath(path: path);
     setState(() {
       _imageState = image;
@@ -194,13 +199,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   ///Handling the kind of Selection of an Image
   ///for mobile devices: displays menu to select from Gallery or take new Picture from Camera
   ///for desktop/web: only Picture from Storage
-  void _showPicker(BuildContext context) async {
+  Future<void> _showPicker(BuildContext context) async {
     if (Theme.of(context).platform == TargetPlatform.windows ||
         Theme.of(context).platform == TargetPlatform.linux ||
         Theme.of(context).platform == TargetPlatform.macOS) {
       await _imgFromStorage();
     } else {
-      showModalBottomSheet(
+      showModalBottomSheet<void>(
           context: context,
           builder: (BuildContext context) {
             return SafeArea(
@@ -208,15 +213,15 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 child: Wrap(
                   children: <Widget>[
                     ListTile(
-                        leading: Icon(Icons.photo_library),
-                        title: Text('Photo Library'),
+                        leading: const Icon(Icons.photo_library),
+                        title: const Text('Photo Library'),
                         onTap: () async {
                           await _imgFromStorage();
                           Navigator.of(context).pop();
                         }),
                     ListTile(
-                      leading: Icon(Icons.photo_camera),
-                      title: Text('Camera'),
+                      leading: const Icon(Icons.photo_camera),
+                      title: const Text('Camera'),
                       onTap: () async {
                         Navigator.of(context).pop();
                         await _imgFromCamera();

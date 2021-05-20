@@ -8,9 +8,8 @@ import 'package:mobile/widgets/CenterProgress.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPathCard extends StatefulWidget {
-  final MemoryPathDb memoryPath;
-
   const MemoryPathCard({Key key, this.memoryPath}) : super(key: key);
+  final MemoryPathDb memoryPath;
 
   @override
   _MemoryPathCardState createState() => _MemoryPathCardState();
@@ -23,7 +22,7 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 393),
+      constraints: const BoxConstraints(maxWidth: 393),
       child: AspectRatio(
         aspectRatio: MediaQuery.of(context).size.aspectRatio,
         child: Padding(
@@ -31,9 +30,9 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
           child: OpenContainer(
             closedColor: Theme.of(context).cardColor,
             closedShape: Theme.of(context).cardTheme.shape,
-            closedBuilder: (c, f) => ListView(
+            closedBuilder: (BuildContext c, VoidCallback f) => ListView(
               shrinkWrap: true,
-              children: [
+              children: <Widget>[
                 ListTile(
                   title: Text(
                     widget.memoryPath.name,
@@ -41,36 +40,37 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
                   ),
                   trailing: IconButton(
                       tooltip: 'Edit path',
-                      icon: Icon(Icons.edit),
+                      icon: const Icon(Icons.edit),
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed('/editPath/${widget.memoryPath.key}');
                       }),
                 ),
                 Hero(
-                  tag: "${HeroTags.MapView}${widget.memoryPath.key}",
+                  tag: '${HeroTags.MapView}${widget.memoryPath.key}',
                   child: StaticMapView(
                     points: widget.memoryPath.memoryPoints,
                     onDirectionsUpdate: setDirections,
                   ),
                 ),
-                !loadingDirections
-                    ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.height),
-                            title: Text(
-                                'Total distance: ${(directions.distance / 1000).round()} km'),
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.timer),
-                            title: Text(
-                                'Walking time: ${directions.duration.inMinutes} min'),
-                          ),
-                        ],
-                      )
-                    : CenterProgress(),
+                if (!loadingDirections)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: const Icon(Icons.height),
+                        title: Text(
+                            'Total distance: ${(directions.distance / 1000).round()} km'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.timer),
+                        title: Text(
+                            'Walking time: ${directions.duration.inMinutes} min'),
+                      ),
+                    ],
+                  )
+                else
+                  const CenterProgress(),
                 /*ButtonBar(
                   children: [
                     Stack(
@@ -87,8 +87,8 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
             ),
             routeSettings:
                 RouteSettings(name: '/practice/${widget.memoryPath.key}'),
-            openBuilder: (c, f) => PracticePage(
-              memoryPath: widget.memoryPath.key,
+            openBuilder: (BuildContext c, VoidCallback f) => PracticePage(
+              memoryPath: widget.memoryPath.key as int,
             ),
             openColor: Theme.of(context).backgroundColor,
           ),

@@ -7,22 +7,23 @@ import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 import 'package:mobile/widgets/maps/EditableMapView.dart';
 
 class EditMemoryPathCard extends StatefulWidget {
+  const EditMemoryPathCard({Key key, @required this.onCreated, this.path})
+      : super(key: key);
   final MemoryPathCreatedCallback onCreated;
   final MemoryPathDb path;
 
-  const EditMemoryPathCard({Key key, @required this.onCreated, this.path})
-      : super(key: key);
   @override
   _EditMemoryPathCardState createState() => _EditMemoryPathCardState();
 }
 
 class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
-  TextEditingController _newMemoryPathController = TextEditingController();
-  TextEditingController _topicController = TextEditingController();
+  final TextEditingController _newMemoryPathController =
+      TextEditingController();
+  final TextEditingController _topicController = TextEditingController();
 
-  List<MemoryPointDb> _points = [];
+  List<MemoryPointDb> _points = <MemoryPointDb>[];
 
-  Map<int, double> _height = {};
+  final Map<int, double> _height = <int, double>{};
 
   @override
   void initState() {
@@ -42,25 +43,25 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
     return SingleChildScrollView(
       child: Center(
         child: Container(
-          constraints: BoxConstraints(maxWidth: 768),
+          constraints: const BoxConstraints(maxWidth: 768),
           child: Card(
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   TextField(
                     autofocus: true,
                     controller: _newMemoryPathController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Path name'),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: EditableMapView(
                       initialMemoryPoints: _points,
-                      onChange: (memoryPoints) {
+                      onChange: (List<MemoryPointDb> memoryPoints) {
                         setState(() {
                           _points = memoryPoints;
 
@@ -70,18 +71,19 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                       },
                     ),
                   ),
-                  _points.isNotEmpty
-                      ? ListTile(
-                          leading: Icon(Icons.info),
-                          title: widget.path != null
-                              ? Text('Tap on list item to edit point details')
-                              : Text(
-                                  'Save your path and come back to edit point details'),
-                        )
-                      : ListTile(
-                          leading: Icon(Icons.touch_app),
-                          title: Text('Tap on map to add Memory-Points'),
-                        ),
+                  if (_points.isNotEmpty)
+                    ListTile(
+                      leading: const Icon(Icons.info),
+                      title: widget.path != null
+                          ? const Text('Tap on list item to edit point details')
+                          : const Text(
+                              'Save your path and come back to edit point details'),
+                    )
+                  else
+                    const ListTile(
+                      leading: Icon(Icons.touch_app),
+                      title: Text('Tap on map to add Memory-Points'),
+                    ),
                   Container(
                     constraints: BoxConstraints(
                         maxHeight: _points.length * 56.toDouble()),
@@ -89,17 +91,20 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                         shrinkWrap: true,
                         primary: false,
                         //physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (c, i) => MemoryPointListTile(
-                              key: ValueKey(_points[i]),
+                        itemBuilder: (BuildContext c, int i) =>
+                            MemoryPointListTile(
+                              key: ValueKey<MemoryPointDb>(_points[i]),
                               point: _points[i],
-                              onHeightChange: (value) => _height[i] = value,
+                              onHeightChange: (double value) =>
+                                  _height[i] = value,
                             ),
                         itemCount: _points.length,
-                        onReorder: (oldIndex, newIndex) {
+                        onReorder: (int oldIndex, int newIndex) {
                           if (newIndex > oldIndex) {
                             newIndex--;
                           }
-                          final point = _points.removeAt(oldIndex);
+                          final MemoryPointDb point =
+                              _points.removeAt(oldIndex);
                           _points.insert(newIndex, point);
                           if (widget.path != null)
                             widget.path.memoryPoints = _points;
@@ -109,36 +114,38 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                   TextField(
                     autofocus: true,
                     controller: _topicController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Topic'),
                   ),
                   ButtonBar(
-                    children: [
+                    children: <Widget>[
                       OutlinedButton.icon(
-                        icon: Hero(
+                        icon: const Hero(
                             tag: HeroTags.AddPathIcon,
                             child: Icon(Icons.check)),
                         onPressed: () {
                           if (_newMemoryPathController.text.trim() == '' ||
                               _topicController.text.trim() == '' ||
                               _points.length < 2) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    'Please fill in all fields and add at least 2 memory points.')));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Please fill in all fields and add at least 2 memory points.')));
                             return;
                           }
                           if (widget.path != null) {
                             widget.path.name = _newMemoryPathController.text;
                             widget.path.topic = _topicController.text;
                             //widget.path.memoryPoints = _points;
-                            Navigator.of(context).pop(); // TODO: that's dirty
+                            Navigator.of(context)
+                                .pop(); // TODO(MemoryPath): that's dirty,
                           } else
                             widget.onCreated(MemoryPathDb(
                                 name: _newMemoryPathController.text,
                                 topic: _topicController.text,
                                 memoryPoints: _points));
                         },
-                        label: Text('Save Memory-Path'),
+                        label: const Text('Save Memory-Path'),
                       ),
                     ],
                   )
@@ -153,31 +160,31 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
 }
 
 class MemoryPointListTile extends StatefulWidget {
+  const MemoryPointListTile({Key key, this.point, this.onHeightChange})
+      : super(key: key);
   final MemoryPointDb point;
   final HeightChangeCallback onHeightChange;
 
-  const MemoryPointListTile({Key key, this.point, this.onHeightChange})
-      : super(key: key);
   @override
   _MemoryPointListTileState createState() => _MemoryPointListTileState();
 }
 
-typedef HeightChangeCallback(double height);
+typedef HeightChangeCallback = Function(double height);
 
 class _MemoryPointListTileState extends State<MemoryPointListTile>
-    with AfterLayoutMixin {
-  GlobalKey _heightKey = GlobalKey();
+    with AfterLayoutMixin<MemoryPointListTile> {
+  final GlobalKey _heightKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Container(
       key: _heightKey,
       child: ExpansionTile(
         trailing: Container(
-          constraints: BoxConstraints.loose(Size(0, 0)),
+          constraints: BoxConstraints.loose(const Size(0, 0)),
         ),
-        leading: Icon(Icons.lightbulb),
+        leading: const Icon(Icons.lightbulb),
         title: Text(widget.point.name),
-        children: [
+        children: <Widget>[
           EditMemoryPointWidget(
             memoryPoint: widget.point,
           )
@@ -188,9 +195,9 @@ class _MemoryPointListTileState extends State<MemoryPointListTile>
 
   @override
   void afterFirstLayout(BuildContext context) {
-    final newHeight = _heightKey.currentContext.size.height;
+    final double newHeight = _heightKey.currentContext.size.height;
     widget.onHeightChange(newHeight);
   }
 }
 
-typedef void MemoryPathCreatedCallback(MemoryPathDb memoryPath);
+typedef MemoryPathCreatedCallback = void Function(MemoryPathDb memoryPath);

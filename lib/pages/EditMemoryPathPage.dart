@@ -1,16 +1,16 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
-import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/widgets/EditMemoryPathCard.dart';
 
 class EditMemoryPathPage extends StatefulWidget {
+  const EditMemoryPathPage({Key key, this.path, this.onCreated})
+      : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/(createPath|editPath\/(\d+))');
 
   final MemoryPathCreatedCallback onCreated;
   final int path;
-  const EditMemoryPathPage({Key key, this.path, this.onCreated})
-      : super(key: key);
   @override
   _EditMemoryPathPageState createState() => _EditMemoryPathPageState();
 }
@@ -20,7 +20,9 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
 
   @override
   void initState() {
-    if (widget.path != null) path = databaseBox.get(widget.path);
+    if (widget.path != null) {
+      path = databaseBox.get(widget.path);
+    }
     super.initState();
   }
 
@@ -30,28 +32,30 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
       appBar: AppBar(
         title: Text((path != null ? 'Edit' : 'Create') + ' Memory-Path'),
         leading: IconButton(
-            icon: Icon(Icons.close), tooltip: 'Discard', onPressed: backToHome),
-        actions: [
+            icon: const Icon(Icons.close),
+            tooltip: 'Discard',
+            onPressed: backToHome),
+        actions: <Widget>[
           if (widget.path != null)
             IconButton(
-              icon: Icon(Icons.delete_forever),
+              icon: const Icon(Icons.delete_forever),
               onPressed: () {
-                showDialog(
+                showModal<Null>(
                     context: context,
-                    builder: (c) {
+                    builder: (BuildContext c) {
                       return AlertDialog(
                         title: Text('Are your sure to delete ${path.name}?'),
-                        actions: [
+                        actions: <Widget>[
                           TextButton(
                               onPressed: Navigator.of(context).pop,
-                              child: Text('Cancel')),
+                              child: const Text('Cancel')),
                           TextButton(
                               onPressed: () {
                                 databaseBox.delete(path.key);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Delete'))
+                              child: const Text('Delete'))
                         ],
                       );
                     });
@@ -65,7 +69,7 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
   }
 
   Future<void> createPath(MemoryPathDb memoryPath) async {
-    final id = await databaseBox.add(memoryPath);
+    final int id = await databaseBox.add(memoryPath);
     print('New path\'s id: $id');
     backToHome();
   }

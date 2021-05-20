@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -5,22 +6,24 @@ import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class EditableMapView extends StatefulWidget {
+  const EditableMapView(
+      {Key key,
+      this.initialMemoryPoints = const <MemoryPointDb>[],
+      this.onChange})
+      : super(key: key);
   final List<MemoryPointDb> initialMemoryPoints;
   final MemoryPointsUpdatedCallback onChange;
 
-  const EditableMapView(
-      {Key key, this.initialMemoryPoints = const [], this.onChange})
-      : super(key: key);
   @override
   _EditableMapViewState createState() => _EditableMapViewState();
 }
 
 class _EditableMapViewState extends State<EditableMapView> {
-  MapViewController _controller = MapViewController();
+  final MapViewController _controller = MapViewController();
 
-  List<MemoryPointDb> points = [];
+  List<MemoryPointDb> points = <MemoryPointDb>[];
 
-  TextEditingController _newPOIController = TextEditingController();
+  final TextEditingController _newPOIController = TextEditingController();
 
   @override
   void initState() {
@@ -41,21 +44,21 @@ class _EditableMapViewState extends State<EditableMapView> {
   }
 
   void addMemoryPoint(LatLng coordinates) {
-    showDialog(
+    showModal<Null>(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text('Add new Memory-Point'),
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text('Add new Memory-Point'),
               content: TextField(
                 autofocus: true,
                 controller: _newPOIController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Memory-Point name'),
               ),
-              actions: [
+              actions: <Widget>[
                 TextButton(
                     onPressed: Navigator.of(context).pop,
-                    child: Text('Cancel')),
+                    child: const Text('Cancel')),
                 TextButton(
                     onPressed: () {
                       setState(() {
@@ -66,19 +69,21 @@ class _EditableMapViewState extends State<EditableMapView> {
                         _newPOIController.text = '';
                         _controller.waypoints = mp2m(points);
                       });
-                      if (widget.onChange != null) widget.onChange(points);
+                      if (widget.onChange != null) {
+                        widget.onChange(points);
+                      }
                       Navigator.of(context).pop();
                     },
-                    child: Text('Save'))
+                    child: const Text('Save'))
               ],
             ));
   }
 
   List<Marker> mp2m(List<MemoryPointDb> points) {
     return points
-        .map((e) => Marker(
+        .map((MemoryPointDb e) => Marker(
             point: LatLng(e.lat, e.long),
-            builder: (context) => IconButton(
+            builder: (BuildContext context) => IconButton(
                   icon: Icon(
                     Icons.location_pin,
                     color: Theme.of(context).primaryColor,
@@ -90,4 +95,5 @@ class _EditableMapViewState extends State<EditableMapView> {
   }
 }
 
-typedef void MemoryPointsUpdatedCallback(List<MemoryPointDb> memoryPoints);
+typedef MemoryPointsUpdatedCallback = void Function(
+    List<MemoryPointDb> memoryPoints);

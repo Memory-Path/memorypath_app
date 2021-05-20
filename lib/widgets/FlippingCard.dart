@@ -3,12 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class FlippingCard extends StatefulWidget {
+  const FlippingCard({Key key, this.front, this.rear, this.height})
+      : super(key: key);
   final Widget front;
   final Widget rear;
   final double height;
-
-  const FlippingCard({Key key, this.front, this.rear, this.height})
-      : super(key: key);
 
   @override
   _FlippingCardState createState() => _FlippingCardState();
@@ -28,17 +27,17 @@ class _FlippingCardState extends State<FlippingCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         alignment: Alignment.topCenter,
         child: Container(
-            constraints: BoxConstraints(maxWidth: 768),
+            constraints: const BoxConstraints(maxWidth: 768),
             child: GestureDetector(
               onTap: _switchCard,
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 transitionBuilder: __transitionBuilder,
-                layoutBuilder: (widget, list) =>
-                    Stack(children: [widget, ...list]),
+                layoutBuilder: (Widget widget, List<Widget> list) =>
+                    Stack(children: <Widget>[widget, ...list]),
                 child: _showFrontSide ? _buildFront() : _buildRear(),
                 switchInCurve: Curves.easeInBack,
                 switchOutCurve: Curves.easeInBack.flipped,
@@ -53,15 +52,15 @@ class _FlippingCardState extends State<FlippingCard> {
   }
 
   Widget __transitionBuilder(Widget widget, Animation<double> animation) {
-    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+    final Animation<double> rotateAnim = Tween<double>(begin: pi, end: 0.0).animate(animation);
     return AnimatedBuilder(
       animation: rotateAnim,
       child: widget,
-      builder: (context, widget) {
-        final isUnder = (ValueKey(_showFrontSide) != widget.key);
-        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
+      builder: (BuildContext context, Widget widget) {
+        final bool isUnder = ValueKey<bool>(_showFrontSide) != widget.key;
+        double tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
         tilt *= isUnder ? -1.0 : 1.0;
-        final value =
+        final double value =
             isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
         return Transform(
           transform: _flipXAxis
@@ -76,7 +75,7 @@ class _FlippingCardState extends State<FlippingCard> {
 
   Widget _buildFront() {
     return Card(
-        key: ValueKey(true),
+        key: const ValueKey<bool>(true),
         child: Container(
           child: widget.front,
           height: widget.height,
@@ -85,7 +84,7 @@ class _FlippingCardState extends State<FlippingCard> {
 
   Widget _buildRear() {
     return Card(
-      key: ValueKey(false),
+      key: const ValueKey<bool>(false),
       child: Container(child: widget.rear, height: widget.height),
     );
   }

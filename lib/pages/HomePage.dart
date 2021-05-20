@@ -10,10 +10,10 @@ import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key key, this.data}) : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/home$');
   final dynamic data;
 
-  const HomePage({Key key, this.data}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -36,21 +36,21 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             if (widget.data != null &&
                 widget.data is RouteNotFoundException &&
                 !_manuallyHideRoutingError)
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.info_outlined,
                   color: Colors.deepOrange,
                 ),
-                title: Text(
+                title: const Text(
                     'Error 404 - We could not find what you were looking for.'),
                 subtitle: Text(
                     'The location ${(widget.data as RouteNotFoundException).name} does not seem to exist.'),
                 trailing: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   tooltip: 'Hide',
                   onPressed: () =>
                       setState(() => _manuallyHideRoutingError = true),
@@ -63,25 +63,26 @@ class _HomePageState extends State<HomePage> {
             Container(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height / 2),
-                child: ValueListenableBuilder(
+                child: ValueListenableBuilder<Box<MemoryPathDb>>(
                   valueListenable: _box.listenable(),
-                  builder: (context, box, widget) {
+                  builder: (BuildContext context, Box<MemoryPathDb> box,
+                      Widget widget) {
                     //Added Quickfix
-                    List<MemoryPathDb> paths = listAllMemoryPath(box);
+                    final List<MemoryPathDb> paths = listAllMemoryPath(box);
                     return ListView(
                       scrollDirection: Axis.horizontal,
-                      children: [
+                      children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: OpenContainer(
                             closedColor: Theme.of(context).cardColor,
                             closedShape: Theme.of(context).cardTheme.shape,
-                            closedBuilder: (c, f) => Container(
-                              constraints: BoxConstraints(minWidth: 64),
+                            closedBuilder: (BuildContext c, VoidCallback f) => Container(
+                              constraints: const BoxConstraints(minWidth: 64),
                               child: AspectRatio(
                                 aspectRatio:
                                     MediaQuery.of(context).size.aspectRatio / 4,
-                                child: Tooltip(
+                                child: const Tooltip(
                                   child: Hero(
                                       tag: HeroTags.AddPathIcon,
                                       child: Icon(Icons.add)),
@@ -93,9 +94,10 @@ class _HomePageState extends State<HomePage> {
                                     },*/
                               ),
                             ),
-                            routeSettings: RouteSettings(name: '/createPath'),
-                            openBuilder: (c, f) => EditMemoryPathPage(
-                              onCreated: (data) {
+                            routeSettings:
+                                const RouteSettings(name: '/createPath'),
+                            openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
+                              onCreated: (MemoryPathDb data) {
                                 print('Data!');
                               },
                             ),
@@ -104,13 +106,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                         if (paths.isEmpty)
                           Container(
-                            constraints: BoxConstraints(maxWidth: 393),
+                            constraints: const BoxConstraints(maxWidth: 393),
                             child: AspectRatio(
                                 aspectRatio:
                                     MediaQuery.of(context).size.aspectRatio,
-                                child: Card(
+                                child: const Card(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Center(
                                       child: Text(
                                         'So lonely here...\nMaybe you would like to create a new Memory-Path?',
@@ -118,10 +120,11 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 )),
-                          )
-                      ]..addAll(paths.map((e) => MemoryPathCard(
-                            memoryPath: e,
-                          ))),
+                          ),
+                        ...paths.map((MemoryPathDb e) => MemoryPathCard(
+                              memoryPath: e,
+                            ))
+                      ],
                     );
                   },
                 )),
@@ -131,10 +134,10 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Container(
         alignment: Alignment.bottomCenter,
         child: Container(
-          constraints: BoxConstraints(maxWidth: 786),
-          child: Card(
+          constraints: const BoxConstraints(maxWidth: 786),
+          child: const Card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
                     'Here, some stats can be shown as soon as the DB is working properly.'),
@@ -150,7 +153,7 @@ class _HomePageState extends State<HomePage> {
 
   //ToDo: Functionality Check
   List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box) {
-    List<MemoryPathDb> memoryPaths = [];
+    final List<MemoryPathDb> memoryPaths = <MemoryPathDb>[];
     memoryPaths.addAll(box.values);
     return memoryPaths;
   }

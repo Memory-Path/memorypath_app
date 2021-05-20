@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CenterProgress extends StatefulWidget {
+  const CenterProgress({this.label = ''});
   final String label;
-
-  CenterProgress({this.label = ''});
 
   @override
   _CenterProgressState createState() => _CenterProgressState();
@@ -17,22 +16,22 @@ class _CenterProgressState extends State<CenterProgress>
 
   @override
   void initState() {
-    _tweenSequence = TweenSequence([
-      TweenSequenceItem(
+    _tweenSequence = TweenSequence<Color>(<TweenSequenceItem<Color>>[
+      TweenSequenceItem<Color>(
           tween: ColorTween(begin: Colors.green, end: Colors.lightBlue),
           weight: 1),
-      TweenSequenceItem(
+      TweenSequenceItem<Color>(
           tween: ColorTween(begin: Colors.lightBlue, end: Colors.lightBlue),
           weight: 2),
-      TweenSequenceItem(
+      TweenSequenceItem<Color>(
           tween: ColorTween(begin: Colors.lightBlue, end: Colors.green),
           weight: 1),
-      TweenSequenceItem(
+      TweenSequenceItem<Color>(
           tween: ColorTween(begin: Colors.green, end: Colors.green), weight: 2),
     ]);
 
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
+        AnimationController(vsync: this, duration: const Duration(seconds: 4));
     _colorTween = _tweenSequence.animate(_animationController);
     _animationController.repeat();
     super.initState();
@@ -42,7 +41,7 @@ class _CenterProgressState extends State<CenterProgress>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
         animation: _colorTween,
-        builder: (context, child) => Padding(
+        builder: (BuildContext context, Widget child) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Column(

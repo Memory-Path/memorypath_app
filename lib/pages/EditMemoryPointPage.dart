@@ -7,11 +7,11 @@ import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 /// just for overall functionality-reasons - will be replaced soon
 
 class MemoryPointEditPage extends StatefulWidget {
+  const MemoryPointEditPage({this.memoryPointId, this.memoryPathId});
   static final RegExp routeMatch = RegExp(r'^\/edit\/(\d+)\/point\/(\d+)$');
   final int memoryPointId;
   final int memoryPathId;
 
-  MemoryPointEditPage({this.memoryPointId, this.memoryPathId});
 
   @override
   _MemoryPointEditPageState createState() => _MemoryPointEditPageState();
@@ -30,9 +30,9 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Memory-Point"),
+        title: const Text('Edit Memory-Point'),
         leading: IconButton(
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
             tooltip: 'Discard',
             onPressed: () {
               if (_memoryPathDbState.memoryPoints[widget.memoryPointId].name ==

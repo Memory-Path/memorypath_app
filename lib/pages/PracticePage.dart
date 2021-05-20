@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
-import 'package:memorypath_db_api/src/MemoryPath.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/src/HeroTags.dart';
 import 'package:mobile/widgets/FlippingCard.dart';
@@ -11,10 +10,10 @@ import 'package:mobile/widgets/ResponsiveCard.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
+  const PracticePage({Key key, this.memoryPath}) : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/practice\/(\d+)$');
   final int memoryPath;
 
-  const PracticePage({Key key, this.memoryPath}) : super(key: key);
   @override
   _PracticePageState createState() => _PracticePageState();
 }
@@ -25,7 +24,7 @@ class _PracticePageState extends State<PracticePage> {
   int _currentPoint = 0;
   bool _reverse = false;
 
-  Map<int, bool> _pointsAnswered = {};
+  final Map<int, bool> _pointsAnswered = <int, bool>{};
 
   @override
   void initState() {
@@ -39,8 +38,10 @@ class _PracticePageState extends State<PracticePage> {
     double percentage;
     if (_pointsAnswered.isNotEmpty) {
       percentage = 0;
-      _pointsAnswered.forEach((key, value) {
-        if (value) percentage++;
+      _pointsAnswered.forEach((int key, bool value) {
+        if (value) {
+          percentage++;
+        }
       });
       percentage /= _pointsAnswered.length;
     }
@@ -51,23 +52,23 @@ class _PracticePageState extends State<PracticePage> {
         body: SafeArea(
           child: Stack(
             alignment: Alignment.centerLeft,
-            children: [
+            children: <Widget>[
               Column(
-                children: [
+                children: <Widget>[
                   Hero(
-                    tag: "${HeroTags.MapView}${memoryPath.key}",
+                    tag: '${HeroTags.MapView}${memoryPath.key}',
                     child: StaticMapView(
                       points: memoryPath.memoryPoints,
                       emphasizePointId: _currentPoint,
                       //key: GlobalKey(),
                     ),
-                  ), // TODO: dirty code
+                  ), // TODO(MemoryPath): dirty code,
                   Expanded(
                     child: PageTransitionSwitcher(
                         duration: const Duration(milliseconds: 300),
                         reverse: _reverse,
                         transitionBuilder:
-                            (child, animation, secondaryAnimation) {
+                            (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
                           return SharedAxisTransition(
                               child: child,
                               animation: animation,
@@ -78,10 +79,10 @@ class _PracticePageState extends State<PracticePage> {
                         layoutBuilder:
                             PageTransitionSwitcher.defaultLayoutBuilder,
                         child: _currentPoint < memoryPath.memoryPoints.length
-                            ? new _PointView(
+                            ? _PointView(
                                 key: GlobalKey(),
                                 point: memoryPath.memoryPoints[_currentPoint],
-                                onAnswered: (correct) {
+                                onAnswered: (bool correct) {
                                   _pointsAnswered[_currentPoint] = correct;
                                   setState(() {
                                     _currentPoint++;
@@ -97,7 +98,7 @@ class _PracticePageState extends State<PracticePage> {
               _RouteSidebar(
                 currentPoint: _currentPoint,
                 points: memoryPath.memoryPoints,
-                onPointSelected: (index) {
+                onPointSelected: (int index) {
                   setState(() {
                     _reverse = index < _currentPoint;
                     _currentPoint = index;
@@ -110,7 +111,7 @@ class _PracticePageState extends State<PracticePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _currentPoint < memoryPath.memoryPoints.length
             ? FloatingActionButton(
-                child: Icon(Icons.arrow_forward),
+                child: const Icon(Icons.arrow_forward),
                 onPressed: () {
                   setState(() {
                     _reverse = false;
@@ -123,18 +124,18 @@ class _PracticePageState extends State<PracticePage> {
 }
 
 class SummaryCard extends StatelessWidget {
+  const SummaryCard({Key key, this.percentage}) : super(key: key);
   final double percentage;
 
-  const SummaryCard({Key key, this.percentage}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ResponsiveCard(
       child: percentage != null
           ? ListTile(
-              leading: Icon(Icons.pie_chart),
+              leading: const Icon(Icons.pie_chart),
               title: Text('${(percentage * 100).round()} % correct'),
             )
-          : ListTile(
+          : const ListTile(
               leading: Icon(Icons.info),
               title: Text('Try to answer some questions...'),
             ),
@@ -143,6 +144,9 @@ class SummaryCard extends StatelessWidget {
 }
 
 class _RouteSidebar extends StatelessWidget {
+  const _RouteSidebar(
+      {Key key, this.currentPoint, this.onPointSelected, this.points})
+      : super(key: key);
   @required
   final List<MemoryPointDb> points;
   @required
@@ -150,9 +154,6 @@ class _RouteSidebar extends StatelessWidget {
   @required
   final Function(int) onPointSelected;
 
-  const _RouteSidebar(
-      {Key key, this.currentPoint, this.onPointSelected, this.points})
-      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -160,9 +161,9 @@ class _RouteSidebar extends StatelessWidget {
       child: Card(
         color: Theme.of(context).cardColor.withAlpha(64),
         child: ListView.separated(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shrinkWrap: true,
-          itemBuilder: (context, index) {
+          itemBuilder: (BuildContext context, int index) {
             return IconButton(
                 color: index == currentPoint
                     ? Theme.of(context).primaryColor
@@ -171,14 +172,16 @@ class _RouteSidebar extends StatelessWidget {
                     ? 'Summary'
                     : 'Point ${index + 1}: ${points[index].name ?? 'unknown'}',
                 icon: index >= points.length
-                    ? Icon(Icons.format_list_bulleted)
-                    : Icon(Icons.lightbulb),
+                    ? const Icon(Icons.format_list_bulleted)
+                    : const Icon(Icons.lightbulb),
                 onPressed: () {
-                  if (currentPoint != index) onPointSelected(index);
+                  if (currentPoint != index) {
+                    onPointSelected(index);
+                  }
                 });
           },
           itemCount: points.length + 1,
-          separatorBuilder: (context, index) {
+          separatorBuilder: (BuildContext context, int index) {
             return Center(
               child: Container(
                 width: 4,
@@ -195,10 +198,10 @@ class _RouteSidebar extends StatelessWidget {
 }
 
 class _PointView extends StatefulWidget {
+  const _PointView({Key key, this.point, this.onAnswered}) : super(key: key);
   final MemoryPointDb point;
   final Function(bool correct) onAnswered;
 
-  const _PointView({Key key, this.point, this.onAnswered}) : super(key: key);
 
   @override
   __PointViewState createState() => __PointViewState();
@@ -210,16 +213,16 @@ class __PointViewState extends State<_PointView> {
     return FlippingCard(
       height: MediaQuery.of(context).size.height / 2,
       front: Column(
-        children: [
+        children: <Widget>[
           ListTile(
             title: Text(
-              widget.point.name ?? "unknown",
+              widget.point.name ?? 'unknown',
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
-            leading: Icon(Icons.question_answer),
-            title: Text(widget.point.question ?? "unknown"),
+            leading: const Icon(Icons.question_answer),
+            title: Text(widget.point.question ?? 'unknown'),
           ),
           Expanded(child: Container()),
           ListTile(
@@ -232,22 +235,22 @@ class __PointViewState extends State<_PointView> {
         mainAxisSize: MainAxisSize.min,
       ),
       rear: Column(
-        children: [
+        children: <Widget>[
           ListTile(
             title: Text(
-              (widget.point.name ?? "unknown") +
+              (widget.point.name ?? 'unknown') +
                   ' - ' +
-                  (widget.point.question ?? "unknown"),
+                  (widget.point.question ?? 'unknown'),
               style: Theme.of(context).textTheme.caption,
             ),
           ),
           ListTile(
-            leading: Icon(Icons.edit_location),
-            title: Text(widget.point.answer ?? "unknown"),
+            leading: const Icon(Icons.edit_location),
+            title: Text(widget.point.answer ?? 'unknown'),
           ),
           Expanded(child: Container()),
-          Divider(),
-          ListTile(
+          const Divider(),
+          const ListTile(
             title: Text(
               'Did you know the correct answer?',
               style: TextStyle(fontStyle: FontStyle.italic),
@@ -255,15 +258,15 @@ class __PointViewState extends State<_PointView> {
           ),
           ButtonBar(
             //mainAxisSize: MainAxisSize.min,
-            children: [
+            children: <Widget>[
               TextButton.icon(
-                  icon: Icon(Icons.thumb_up),
+                  icon: const Icon(Icons.thumb_up),
                   onPressed: () => widget.onAnswered(true),
-                  label: Text("Yes")),
+                  label: const Text('Yes')),
               TextButton.icon(
-                  icon: Icon(Icons.thumb_down),
+                  icon: const Icon(Icons.thumb_down),
                   onPressed: () => widget.onAnswered(false),
-                  label: Text("No")),
+                  label: const Text('No')),
             ],
           ),
         ],

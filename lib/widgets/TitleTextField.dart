@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef void OnTitleChangedCallback(String title);
+typedef OnTitleChangedCallback = void Function(String title);
 
 class TitleTextField extends StatefulWidget {
+  const TitleTextField(this.onTitleChanged, this.title);
   final OnTitleChangedCallback onTitleChanged;
   final String title;
-
-  TitleTextField(this.onTitleChanged, this.title);
 
   @override
   _TitleTextFieldState createState() => _TitleTextFieldState();
@@ -30,7 +29,7 @@ class _TitleTextFieldState extends State<TitleTextField> {
   Widget build(BuildContext context) {
     if (_isEditingTitle)
       return TextField(
-        onSubmitted: (newTitle) {
+        onSubmitted: (String newTitle) {
           setState(() {
             _titleState = newTitle;
             widget.onTitleChanged(newTitle);
@@ -47,11 +46,11 @@ class _TitleTextFieldState extends State<TitleTextField> {
         });
       },
       child: Text(
-        _titleState ?? "",
+        _titleState ?? '',
         style: Theme.of(context).textTheme.headline3,
       ),
     );
-    return Container();
+    //return Container();
   }
 
   @override
