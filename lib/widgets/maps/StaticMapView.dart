@@ -6,7 +6,7 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class StaticMapView extends StatefulWidget {
   const StaticMapView(
-      {Key key,
+      {Key? key,
       this.points = const <MemoryPointDb>[],
       this.emphasizePointId,
       this.onDirectionsUpdate})
@@ -16,9 +16,9 @@ class StaticMapView extends StatefulWidget {
   final List<MemoryPointDb> points;
 
   /// a point to be emphasized
-  final int emphasizePointId;
+  final int? emphasizePointId;
 
-  final MBDirectionsCallback onDirectionsUpdate;
+  final MBDirectionsCallback? onDirectionsUpdate;
 
   @override
   _StaticMapViewState createState() => _StaticMapViewState();
@@ -36,7 +36,7 @@ class _StaticMapViewState extends State<StaticMapView> {
             showLocationButton: false,
             waypoints: mp2m(widget.points),
             onDirectionsUpdate:
-                widget?.onDirectionsUpdate ?? (MBDirections d) {},
+                widget.onDirectionsUpdate ?? (MBDirections d) {},
           ),
           Container(
             color: Colors.transparent,

@@ -10,16 +10,16 @@ import 'package:mobile/widgets/ResponsiveCard.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
-  const PracticePage({Key key, this.memoryPath}) : super(key: key);
+  const PracticePage({Key? key, this.memoryPath}) : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/practice\/(\d+)$');
-  final int memoryPath;
+  final int? memoryPath;
 
   @override
   _PracticePageState createState() => _PracticePageState();
 }
 
 class _PracticePageState extends State<PracticePage> {
-  MemoryPathDb memoryPath;
+  MemoryPathDb? memoryPath;
 
   int _currentPoint = 0;
   bool _reverse = false;
@@ -35,19 +35,19 @@ class _PracticePageState extends State<PracticePage> {
 
   @override
   Widget build(BuildContext context) {
-    double percentage;
+    double? percentage;
     if (_pointsAnswered.isNotEmpty) {
       percentage = 0;
       _pointsAnswered.forEach((int key, bool value) {
         if (value) {
-          percentage++;
+          percentage = percentage! + 1;
         }
       });
-      percentage /= _pointsAnswered.length;
+      percentage = percentage! / _pointsAnswered.length;
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text('Practice Memory-Path ${memoryPath.name}'),
+          title: Text('Practice Memory-Path ${memoryPath!.name}'),
         ),
         body: SafeArea(
           child: Stack(
@@ -56,9 +56,9 @@ class _PracticePageState extends State<PracticePage> {
               Column(
                 children: <Widget>[
                   Hero(
-                    tag: '${HeroTags.MapView}${memoryPath.key}',
+                    tag: '${HeroTags.MapView}${memoryPath!.key}',
                     child: StaticMapView(
-                      points: memoryPath.memoryPoints,
+                      points: memoryPath!.memoryPoints,
                       emphasizePointId: _currentPoint,
                       //key: GlobalKey(),
                     ),
@@ -67,8 +67,9 @@ class _PracticePageState extends State<PracticePage> {
                     child: PageTransitionSwitcher(
                         duration: const Duration(milliseconds: 300),
                         reverse: _reverse,
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
+                        transitionBuilder: (Widget child,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
                           return SharedAxisTransition(
                               child: child,
                               animation: animation,
@@ -78,10 +79,10 @@ class _PracticePageState extends State<PracticePage> {
                         },
                         layoutBuilder:
                             PageTransitionSwitcher.defaultLayoutBuilder,
-                        child: _currentPoint < memoryPath.memoryPoints.length
+                        child: _currentPoint < memoryPath!.memoryPoints.length
                             ? _PointView(
                                 key: GlobalKey(),
-                                point: memoryPath.memoryPoints[_currentPoint],
+                                point: memoryPath!.memoryPoints[_currentPoint],
                                 onAnswered: (bool correct) {
                                   _pointsAnswered[_currentPoint] = correct;
                                   setState(() {
@@ -97,7 +98,7 @@ class _PracticePageState extends State<PracticePage> {
               ),
               _RouteSidebar(
                 currentPoint: _currentPoint,
-                points: memoryPath.memoryPoints,
+                points: memoryPath!.memoryPoints,
                 onPointSelected: (int index) {
                   setState(() {
                     _reverse = index < _currentPoint;
@@ -109,7 +110,7 @@ class _PracticePageState extends State<PracticePage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _currentPoint < memoryPath.memoryPoints.length
+        floatingActionButton: _currentPoint < memoryPath!.memoryPoints.length
             ? FloatingActionButton(
                 child: const Icon(Icons.arrow_forward),
                 onPressed: () {
@@ -124,8 +125,8 @@ class _PracticePageState extends State<PracticePage> {
 }
 
 class SummaryCard extends StatelessWidget {
-  const SummaryCard({Key key, this.percentage}) : super(key: key);
-  final double percentage;
+  const SummaryCard({Key? key, this.percentage}) : super(key: key);
+  final double? percentage;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,7 @@ class SummaryCard extends StatelessWidget {
       child: percentage != null
           ? ListTile(
               leading: const Icon(Icons.pie_chart),
-              title: Text('${(percentage * 100).round()} % correct'),
+              title: Text('${(percentage! * 100).round()} % correct'),
             )
           : const ListTile(
               leading: Icon(Icons.info),
@@ -145,14 +146,14 @@ class SummaryCard extends StatelessWidget {
 
 class _RouteSidebar extends StatelessWidget {
   const _RouteSidebar(
-      {Key key, this.currentPoint, this.onPointSelected, this.points})
+      {Key? key, this.currentPoint, this.onPointSelected, this.points})
       : super(key: key);
   @required
-  final List<MemoryPointDb> points;
+  final List<MemoryPointDb>? points;
   @required
-  final int currentPoint;
+  final int? currentPoint;
   @required
-  final Function(int) onPointSelected;
+  final Function(int)? onPointSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -168,25 +169,25 @@ class _RouteSidebar extends StatelessWidget {
                 color: index == currentPoint
                     ? Theme.of(context).primaryColor
                     : null,
-                tooltip: index >= points.length
+                tooltip: index >= points!.length
                     ? 'Summary'
-                    : 'Point ${index + 1}: ${points[index].name ?? 'unknown'}',
-                icon: index >= points.length
+                    : 'Point ${index + 1}: ${points![index].name ?? 'unknown'}',
+                icon: index >= points!.length
                     ? const Icon(Icons.format_list_bulleted)
                     : const Icon(Icons.lightbulb),
                 onPressed: () {
                   if (currentPoint != index) {
-                    onPointSelected(index);
+                    onPointSelected!(index);
                   }
                 });
           },
-          itemCount: points.length + 1,
+          itemCount: points!.length + 1,
           separatorBuilder: (BuildContext context, int index) {
             return Center(
               child: Container(
                 width: 4,
                 height:
-                    (MediaQuery.of(context).size.height / 2) / points.length,
+                    (MediaQuery.of(context).size.height / 2) / points!.length,
                 color: Theme.of(context).primaryColor,
               ),
             );
@@ -198,10 +199,9 @@ class _RouteSidebar extends StatelessWidget {
 }
 
 class _PointView extends StatefulWidget {
-  const _PointView({Key key, this.point, this.onAnswered}) : super(key: key);
-  final MemoryPointDb point;
-  final Function(bool correct) onAnswered;
-
+  const _PointView({Key? key, this.point, this.onAnswered}) : super(key: key);
+  final MemoryPointDb? point;
+  final Function(bool correct)? onAnswered;
 
   @override
   __PointViewState createState() => __PointViewState();
@@ -216,13 +216,13 @@ class __PointViewState extends State<_PointView> {
         children: <Widget>[
           ListTile(
             title: Text(
-              widget.point.name ?? 'unknown',
+              widget.point!.name ?? 'unknown',
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
           ListTile(
             leading: const Icon(Icons.question_answer),
-            title: Text(widget.point.question ?? 'unknown'),
+            title: Text(widget.point!.question ?? 'unknown'),
           ),
           Expanded(child: Container()),
           ListTile(
@@ -238,15 +238,15 @@ class __PointViewState extends State<_PointView> {
         children: <Widget>[
           ListTile(
             title: Text(
-              (widget.point.name ?? 'unknown') +
+              (widget.point!.name ?? 'unknown') +
                   ' - ' +
-                  (widget.point.question ?? 'unknown'),
+                  (widget.point!.question ?? 'unknown'),
               style: Theme.of(context).textTheme.caption,
             ),
           ),
           ListTile(
             leading: const Icon(Icons.edit_location),
-            title: Text(widget.point.answer ?? 'unknown'),
+            title: Text(widget.point!.answer ?? 'unknown'),
           ),
           Expanded(child: Container()),
           const Divider(),
@@ -261,11 +261,11 @@ class __PointViewState extends State<_PointView> {
             children: <Widget>[
               TextButton.icon(
                   icon: const Icon(Icons.thumb_up),
-                  onPressed: () => widget.onAnswered(true),
+                  onPressed: () => widget.onAnswered!(true),
                   label: const Text('Yes')),
               TextButton.icon(
                   icon: const Icon(Icons.thumb_down),
-                  onPressed: () => widget.onAnswered(false),
+                  onPressed: () => widget.onAnswered!(false),
                   label: const Text('No')),
             ],
           ),

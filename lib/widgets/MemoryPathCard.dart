@@ -8,7 +8,7 @@ import 'package:mobile/widgets/CenterProgress.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class MemoryPathCard extends StatefulWidget {
-  const MemoryPathCard({Key key, this.memoryPath}) : super(key: key);
+  const MemoryPathCard({Key? key, required this.memoryPath}) : super(key: key);
   final MemoryPathDb memoryPath;
 
   @override
@@ -16,7 +16,7 @@ class MemoryPathCard extends StatefulWidget {
 }
 
 class _MemoryPathCardState extends State<MemoryPathCard> {
-  MBDirections directions;
+  late MBDirections directions;
   bool loadingDirections = true;
 
   @override
@@ -29,7 +29,7 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
           padding: const EdgeInsets.all(4.0),
           child: OpenContainer(
             closedColor: Theme.of(context).cardColor,
-            closedShape: Theme.of(context).cardTheme.shape,
+            closedShape: Theme.of(context).cardTheme.shape!,
             closedBuilder: (BuildContext c, VoidCallback f) => ListView(
               shrinkWrap: true,
               children: <Widget>[
@@ -88,7 +88,7 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
             routeSettings:
                 RouteSettings(name: '/practice/${widget.memoryPath.key}'),
             openBuilder: (BuildContext c, VoidCallback f) => PracticePage(
-              memoryPath: widget.memoryPath.key as int,
+              memoryPath: widget.memoryPath.key as int?,
             ),
             openColor: Theme.of(context).backgroundColor,
           ),

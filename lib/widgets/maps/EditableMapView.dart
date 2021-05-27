@@ -7,12 +7,12 @@ import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class EditableMapView extends StatefulWidget {
   const EditableMapView(
-      {Key key,
+      {Key? key,
       this.initialMemoryPoints = const <MemoryPointDb>[],
       this.onChange})
       : super(key: key);
   final List<MemoryPointDb> initialMemoryPoints;
-  final MemoryPointsUpdatedCallback onChange;
+  final MemoryPointsUpdatedCallback? onChange;
 
   @override
   _EditableMapViewState createState() => _EditableMapViewState();
@@ -70,7 +70,7 @@ class _EditableMapViewState extends State<EditableMapView> {
                         _controller.waypoints = mp2m(points);
                       });
                       if (widget.onChange != null) {
-                        widget.onChange(points);
+                        widget.onChange!(points);
                       }
                       Navigator.of(context).pop();
                     },

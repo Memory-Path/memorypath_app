@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveCard extends StatelessWidget {
-  const ResponsiveCard({Key key, this.child}) : super(key: key);
-  final Widget child;
+  const ResponsiveCard({Key? key, this.child}) : super(key: key);
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

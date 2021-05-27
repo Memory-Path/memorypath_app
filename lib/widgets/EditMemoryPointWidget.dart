@@ -11,7 +11,7 @@ class EditMemoryPointWidget extends StatefulWidget {
   });
 
   /// The actual Memory-Point ([MemoryPointDb]) that is edited in this Widget
-  final MemoryPointDb memoryPoint;
+  final MemoryPointDb? memoryPoint;
 
   @override
   _EditMemoryPointWidgetState createState() => _EditMemoryPointWidgetState();
@@ -19,20 +19,20 @@ class EditMemoryPointWidget extends StatefulWidget {
 
 class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
   /// TextController to track the User-Input
-  TextEditingController _questionController;
-  TextEditingController _answerController;
+  TextEditingController? _questionController;
+  TextEditingController? _answerController;
 
   @override
   void initState() {
     ///Initial setting of the values for the Widget-State
     _questionController =
-        TextEditingController(text: widget.memoryPoint.question);
-    _questionController.addListener(() {
-      widget.memoryPoint.question = _questionController.text;
+        TextEditingController(text: widget.memoryPoint!.question);
+    _questionController!.addListener(() {
+      widget.memoryPoint!.question = _questionController!.text;
     });
-    _answerController = TextEditingController(text: widget.memoryPoint.answer);
-    _answerController.addListener(() {
-      widget.memoryPoint.answer = _answerController.text;
+    _answerController = TextEditingController(text: widget.memoryPoint!.answer);
+    _answerController!.addListener(() {
+      widget.memoryPoint!.answer = _answerController!.text;
     });
     super.initState();
   }
@@ -47,12 +47,12 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
         shrinkWrap: true,
         children: <Widget>[
           ///TextField to edit the Title of the MemoryPoint
-          TitleTextField(_onMemoryPointNameChanged, widget.memoryPoint.name),
+          TitleTextField(_onMemoryPointNameChanged, widget.memoryPoint!.name),
           ListTile(
               title: Container(
             constraints: const BoxConstraints(minHeight: 128),
             child: ImagePickerWidget(
-              imagePath: widget.memoryPoint.image,
+              imagePath: widget.memoryPoint!.image,
               onImageChanged: updateImage,
             ),
           )),
@@ -72,7 +72,7 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
                 border: OutlineInputBorder(), labelText: 'Answer'),
             onSubmitted: (String answer) {
               setState(() {
-                widget.memoryPoint.answer = answer;
+                widget.memoryPoint!.answer = answer;
               });
             },
           ),
@@ -84,18 +84,18 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
   ///dispose the TextController when Widget is disposed
   @override
   void dispose() {
-    _questionController.dispose();
-    _answerController.dispose();
+    _questionController!.dispose();
+    _answerController!.dispose();
     super.dispose();
   }
 
   ///Callback for the [ImagePickerWidget] to track the new Path of the Image, selected from the User
   void updateImage(String image) {
-    widget.memoryPoint.image = image;
+    widget.memoryPoint!.image = image;
   }
 
   /// Callback for the [TitleTExtField]
   void _onMemoryPointNameChanged(String title) {
-    widget.memoryPoint.name = title;
+    widget.memoryPoint!.name = title;
   }
 }

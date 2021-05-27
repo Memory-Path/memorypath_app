@@ -10,13 +10,13 @@ typedef OnUpdateImageCallback = void Function(String image);
 const String STORAGE_PATH = 'assets/images/';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({this.imagePath, this.onImageChanged});
+  const ImagePickerWidget({this.imagePath, required this.onImageChanged});
 
   ///Configuration of the default image, that is displayed, when no image is set yet
   static const String defaultImage='assets/images/blurry_background.jpg';
 
   ///The Image of a MemoryPoint - can be null
-  final String imagePath;
+  final String? imagePath;
 
   /// Callback for [EditMemoryPointWidget]
   final OnUpdateImageCallback onImageChanged;
@@ -27,13 +27,13 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   ///image, that is not yet loaded
-  Future<FilePickerCross> _imageStateFuture;
+  Future<FilePickerCross>? _imageStateFuture;
 
   ///loaded image
-  FilePickerCross _imageState;
+  FilePickerCross? _imageState;
 
   ///actual imagePath, that can be modified by the User
-  String _imagePathState;
+  String? _imagePathState;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     _imagePathState = widget.imagePath;
     if (_imagePathState != null) {
       _imageStateFuture =
-          FilePickerCross.fromInternalPath(path: _imagePathState);
+          FilePickerCross.fromInternalPath(path: _imagePathState!);
     }
     super.initState();
   }
@@ -69,7 +69,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         return Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: MemoryImage(snapshot.data.toUint8List()),
+                              image: MemoryImage(snapshot.data!.toUint8List()),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -80,7 +80,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                   color: Colors.grey[200],
                                   border: Border.all(
                                     width: 2,
-                                    color: Colors.grey[700],
+                                    color: Colors.grey[700]!,
                                   ),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(64))),
@@ -104,7 +104,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 : Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: MemoryImage(_imageState.toUint8List()),
+                        image: MemoryImage(_imageState!.toUint8List()),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -115,7 +115,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             color: Colors.grey[200],
                             border: Border.all(
                               width: 2,
-                              color: Colors.grey[700],
+                              color: Colors.grey[700]!,
                             ),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(64))),
@@ -143,7 +143,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                         color: Colors.grey[200],
                         border: Border.all(
                           width: 2,
-                          color: Colors.grey[700],
+                          color: Colors.grey[700]!,
                         ),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(64))),
@@ -177,7 +177,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     setState(() {
                       _imagePathState = path;
                       _imageState = imageData;
-                      widget.onImageChanged(_imagePathState);
+                      widget.onImageChanged(_imagePathState!);
                     });
                   },
                 )));
@@ -192,7 +192,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     setState(() {
       _imageState = image;
       _imagePathState = path;
-      widget.onImageChanged(_imagePathState);
+      widget.onImageChanged(_imagePathState!);
     });
   }
 

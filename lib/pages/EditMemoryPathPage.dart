@@ -5,18 +5,18 @@ import 'package:mobile/main.dart';
 import 'package:mobile/widgets/EditMemoryPathCard.dart';
 
 class EditMemoryPathPage extends StatefulWidget {
-  const EditMemoryPathPage({Key key, this.path, this.onCreated})
+  const EditMemoryPathPage({Key? key, this.path, this.onCreated})
       : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/(createPath|editPath\/(\d+))');
 
-  final MemoryPathCreatedCallback onCreated;
-  final int path;
+  final MemoryPathCreatedCallback? onCreated;
+  final int? path;
   @override
   _EditMemoryPathPageState createState() => _EditMemoryPathPageState();
 }
 
 class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
-  MemoryPathDb path;
+  MemoryPathDb? path;
 
   @override
   void initState() {
@@ -44,14 +44,14 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
                     context: context,
                     builder: (BuildContext c) {
                       return AlertDialog(
-                        title: Text('Are your sure to delete ${path.name}?'),
+                        title: Text('Are your sure to delete ${path!.name}?'),
                         actions: <Widget>[
                           TextButton(
                               onPressed: Navigator.of(context).pop,
                               child: const Text('Cancel')),
                           TextButton(
                               onPressed: () {
-                                databaseBox.delete(path.key);
+                                databaseBox.delete(path!.key);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },

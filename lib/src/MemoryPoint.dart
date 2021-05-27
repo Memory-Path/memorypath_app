@@ -11,18 +11,18 @@ class MemoryPoint {
     question = memoryPointDb.question;
     latlng = LatLng(memoryPointDb.lat, memoryPointDb.long);
   }
-  String name;
-  String image;
-  String question;
-  String answer;
-  LatLng latlng;
+  String? name;
+  String? image;
+  String? question;
+  String? answer;
+  LatLng? latlng;
 
   MemoryPointDb toMemoryPointDb() {
     return MemoryPointDb(
-        name: name,
-        question: question,
-        image: image,
-        lat: latlng.latitude,
-        long: latlng.longitude);
+        name: name!,
+        question: question!,
+        image: image!,
+        lat: latlng!.latitude,
+        long: latlng!.longitude);
   }
 }

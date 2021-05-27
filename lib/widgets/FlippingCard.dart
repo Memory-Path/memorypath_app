@@ -3,19 +3,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class FlippingCard extends StatefulWidget {
-  const FlippingCard({Key key, this.front, this.rear, this.height})
+  const FlippingCard({Key? key, required this.front, required this.rear, this.height})
       : super(key: key);
   final Widget front;
   final Widget rear;
-  final double height;
+  final double? height;
 
   @override
   _FlippingCardState createState() => _FlippingCardState();
 }
 
 class _FlippingCardState extends State<FlippingCard> {
-  bool _showFrontSide;
-  bool _flipXAxis;
+  bool? _showFrontSide;
+  late bool _flipXAxis;
 
   @override
   void initState() {
@@ -36,9 +36,9 @@ class _FlippingCardState extends State<FlippingCard> {
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 transitionBuilder: __transitionBuilder,
-                layoutBuilder: (Widget widget, List<Widget> list) =>
-                    Stack(children: <Widget>[widget, ...list]),
-                child: _showFrontSide ? _buildFront() : _buildRear(),
+                layoutBuilder: (Widget? widget, List<Widget> list) =>
+                    Stack(children: <Widget>[widget!, ...list]),
+                child: _showFrontSide! ? _buildFront() : _buildRear(),
                 switchInCurve: Curves.easeInBack,
                 switchOutCurve: Curves.easeInBack.flipped,
               ),
@@ -47,7 +47,7 @@ class _FlippingCardState extends State<FlippingCard> {
 
   void _switchCard() {
     setState(() {
-      _showFrontSide = !_showFrontSide;
+      _showFrontSide = !_showFrontSide!;
     });
   }
 
@@ -56,8 +56,8 @@ class _FlippingCardState extends State<FlippingCard> {
     return AnimatedBuilder(
       animation: rotateAnim,
       child: widget,
-      builder: (BuildContext context, Widget widget) {
-        final bool isUnder = ValueKey<bool>(_showFrontSide) != widget.key;
+      builder: (BuildContext context, Widget? widget) {
+        final bool isUnder = ValueKey<bool?>(_showFrontSide) != widget!.key;
         double tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
         tilt *= isUnder ? -1.0 : 1.0;
         final double value =

@@ -7,10 +7,10 @@ import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 import 'package:mobile/widgets/maps/EditableMapView.dart';
 
 class EditMemoryPathCard extends StatefulWidget {
-  const EditMemoryPathCard({Key key, @required this.onCreated, this.path})
+  const EditMemoryPathCard({Key? key, required this.onCreated, this.path})
       : super(key: key);
   final MemoryPathCreatedCallback onCreated;
-  final MemoryPathDb path;
+  final MemoryPathDb? path;
 
   @override
   _EditMemoryPathCardState createState() => _EditMemoryPathCardState();
@@ -28,9 +28,9 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
   @override
   void initState() {
     if (widget.path != null) {
-      _newMemoryPathController.text = widget.path.name;
-      _topicController.text = widget.path.topic;
-      _points = widget.path.memoryPoints;
+      _newMemoryPathController.text = widget.path!.name;
+      _topicController.text = widget.path!.topic;
+      _points = widget.path!.memoryPoints;
       for (int i = 0; i < _points.length; i++) {
         _height[0] = 56;
       }
@@ -66,7 +66,7 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                           _points = memoryPoints;
 
                           if (widget.path != null)
-                            widget.path.memoryPoints = _points;
+                            widget.path!.memoryPoints = _points;
                         });
                       },
                     ),
@@ -107,7 +107,7 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                               _points.removeAt(oldIndex);
                           _points.insert(newIndex, point);
                           if (widget.path != null)
-                            widget.path.memoryPoints = _points;
+                            widget.path!.memoryPoints = _points;
                           setState(() {});
                         }),
                   ),
@@ -134,8 +134,8 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
                             return;
                           }
                           if (widget.path != null) {
-                            widget.path.name = _newMemoryPathController.text;
-                            widget.path.topic = _topicController.text;
+                            widget.path!.name = _newMemoryPathController.text;
+                            widget.path!.topic = _topicController.text;
                             //widget.path.memoryPoints = _points;
                             Navigator.of(context)
                                 .pop(); // TODO(MemoryPath): that's dirty,
@@ -160,10 +160,10 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
 }
 
 class MemoryPointListTile extends StatefulWidget {
-  const MemoryPointListTile({Key key, this.point, this.onHeightChange})
+  const MemoryPointListTile({Key? key, this.point, this.onHeightChange})
       : super(key: key);
-  final MemoryPointDb point;
-  final HeightChangeCallback onHeightChange;
+  final MemoryPointDb? point;
+  final HeightChangeCallback? onHeightChange;
 
   @override
   _MemoryPointListTileState createState() => _MemoryPointListTileState();
@@ -183,7 +183,7 @@ class _MemoryPointListTileState extends State<MemoryPointListTile>
           constraints: BoxConstraints.loose(const Size(0, 0)),
         ),
         leading: const Icon(Icons.lightbulb),
-        title: Text(widget.point.name),
+        title: Text(widget.point!.name),
         children: <Widget>[
           EditMemoryPointWidget(
             memoryPoint: widget.point,
@@ -195,8 +195,8 @@ class _MemoryPointListTileState extends State<MemoryPointListTile>
 
   @override
   void afterFirstLayout(BuildContext context) {
-    final double newHeight = _heightKey.currentContext.size.height;
-    widget.onHeightChange(newHeight);
+    final double newHeight = _heightKey.currentContext!.size!.height;
+    widget.onHeightChange!(newHeight);
   }
 }
 

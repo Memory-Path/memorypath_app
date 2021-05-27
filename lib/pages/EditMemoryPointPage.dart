@@ -9,8 +9,8 @@ import 'package:mobile/widgets/EditMemoryPointWidget.dart';
 class MemoryPointEditPage extends StatefulWidget {
   const MemoryPointEditPage({this.memoryPointId, this.memoryPathId});
   static final RegExp routeMatch = RegExp(r'^\/edit\/(\d+)\/point\/(\d+)$');
-  final int memoryPointId;
-  final int memoryPathId;
+  final int? memoryPointId;
+  final int? memoryPathId;
 
 
   @override
@@ -18,7 +18,7 @@ class MemoryPointEditPage extends StatefulWidget {
 }
 
 class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
-  MemoryPathDb _memoryPathDbState;
+  MemoryPathDb? _memoryPathDbState;
 
   @override
   void initState() {
@@ -35,10 +35,10 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
             icon: const Icon(Icons.close),
             tooltip: 'Discard',
             onPressed: () {
-              if (_memoryPathDbState.memoryPoints[widget.memoryPointId].name ==
+              if (_memoryPathDbState!.memoryPoints[widget.memoryPointId!].name ==
                   null) {
-                _memoryPathDbState.memoryPoints.removeAt(widget.memoryPointId);
-                databaseBox.putAt(widget.memoryPathId, _memoryPathDbState);
+                _memoryPathDbState!.memoryPoints.removeAt(widget.memoryPointId!);
+                databaseBox.putAt(widget.memoryPathId!, _memoryPathDbState!);
               }
               Navigator.pop(context);
             }),
@@ -51,7 +51,7 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
               maxWidth: MediaQuery.of(context).size.width),
           child: EditMemoryPointWidget(
             memoryPoint:
-                _memoryPathDbState.memoryPoints.elementAt(widget.memoryPointId),
+                _memoryPathDbState!.memoryPoints.elementAt(widget.memoryPointId!),
           ),
         ),
       ),

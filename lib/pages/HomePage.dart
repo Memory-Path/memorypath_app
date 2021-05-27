@@ -10,7 +10,7 @@ import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key, this.data}) : super(key: key);
+  const HomePage({Key? key, this.data}) : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/home$');
   final dynamic data;
 
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 child: ValueListenableBuilder<Box<MemoryPathDb>>(
                   valueListenable: _box.listenable(),
                   builder: (BuildContext context, Box<MemoryPathDb> box,
-                      Widget widget) {
+                      Widget? widget) {
                     //Added Quickfix
                     final List<MemoryPathDb> paths = listAllMemoryPath(box);
                     return ListView(
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(4.0),
                           child: OpenContainer(
                             closedColor: Theme.of(context).cardColor,
-                            closedShape: Theme.of(context).cardTheme.shape,
+                            closedShape: Theme.of(context).cardTheme.shape!,
                             closedBuilder: (BuildContext c, VoidCallback f) => Container(
                               constraints: const BoxConstraints(minWidth: 64),
                               child: AspectRatio(

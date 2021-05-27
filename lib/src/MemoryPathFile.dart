@@ -1,3 +1,4 @@
+/*
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
@@ -65,3 +66,4 @@ class MemoryPathFileMetadata {
   //final int fileFormatVersion
 
 }
+*/

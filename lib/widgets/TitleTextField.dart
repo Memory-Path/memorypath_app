@@ -13,9 +13,9 @@ class TitleTextField extends StatefulWidget {
 }
 
 class _TitleTextFieldState extends State<TitleTextField> {
-  bool _isEditingTitle;
-  String _titleState;
-  TextEditingController _titleController;
+  late bool _isEditingTitle;
+  String? _titleState;
+  TextEditingController? _titleController;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _TitleTextFieldState extends State<TitleTextField> {
 
   @override
   void dispose() {
-    _titleController.dispose();
+    _titleController!.dispose();
     super.dispose();
   }
 }

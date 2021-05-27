@@ -6,9 +6,9 @@ class MemoryPath {
   MemoryPath.fromDb() {
     //toDo: Implement
   }
-  int id;
-  String name;
-  String topic;
-  List<MemoryPoint> memoryPoints;
+  late int id;
+  String? name;
+  String? topic;
+  List<MemoryPoint>? memoryPoints;
 
 }

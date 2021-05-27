@@ -4,10 +4,10 @@ import 'package:mobile/main.dart';
 import 'package:mobile/mapbox_api_key.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key, this.requestedRoute = '/home'})
+  const SplashScreen({Key? key, this.requestedRoute = '/home'})
       : super(key: key);
   static final RegExp routeMatch = RegExp(r'^\/$');
-  final String requestedRoute;
+  final String? requestedRoute;
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -32,6 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future<Null>.delayed(const Duration(seconds: 1));
     MapBoxApi.init(MAPBOX_API_KEY);
     initialized = true;
-    Navigator.of(context).pushReplacementNamed(widget.requestedRoute);
+    Navigator.of(context).pushReplacementNamed(widget.requestedRoute!);
   }
 }

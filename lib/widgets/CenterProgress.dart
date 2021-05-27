@@ -10,24 +10,24 @@ class CenterProgress extends StatefulWidget {
 
 class _CenterProgressState extends State<CenterProgress>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Color> _colorTween;
-  TweenSequence<Color> _tweenSequence;
+  late AnimationController _animationController;
+  Animation<Color>? _colorTween;
+  late TweenSequence<Color> _tweenSequence;
 
   @override
   void initState() {
     _tweenSequence = TweenSequence<Color>(<TweenSequenceItem<Color>>[
       TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.green, end: Colors.lightBlue),
+          tween: ColorTween(begin: Colors.green, end: Colors.lightBlue) as Animatable<Color>,
           weight: 1),
       TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.lightBlue, end: Colors.lightBlue),
+          tween: ColorTween(begin: Colors.lightBlue, end: Colors.lightBlue) as Animatable<Color>,
           weight: 2),
       TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.lightBlue, end: Colors.green),
+          tween: ColorTween(begin: Colors.lightBlue, end: Colors.green) as Animatable<Color>,
           weight: 1),
       TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.green, end: Colors.green), weight: 2),
+          tween: ColorTween(begin: Colors.green, end: Colors.green) as Animatable<Color>, weight: 2),
     ]);
 
     _animationController =
@@ -40,8 +40,8 @@ class _CenterProgressState extends State<CenterProgress>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _colorTween,
-        builder: (BuildContext context, Widget child) => Padding(
+        animation: _colorTween!,
+        builder: (BuildContext context, Widget? child) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Column(
