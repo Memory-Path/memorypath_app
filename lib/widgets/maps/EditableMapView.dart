@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
@@ -82,7 +82,7 @@ class _EditableMapViewState extends State<EditableMapView> {
   List<Marker> mp2m(List<MemoryPointDb> points) {
     return points
         .map((MemoryPointDb e) => Marker(
-            point: LatLng(e.lat, e.long),
+            point: LatLng(e.lat!, e.long!),
             builder: (BuildContext context) => IconButton(
                   icon: Icon(
                     Icons.location_pin,

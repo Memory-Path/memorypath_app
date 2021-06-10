@@ -1,4 +1,4 @@
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
 class MemoryPoint {
@@ -9,7 +9,7 @@ class MemoryPoint {
     image = memoryPointDb.image;
     answer = memoryPointDb.answer;
     question = memoryPointDb.question;
-    latlng = LatLng(memoryPointDb.lat, memoryPointDb.long);
+    latlng = LatLng(memoryPointDb.lat!, memoryPointDb.long!);
   }
   String? name;
   String? image;

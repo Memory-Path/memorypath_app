@@ -47,7 +47,7 @@ class _EditMemoryPointWidgetState extends State<EditMemoryPointWidget> {
         shrinkWrap: true,
         children: <Widget>[
           ///TextField to edit the Title of the MemoryPoint
-          TitleTextField(_onMemoryPointNameChanged, widget.memoryPoint!.name),
+          TitleTextField(_onMemoryPointNameChanged, widget.memoryPoint!.name!),
           ListTile(
               title: Container(
             constraints: const BoxConstraints(minHeight: 128),

@@ -28,9 +28,9 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
   @override
   void initState() {
     if (widget.path != null) {
-      _newMemoryPathController.text = widget.path!.name;
-      _topicController.text = widget.path!.topic;
-      _points = widget.path!.memoryPoints;
+      _newMemoryPathController.text = widget.path!.name!;
+      _topicController.text = widget.path!.topic!;
+      _points = widget.path!.memoryPoints!;
       for (int i = 0; i < _points.length; i++) {
         _height[0] = 56;
       }
@@ -183,7 +183,7 @@ class _MemoryPointListTileState extends State<MemoryPointListTile>
           constraints: BoxConstraints.loose(const Size(0, 0)),
         ),
         leading: const Icon(Icons.lightbulb),
-        title: Text(widget.point!.name),
+        title: Text(widget.point!.name!),
         children: <Widget>[
           EditMemoryPointWidget(
             memoryPoint: widget.point,

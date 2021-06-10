@@ -11,23 +11,23 @@ class CenterProgress extends StatefulWidget {
 class _CenterProgressState extends State<CenterProgress>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  Animation<Color>? _colorTween;
-  late TweenSequence<Color> _tweenSequence;
+  Animation<Color?>? _colorTween;
+  late TweenSequence<Color?> _tweenSequence;
 
   @override
   void initState() {
-    _tweenSequence = TweenSequence<Color>(<TweenSequenceItem<Color>>[
-      TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.green, end: Colors.lightBlue) as Animatable<Color>,
+    _tweenSequence = TweenSequence<Color?>(<TweenSequenceItem<Color?>>[
+      TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.green, end: Colors.lightBlue),
           weight: 1),
-      TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.lightBlue, end: Colors.lightBlue) as Animatable<Color>,
+      TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.lightBlue, end: Colors.lightBlue),
           weight: 2),
-      TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.lightBlue, end: Colors.green) as Animatable<Color>,
+      TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.lightBlue, end: Colors.green),
           weight: 1),
-      TweenSequenceItem<Color>(
-          tween: ColorTween(begin: Colors.green, end: Colors.green) as Animatable<Color>, weight: 2),
+      TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.green, end: Colors.green), weight: 2),
     ]);
 
     _animationController =

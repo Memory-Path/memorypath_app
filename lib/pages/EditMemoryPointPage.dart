@@ -12,7 +12,6 @@ class MemoryPointEditPage extends StatefulWidget {
   final int? memoryPointId;
   final int? memoryPathId;
 
-
   @override
   _MemoryPointEditPageState createState() => _MemoryPointEditPageState();
 }
@@ -35,9 +34,11 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
             icon: const Icon(Icons.close),
             tooltip: 'Discard',
             onPressed: () {
-              if (_memoryPathDbState!.memoryPoints[widget.memoryPointId!].name ==
+              if (_memoryPathDbState!
+                      .memoryPoints![widget.memoryPointId!].name ==
                   null) {
-                _memoryPathDbState!.memoryPoints.removeAt(widget.memoryPointId!);
+                _memoryPathDbState!.memoryPoints!
+                    .removeAt(widget.memoryPointId!);
                 databaseBox.putAt(widget.memoryPathId!, _memoryPathDbState!);
               }
               Navigator.pop(context);
@@ -50,8 +51,8 @@ class _MemoryPointEditPageState extends State<MemoryPointEditPage> {
               maxHeight: MediaQuery.of(context).size.height,
               maxWidth: MediaQuery.of(context).size.width),
           child: EditMemoryPointWidget(
-            memoryPoint:
-                _memoryPathDbState!.memoryPoints.elementAt(widget.memoryPointId!),
+            memoryPoint: _memoryPathDbState!.memoryPoints!
+                .elementAt(widget.memoryPointId!),
           ),
         ),
       ),

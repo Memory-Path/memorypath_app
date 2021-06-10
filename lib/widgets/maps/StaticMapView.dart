@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:map_api/map_api.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 
@@ -59,7 +59,7 @@ class _StaticMapViewState extends State<StaticMapView> {
     for (int i = 0; i < points.length; i++) {
       final MemoryPointDb e = points[i];
       markers.add(Marker(
-          point: LatLng(e.lat, e.long),
+          point: LatLng(e.lat!, e.long!),
           builder: (BuildContext context) => IconButton(
                 icon: Icon(
                   Icons.location_pin,

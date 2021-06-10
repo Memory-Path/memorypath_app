@@ -20,7 +20,7 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
   image_picker: ^0.8.0+3
-  latlong: ^0.6.1
+  latlong2: ^0.8.0
   archive: ^3.1.2
 
 
@@ -41,16 +41,6 @@ dev_dependencies:
 
   dartdoc: ^0.45.0
   build_runner: ^2.0.4
-  json_serializable: ^4.1.3
-
-
-dependency_overrides:
-  flutter_map: ^0.13.1
-  quiver: ^3.0.1
-  hive: ^2.0.4
-  hive_flutter: ^1.0.0
-  logging: ^1.0.1
-  json_annotation: ^4.0.1
   json_serializable: ^4.1.3
 
 flutter:

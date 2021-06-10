@@ -58,7 +58,7 @@ class _PracticePageState extends State<PracticePage> {
                   Hero(
                     tag: '${HeroTags.MapView}${memoryPath!.key}',
                     child: StaticMapView(
-                      points: memoryPath!.memoryPoints,
+                      points: memoryPath!.memoryPoints!,
                       emphasizePointId: _currentPoint,
                       //key: GlobalKey(),
                     ),
@@ -79,10 +79,10 @@ class _PracticePageState extends State<PracticePage> {
                         },
                         layoutBuilder:
                             PageTransitionSwitcher.defaultLayoutBuilder,
-                        child: _currentPoint < memoryPath!.memoryPoints.length
+                        child: _currentPoint < memoryPath!.memoryPoints!.length
                             ? _PointView(
                                 key: GlobalKey(),
-                                point: memoryPath!.memoryPoints[_currentPoint],
+                                point: memoryPath!.memoryPoints![_currentPoint],
                                 onAnswered: (bool correct) {
                                   _pointsAnswered[_currentPoint] = correct;
                                   setState(() {
@@ -110,7 +110,7 @@ class _PracticePageState extends State<PracticePage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _currentPoint < memoryPath!.memoryPoints.length
+        floatingActionButton: _currentPoint < memoryPath!.memoryPoints!.length
             ? FloatingActionButton(
                 child: const Icon(Icons.arrow_forward),
                 onPressed: () {

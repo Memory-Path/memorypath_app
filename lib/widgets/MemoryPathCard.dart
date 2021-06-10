@@ -35,7 +35,7 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    widget.memoryPath.name,
+                    widget.memoryPath.name!,
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   trailing: IconButton(
@@ -49,7 +49,7 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
                 Hero(
                   tag: '${HeroTags.MapView}${widget.memoryPath.key}',
                   child: StaticMapView(
-                    points: widget.memoryPath.memoryPoints,
+                    points: widget.memoryPath.memoryPoints!,
                     onDirectionsUpdate: setDirections,
                   ),
                 ),

@@ -94,10 +94,15 @@ ColorScheme _lightColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
+CardTheme cardTheme = CardTheme(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)));
+
 ThemeData darkTheme = ThemeData(
   colorScheme: _darkColorScheme,
+  cardTheme: cardTheme,
 );
 
 ThemeData lightTheme = ThemeData(
   colorScheme: _lightColorScheme,
+  cardTheme: cardTheme,
 );
