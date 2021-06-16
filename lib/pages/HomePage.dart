@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    //loadMemoryPaths();
     super.initState();
   }
 
@@ -33,9 +32,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          padding: const EdgeInsets.all(2),
           children: <Widget>[
             if (widget.data != null &&
                 widget.data is RouteNotFoundException &&
@@ -56,102 +54,140 @@ class _HomePageState extends State<HomePage> {
                       setState(() => _manuallyHideRoutingError = true),
                 ),
               ),
-            Text(
-              'My paths',
-              style: Theme.of(context).textTheme.headline3,
+            // TODO(MemoryPath): Replace by dynamic User-Info
+            ListTile(
+              leading: Text(
+                'Hey User',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              trailing: const Icon(Icons.person),
+            ),
+            ListTile(
+              leading: Text(
+                'My Paths',
+                style: Theme.of(context).textTheme.caption,
+              ),
             ),
             Container(
                 constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height / 2),
+                    maxHeight: MediaQuery.of(context).size.height / 2 * 3),
                 child: ValueListenableBuilder<Box<MemoryPathDb>>(
                   valueListenable: _box.listenable(),
                   builder: (BuildContext context, Box<MemoryPathDb> box,
                       Widget? widget) {
                     //Added Quickfix
                     final List<MemoryPathDb> paths = listAllMemoryPath(box);
-                    return ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: OpenContainer(
-                            closedColor: Theme.of(context).cardColor,
-                            closedShape: Theme.of(context).cardTheme.shape!,
-                            closedBuilder: (BuildContext c, VoidCallback f) => Container(
-                              constraints: const BoxConstraints(minWidth: 64),
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: [
+                          if (paths.isEmpty)
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxHeight: 250,
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width / 2),
                               child: AspectRatio(
-                                aspectRatio:
-                                    MediaQuery.of(context).size.aspectRatio / 4,
-                                child: const Tooltip(
-                                  child: Hero(
-                                      tag: HeroTags.AddPathIcon,
-                                      child: Icon(Icons.add)),
-                                  message: 'Create memory path',
-                                ),
-                                /*onPressed: () {
-                                      */ /*setState(
-                                              () => _addingPath = true);*/ /*
-                                    },*/
-                              ),
-                            ),
-                            routeSettings:
-                                const RouteSettings(name: '/createPath'),
-                            openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
-                              onCreated: (MemoryPathDb data) {
-                                print('Data!');
-                              },
-                            ),
-                            openColor: Theme.of(context).backgroundColor,
-                          ),
-                        ),
-                        if (paths.isEmpty)
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 393),
-                            child: AspectRatio(
-                                aspectRatio:
-                                    MediaQuery.of(context).size.aspectRatio,
-                                child: const Card(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Text(
-                                        'So lonely here...\nMaybe you would like to create a new Memory-Path?',
+                                  aspectRatio:
+                                      MediaQuery.of(context).size.aspectRatio,
+                                  child: Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Text(
+                                          'So lonely here...\nMaybe you would like to create a new Memory-Path?',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )),
-                          ),
-                        ...paths.map((MemoryPathDb e) => MemoryPathCard(
-                              memoryPath: e,
-                            ))
-                      ],
+                                  )),
+                            ),
+                          ...paths.map((MemoryPathDb e) => MemoryPathCard(
+                                memoryPath: e,
+                              )),
+                        ],
+                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(4.0),
+                      //   child: OpenContainer(
+                      //     closedColor: Theme.of(context).cardColor,
+                      //     closedShape: Theme.of(context).cardTheme.shape!,
+                      //     closedBuilder: (BuildContext c, VoidCallback f) =>
+                      //         Container(
+                      //       constraints: const BoxConstraints(minWidth: 64),
+                      //       child: AspectRatio(
+                      //         aspectRatio:
+                      //             MediaQuery.of(context).size.aspectRatio / 4,
+                      //         child: const Tooltip(
+                      //           child: Hero(
+                      //               tag: HeroTags.AddPathIcon,
+                      //               child: Icon(Icons.add)),
+                      //           message: 'Create memory path',
+                      //         ),
+                      //         /*onPressed: () {
+                      //               */ /*setState(
+                      //                       () => _addingPath = true);*/ /*
+                      //             },*/
+                      //       ),
+                      //     ),
+                      //     routeSettings:
+                      //         const RouteSettings(name: '/createPath'),
+                      //     openBuilder: (BuildContext c, VoidCallback f) =>
+                      //         EditMemoryPathPage(
+                      //       onCreated: (MemoryPathDb data) {
+                      //         print('Data!');
+                      //       },
+                      //     ),
+                      //     openColor: Theme.of(context).backgroundColor,
+                      //   ),
+                      // ),
                     );
                   },
                 )),
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 786),
-          child: const Card(
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                child: Text(
-                    'Here, some stats can be shown as soon as the DB is working properly.'),
-              ),
-            ),
+      // TODO(MemoryPath): Button Shape & Color,
+      floatingActionButton: OpenContainer(
+        closedColor: Theme.of(context).colorScheme.onSecondary,
+        closedShape: Theme.of(context).cardTheme.shape!,
+        openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
+          onCreated: (MemoryPathDb data) {},
+        ),
+        openColor: Theme.of(context).backgroundColor,
+        closedBuilder: (BuildContext c, VoidCallback f) => Container(
+          child: const Tooltip(
+            child: Hero(tag: HeroTags.AddPathIcon, child: Icon(Icons.add)),
+            message: 'Create Memory-Path',
           ),
         ),
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 5),
+        routeSettings: const RouteSettings(name: '/createPath'),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        // TODO(MemoryPath): How to navigate to specific Route?
+        onTap: null,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home), tooltip: 'Go to Homepage', label: 'home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.apps),
+              tooltip: 'Show all Memory-Paths',
+              label: 'showAll'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              tooltip: 'Go to Profile',
+              label: 'profile')
+        ],
       ),
     );
   }
 
-  //ToDo: Functionality Check
   List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box) {
     final List<MemoryPathDb> memoryPaths = <MemoryPathDb>[];
     memoryPaths.addAll(box.values);
