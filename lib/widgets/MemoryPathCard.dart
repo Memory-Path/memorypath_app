@@ -144,11 +144,11 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
 
   Widget? memoryPathUnfinishedWidget(MemoryPathDb memoryPathDb) {
     bool unfinished = false;
-    memoryPathDb.memoryPoints!.forEach((element) {
+    for (final MemoryPointDb element in memoryPathDb.memoryPoints!) {
       if (element.image == null || element.lat == null) {
         unfinished = true;
       }
-    });
+    }
     if (unfinished) {
       return Align(
         alignment: Alignment.center,
@@ -171,6 +171,5 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
         ),
       );
     }
-    ;
   }
 }

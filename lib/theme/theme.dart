@@ -67,12 +67,12 @@ ColorScheme _darkColorScheme = ColorScheme(
   primaryVariant: _darkColors.blue,
   secondary: _darkColors.orange,
   secondaryVariant: _darkColors.darkRed,
-  surface: _darkColors.light,
+  surface: _darkColors.blue,
   background: _darkColors.light,
   error: _darkColors.darkRed,
   onPrimary: _darkColors.onDarkBlue,
   onSecondary: _darkColors.onOrange,
-  onSurface: _darkColors.onLight,
+  onSurface: _darkColors.onBlue,
   onBackground: _darkColors.onLight,
   onError: _darkColors.onDarkRed,
   brightness: Brightness.dark,
@@ -94,15 +94,38 @@ ColorScheme _lightColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-CardTheme cardTheme = CardTheme(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)));
+CardTheme _cardTheme = CardTheme(
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+);
+
+BottomNavigationBarThemeData _darkBottomNavigationBarTheme =
+    BottomNavigationBarThemeData(selectedItemColor: _darkColors.orange);
+
+BottomNavigationBarThemeData _lightBottomNavigationBarTheme =
+    BottomNavigationBarThemeData(selectedItemColor: _darkColors.orange);
+
+AppBarTheme _darkAppBarTheme = AppBarTheme(
+  color: _darkColors.orange,
+);
+
+AppBarTheme _lightAppBarTheme = AppBarTheme(
+  color: _lightColors.orange,
+);
 
 ThemeData darkTheme = ThemeData(
   colorScheme: _darkColorScheme,
-  cardTheme: cardTheme,
+  cardTheme: _cardTheme,
+  cardColor: _darkColorScheme.surface,
+  bottomNavigationBarTheme: _darkBottomNavigationBarTheme,
+  primaryColor: _darkColorScheme.primary,
+  appBarTheme: _darkAppBarTheme,
 );
 
 ThemeData lightTheme = ThemeData(
   colorScheme: _lightColorScheme,
-  cardTheme: cardTheme,
+  cardTheme: _cardTheme,
+  cardColor: _lightColorScheme.surface,
+  bottomNavigationBarTheme: _lightBottomNavigationBarTheme,
+  primaryColor: _lightColorScheme.primary,
+  appBarTheme: _lightAppBarTheme,
 );

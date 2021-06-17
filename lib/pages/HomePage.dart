@@ -1,8 +1,10 @@
 import 'package:animations/animations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/components/SpacingBottomNavigationBar.dart';
 import 'package:mobile/pages/EditMemoryPathPage.dart';
 //import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
@@ -29,10 +31,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final Box<MemoryPathDb> _box = Hive.box<MemoryPathDb>(HIVE_MEMORY_PATHS);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
-        child: ListView(
-          padding: const EdgeInsets.all(2),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
           children: <Widget>[
             if (widget.data != null &&
                 widget.data is RouteNotFoundException &&
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 4,
-                        children: [
+                        children: <Widget>[
                           if (paths.isEmpty)
                             Container(
                               constraints: BoxConstraints(
@@ -149,40 +149,38 @@ class _HomePageState extends State<HomePage> {
                 )),
           ],
         ),
-      ),
-      // TODO(MemoryPath): Button Shape & Color,
-      floatingActionButton: OpenContainer(
-        closedColor: Colors.transparent,
-        closedShape: const StadiumBorder(),
-        openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
-          onCreated: (MemoryPathDb data) {},
+        floatingActionButton: OpenContainer(
+          closedColor: Colors.transparent,
+          closedShape: const StadiumBorder(),
+          openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
+            onCreated: (MemoryPathDb data) {},
+          ),
+          openColor: Theme.of(context).backgroundColor,
+          closedBuilder: (BuildContext c, VoidCallback f) =>
+              FloatingActionButton(
+            onPressed: f,
+            child: const Icon(Icons.add),
+          ),
+          routeSettings: const RouteSettings(name: '/createPath'),
         ),
-        openColor: Theme.of(context).backgroundColor,
-        closedBuilder: (BuildContext c, VoidCallback f) => FloatingActionButton(
-          onPressed: f,
-          child: const Icon(Icons.add),
-        ),
-        routeSettings: const RouteSettings(name: '/createPath'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        // TODO(MemoryPath): How to navigate to specific Route?
-        onTap: null,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), tooltip: 'Go to Homepage', label: 'home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.apps),
-              tooltip: 'Show all Memory-Paths',
-              label: 'showAll'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              tooltip: 'Go to Profile',
-              label: 'profile')
-        ],
-      ),
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        bottomNavigationBar: const SpacingBottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                tooltip: 'Go to Homepage',
+                label: 'home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.apps),
+                tooltip: 'Show all Memory-Paths',
+                label: 'showAll'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                tooltip: 'Go to Profile',
+                label: 'profile')
+          ],
+          onTap: null,
+        ));
   }
 
   List<MemoryPathDb> listAllMemoryPath(Box<MemoryPathDb> box) {

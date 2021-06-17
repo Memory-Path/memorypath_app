@@ -36,13 +36,17 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder<Box<dynamic>>(
       valueListenable: Hive.box<dynamic>(HIVE_SETTINGS).listenable(),
       builder: (BuildContext context, Box<dynamic> box, Widget? widget) {
-        final bool isDarkTheme =
-            box.get('darkMode', defaultValue: true) as bool;
+        final bool? isDarkTheme = box.get('darkMode') as bool?;
 
         return MaterialApp(
           title: 'Memory-Path',
-          theme: isDarkTheme ? darkTheme : lightTheme,
+          theme: lightTheme,
           darkTheme: darkTheme,
+          themeMode: isDarkTheme == null
+              ? ThemeMode.system
+              : isDarkTheme
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
           initialRoute:
               '/', // this can be used during development to access a requested page right when opening the app
           onGenerateRoute: (RouteSettings routeSettings) {
@@ -67,8 +71,8 @@ class MyApp extends StatelessWidget {
                   builder: (BuildContext context) => const HomePage());
             } else if (EditMemoryPathPage.routeMatch
                 .hasMatch(routeSettings.name!)) {
-              final RegExpMatch match =
-                  EditMemoryPathPage.routeMatch.firstMatch(routeSettings.name!)!;
+              final RegExpMatch match = EditMemoryPathPage.routeMatch
+                  .firstMatch(routeSettings.name!)!;
               int? path;
               if (match.group(2) != null) {
                 path = int.parse(match.group(2)!);
@@ -78,8 +82,8 @@ class MyApp extends StatelessWidget {
                       EditMemoryPathPage(path: path));
             } else if (MemoryPointEditPage.routeMatch
                 .hasMatch(routeSettings.name!)) {
-              final RegExpMatch match =
-                  MemoryPointEditPage.routeMatch.firstMatch(routeSettings.name!)!;
+              final RegExpMatch match = MemoryPointEditPage.routeMatch
+                  .firstMatch(routeSettings.name!)!;
               final int path = int.parse(match.group(1)!);
               final int point = int.parse(match.group(2)!);
               return MaterialPageRoute<MemoryPointEditPage>(
