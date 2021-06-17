@@ -4,7 +4,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
 import 'package:mobile/pages/EditMemoryPathPage.dart';
-import 'package:mobile/src/HeroTags.dart';
 //import 'package:mobile/src/MemoryPath.dart';
 import 'package:mobile/src/RouteNotFoundException.dart';
 import 'package:mobile/widgets/MemoryPathCard.dart';
@@ -153,17 +152,15 @@ class _HomePageState extends State<HomePage> {
       ),
       // TODO(MemoryPath): Button Shape & Color,
       floatingActionButton: OpenContainer(
-        closedColor: Theme.of(context).colorScheme.onSecondary,
-        closedShape: Theme.of(context).cardTheme.shape!,
+        closedColor: Colors.transparent,
+        closedShape: const StadiumBorder(),
         openBuilder: (BuildContext c, VoidCallback f) => EditMemoryPathPage(
           onCreated: (MemoryPathDb data) {},
         ),
         openColor: Theme.of(context).backgroundColor,
-        closedBuilder: (BuildContext c, VoidCallback f) => Container(
-          child: const Tooltip(
-            child: Hero(tag: HeroTags.AddPathIcon, child: Icon(Icons.add)),
-            message: 'Create Memory-Path',
-          ),
+        closedBuilder: (BuildContext c, VoidCallback f) => FloatingActionButton(
+          onPressed: f,
+          child: const Icon(Icons.add),
         ),
         routeSettings: const RouteSettings(name: '/createPath'),
       ),
