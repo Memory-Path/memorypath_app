@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
-import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
-import 'package:mobile/pages/PracticePage.dart';
+import 'package:mobile/pages/OverviewMemoryPathPage.dart';
+import 'package:mobile/widgets/MemoryPathImageDisplayer.dart';
 
 class MemoryPathCard extends StatefulWidget {
   const MemoryPathCard({Key? key, required this.memoryPath}) : super(key: key);
@@ -13,21 +13,6 @@ class MemoryPathCard extends StatefulWidget {
 }
 
 class _MemoryPathCardState extends State<MemoryPathCard> {
-  //late MBDirections directions;
-  Future<FilePickerCross>? _imageStateFuture;
-  //bool loadingDirections = true;
-
-  @override
-  void initState() {
-    if (widget.memoryPath.memoryPoints!.isNotEmpty) {
-      if (widget.memoryPath.memoryPoints!.first.image != null) {
-        _imageStateFuture = FilePickerCross.fromInternalPath(
-            path: widget.memoryPath.memoryPoints!.first.image!);
-      }
-    }
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,41 +28,15 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
             closedBuilder: (BuildContext c, VoidCallback f) => ListView(
               shrinkWrap: true,
               children: <Widget>[
-                // TODO(MemoryPath): Unfinished MemoryPath-Indicator
-                if (_imageStateFuture != null)
-                  FutureBuilder<FilePickerCross>(
-                      future: _imageStateFuture,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<FilePickerCross> snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image:
-                                    MemoryImage(snapshot.data!.toUint8List()),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child:
-                                memoryPathUnfinishedWidget(widget.memoryPath),
-                          );
-                        } else {
-                          return Container(
-                              child: const Center(
-                                  child: CircularProgressIndicator()));
-                        }
-                      })
-                else
-                  // TODO(Lanna): Fill in Blur-Image
-                  Container(
-                    color: Colors.amber,
-                    height: 150,
-                    child: memoryPathUnfinishedWidget(widget.memoryPath),
-                  ),
+                Container(
+                  height: 150,
+                  child:
+                      MemoryPathImageDisplayer(memoryPath: widget.memoryPath),
+                ),
                 ListTile(
                   title: Text(
                     widget.memoryPath.name!,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                   subtitle: Text(widget.memoryPath.topic!),
                   // TODO(MemoryPath): Add Card-Number and Location
@@ -118,8 +77,9 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
               ],
             ),
             routeSettings:
-                RouteSettings(name: '/practice/${widget.memoryPath.key}'),
-            openBuilder: (BuildContext c, VoidCallback f) => PracticePage(
+                RouteSettings(name: '/overview/${widget.memoryPath.key}'),
+            openBuilder: (BuildContext c, VoidCallback f) =>
+                OverviewMemoryPathPage(
               memoryPath: widget.memoryPath.key as int?,
             ),
             openColor: Theme.of(context).backgroundColor,
@@ -142,34 +102,4 @@ class _MemoryPathCardState extends State<MemoryPathCard> {
   //   });
   // }
 
-  Widget? memoryPathUnfinishedWidget(MemoryPathDb memoryPathDb) {
-    bool unfinished = false;
-    for (final MemoryPointDb element in memoryPathDb.memoryPoints!) {
-      if (element.image == null || element.lat == null) {
-        unfinished = true;
-      }
-    }
-    if (unfinished) {
-      return Align(
-        alignment: Alignment.center,
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: Border.all(
-                width: 2,
-                color: Colors.grey[700]!,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(64))),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.access_time,
-              size: 32,
-              color: Colors.grey[700],
-            ),
-          ),
-        ),
-      );
-    }
-  }
 }
