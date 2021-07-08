@@ -3,22 +3,22 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "version.json": "d75b5ea4d59e2aafe556a5d9ddc482f3",
-"main.dart.js": "2e026d6688a4c9423dde78a3ee947ed1",
-"index.html": "0dc34bda3c10ae4e3b6c58a1b87b6e70",
-"/": "0dc34bda3c10ae4e3b6c58a1b87b6e70",
+  "favicon.png": "5dcef449791fa27946b3d35ad8803796",
+"main.dart.js": "5000d30a686b128cc4b63bc4d8e7ad91",
+"index.html": "d6608b5fe38f46e679e4f9b5e1f10d94",
+"/": "d6608b5fe38f46e679e4f9b5e1f10d94",
+"manifest.json": "6c3dcbd7de98b2e3650cab4860062752",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-brands-400.ttf": "3241d1d9c15448a4da96df05f3292ffe",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-solid-900.ttf": "ffed6899ceb84c60a1efa51c809a57e4",
 "assets/packages/font_awesome_flutter/lib/fonts/fa-regular-400.ttf": "eaed33dc9678381a55cb5c13edaf241d",
-"assets/AssetManifest.json": "94a7fee61c36ec956183a1091eeaaff6",
-"assets/NOTICES": "4657bc109680f222feb5b0145786d35b",
+"assets/NOTICES": "d071343ed5b65e980be09ca46f63084f",
+"assets/FontManifest.json": "3ddd9b2ab1c2ae162d46e3cc7b78ba88",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
 "assets/assets/images/blurry_background.jpg": "ce8c903b7e84daa095e2157c3f97c8f8",
-"assets/FontManifest.json": "3ddd9b2ab1c2ae162d46e3cc7b78ba88",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
+"assets/AssetManifest.json": "94a7fee61c36ec956183a1091eeaaff6",
+"version.json": "d75b5ea4d59e2aafe556a5d9ddc482f3",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"manifest.json": "6c3dcbd7de98b2e3650cab4860062752",
-"favicon.png": "5dcef449791fa27946b3d35ad8803796"
+"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1"
 };
 
 // The application shell files that are downloaded before a service worker can
