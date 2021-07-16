@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memorypath_db_api/memorypath_db_api.dart';
+import 'package:mobile/components/grabbing_handle.dart';
+import 'package:mobile/globals.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/widgets/MemoryPathImageDisplayer.dart';
 import 'package:mobile/widgets/SimpleImageDisplayer.dart';
@@ -54,34 +56,9 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage>
         controller: _sheetController,
         lockOverflowDrag: true,
         sheetAbove: null,
-        snappingPositions: const <SnappingPosition>[
-          SnappingPosition.pixels(positionPixels: 24),
-          SnappingPosition.factor(positionFactor: .5),
-          SnappingPosition.factor(positionFactor: .9),
-        ],
+        snappingPositions: kDefaultSnappingPositions,
         grabbingHeight: 48,
-        grabbing: Material(
-          color: Theme.of(context).colorScheme.surface,
-          elevation: 8,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16), topRight: Radius.circular(16))),
-          child: Center(
-            child: Container(
-              height: 8,
-              width: 48,
-              child: Tooltip(
-                message: 'Drag to open',
-                child: Material(
-                  elevation: 2,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                ),
-              ),
-            ),
-          ),
-        ),
+        grabbing: GrabbingHandle(),
         sheetBelow: SnappingSheetContent(
             childScrollController: _listViewController,
             draggable: true,
