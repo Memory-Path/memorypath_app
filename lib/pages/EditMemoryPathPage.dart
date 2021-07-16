@@ -34,7 +34,7 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
         leading: IconButton(
             icon: const Icon(Icons.close),
             tooltip: 'Discard',
-            onPressed: backToHome),
+            onPressed: Navigator.of(context).pop),
         actions: <Widget>[
           if (widget.path != null)
             IconButton(

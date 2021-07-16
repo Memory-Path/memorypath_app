@@ -16,15 +16,23 @@ class OverviewMemoryPathPage extends StatefulWidget {
   _OverviewMemoryPathPageState createState() => _OverviewMemoryPathPageState();
 }
 
-class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
-  MemoryPathDb? memoryPath;
+class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage>
+    with TickerProviderStateMixin {
+  late MemoryPathDb? memoryPath;
   final ScrollController _listViewController = ScrollController();
-  bool _mapDisplayed = false;
+
+  final SnappingSheetController _sheetController = SnappingSheetController();
+
+  late TabController _tabController;
 
   @override
   void initState() {
-    memoryPath = databaseBox.get(widget.memoryPath);
-    // TODO(MemoryPath): Null-Check and display error if MemoryPath not found
+    final MemoryPathDb? path = databaseBox.get(widget.memoryPath);
+    if (path == null) {
+      Navigator.of(context).pop();
+    }
+    memoryPath = path!;
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -36,29 +44,41 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const <Tab>[Tab(text: 'Map'), Tab(text: 'Image')],
+        ),
       ),
       // TODO(TheOneWithTheBraid): Layout- and Functionality-Update
       body: SnappingSheet(
+        controller: _sheetController,
         lockOverflowDrag: true,
         sheetAbove: null,
-        grabbingHeight: 64,
+        snappingPositions: const <SnappingPosition>[
+          SnappingPosition.pixels(positionPixels: 24),
+          SnappingPosition.factor(positionFactor: .5),
+          SnappingPosition.factor(positionFactor: .9),
+        ],
+        grabbingHeight: 48,
         grabbing: Material(
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).colorScheme.surface,
           elevation: 8,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(32), topRight: Radius.circular(32))),
-          child: Container(
-            alignment: Alignment.centerLeft,
-            child: ListTile(
-              title: const Text('Memory-Points'),
-              trailing: IconButton(
-                  onPressed: _expandBottom,
-                  icon: const Icon(Icons.arrow_drop_down)),
-              /*trailing: Switch(
-                value: false,
-                onChanged: null,
-              ),*/
+                  topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+          child: Center(
+            child: Container(
+              height: 8,
+              width: 48,
+              child: Tooltip(
+                message: 'Drag to open',
+                child: Material(
+                  elevation: 2,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                ),
+              ),
             ),
           ),
         ),
@@ -66,7 +86,7 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
             childScrollController: _listViewController,
             draggable: true,
             child: Material(
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).colorScheme.surface,
               child: ListView.builder(
                 controller: _listViewController,
                 itemCount: memoryPath!.memoryPoints!.length,
@@ -76,23 +96,27 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
               ),
             )),
         child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 5 * 4,
-          child: GestureDetector(
-              child: _mapOrImage(),
-              onTap: () => setState(() {
-                    _mapDisplayed = !_mapDisplayed;
-                  })),
-        ),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 5 * 4,
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                StaticMapView(points: memoryPath!.memoryPoints!),
+                MemoryPathImageDisplayer(
+                  memoryPath: memoryPath!,
+                ),
+              ],
+            )),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () =>
             Navigator.pushNamed(context, '/practice/${widget.memoryPath}'),
         label: const Text('Start Learning'),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       // TODO(TheOneWithTheBraid): Integration of Widgets and Clean up - Elements in draft commented underneath
       bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).colorScheme.secondary,
         child: ListTile(
           title: Text(memoryPath!.name!),
           subtitle: Text(memoryPath!.topic!),
@@ -146,16 +170,4 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
       );
     }
   }
-
-  Widget _mapOrImage() {
-    if (_mapDisplayed) {
-      return StaticMapView(points: memoryPath!.memoryPoints!);
-    } else {
-      return MemoryPathImageDisplayer(
-        memoryPath: memoryPath!,
-      );
-    }
-  }
-
-  void _expandBottom() {}
 }
