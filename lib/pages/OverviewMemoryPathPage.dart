@@ -41,28 +41,39 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
       body: SnappingSheet(
         lockOverflowDrag: true,
         sheetAbove: null,
-        grabbingHeight: 50,
-        grabbing: SizedBox(
-          height: MediaQuery.of(context).size.height / 10,
+        grabbingHeight: 64,
+        grabbing: Material(
+          color: Theme.of(context).cardColor,
+          elevation: 8,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(32), topRight: Radius.circular(32))),
           child: Container(
-            color: Colors.amber,
-            child: const ListTile(
-              title: Text('Memory-Points'),
-              trailing: Switch(
+            alignment: Alignment.centerLeft,
+            child: ListTile(
+              title: const Text('Memory-Points'),
+              trailing: IconButton(
+                  onPressed: _expandBottom,
+                  icon: const Icon(Icons.arrow_drop_down)),
+              /*trailing: Switch(
                 value: false,
                 onChanged: null,
-              ),
+              ),*/
             ),
           ),
         ),
         sheetBelow: SnappingSheetContent(
             childScrollController: _listViewController,
-            child: ListView.builder(
-              controller: _listViewController,
-              itemCount: memoryPath!.memoryPoints!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _memoryPointListTile(memoryPath!.memoryPoints![index]);
-              },
+            draggable: true,
+            child: Material(
+              color: Theme.of(context).cardColor,
+              child: ListView.builder(
+                controller: _listViewController,
+                itemCount: memoryPath!.memoryPoints!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _memoryPointListTile(memoryPath!.memoryPoints![index]);
+                },
+              ),
             )),
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -74,11 +85,12 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
                   })),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () =>
             Navigator.pushNamed(context, '/practice/${widget.memoryPath}'),
-        child: const Text('Start Learning'),
+        label: const Text('Start Learning'),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       // TODO(TheOneWithTheBraid): Integration of Widgets and Clean up - Elements in draft commented underneath
       bottomNavigationBar: BottomAppBar(
         child: ListTile(
@@ -144,4 +156,6 @@ class _OverviewMemoryPathPageState extends State<OverviewMemoryPathPage> {
       );
     }
   }
+
+  void _expandBottom() {}
 }
