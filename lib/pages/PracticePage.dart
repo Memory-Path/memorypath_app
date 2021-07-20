@@ -6,6 +6,7 @@ import 'package:mobile/main.dart';
 import 'package:mobile/src/HeroTags.dart';
 import 'package:mobile/widgets/FlippingCard.dart';
 import 'package:mobile/widgets/ResponsiveCard.dart';
+import 'package:mobile/widgets/SimpleImageDisplayer.dart';
 import 'package:mobile/widgets/maps/StaticMapView.dart';
 
 class PracticePage extends StatefulWidget {
@@ -219,6 +220,11 @@ class __PointViewState extends State<_PointView> {
               style: Theme.of(context).textTheme.headline5,
             ),
           ),
+          Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                  maxHeight: MediaQuery.of(context).size.height / 8),
+              child: SimpleImageDisplayer(path: widget.point!.image)),
           ListTile(
             leading: const Icon(Icons.question_answer),
             title: Text(widget.point!.question ?? 'unknown'),
@@ -243,6 +249,11 @@ class __PointViewState extends State<_PointView> {
               style: Theme.of(context).textTheme.caption,
             ),
           ),
+          Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                  maxHeight: MediaQuery.of(context).size.height / 8),
+              child: SimpleImageDisplayer(path: widget.point!.image)),
           ListTile(
             leading: const Icon(Icons.edit_location),
             title: Text(widget.point!.answer ?? 'unknown'),

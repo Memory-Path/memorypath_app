@@ -4,16 +4,12 @@ import 'package:camera_camera/camera_camera.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 
-typedef OnUpdateImageCallback = void Function(String image);
+import '../globals.dart';
 
-///Configuration for the Storage-Path, where images, that are used in the App, are stored.
-const String STORAGE_PATH = 'assets/images/';
+typedef OnUpdateImageCallback = void Function(String image);
 
 class ImagePickerWidget extends StatefulWidget {
   const ImagePickerWidget({this.imagePath, required this.onImageChanged});
-
-  ///Configuration of the default image, that is displayed, when no image is set yet
-  static const String defaultImage='assets/images/blurry_background.jpg';
 
   ///The Image of a MemoryPoint - can be null
   final String? imagePath;
@@ -133,7 +129,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             : Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(ImagePickerWidget.defaultImage),
+                    image: AssetImage(defaultImagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -171,7 +167,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     final FilePickerCross imageData =
                         FilePickerCross(await file.readAsBytes());
                     final String path =
-                        STORAGE_PATH + DateTime.now().toString() + '.png';
+                        storagePath + DateTime.now().toString() + '.png';
                     await imageData.saveToPath(path: path);
                     Navigator.pop(context);
                     setState(() {
@@ -187,8 +183,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Future<void> _imgFromStorage() async {
     final FilePickerCross image =
         await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-    final String path = STORAGE_PATH + DateTime.now().toString() + '.png';
-    image.saveToPath(path: path);
+    final String path = storagePath + DateTime.now().toString() + '.png';
+    await image.saveToPath(path: path);
     setState(() {
       _imageState = image;
       _imagePathState = path;

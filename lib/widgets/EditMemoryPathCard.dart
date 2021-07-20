@@ -150,6 +150,7 @@ class _EditMemoryPathCardState extends State<EditMemoryPathCard> {
               itemBuilder: (BuildContext c, int i) => MemoryPointListTile(
                     key: ValueKey<MemoryPointDb>(_points[i]),
                     point: _points[i],
+                    // TODO(Memory-Path): onHeightChange-Function
                   ),
               itemCount: _points.length,
               onReorder: (int oldIndex, int newIndex) {
