@@ -54,6 +54,7 @@ class _EditMemoryPathPageState extends State<EditMemoryPathPage> {
                                 databaseBox.delete(path!.key);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               },
                               child: const Text('Delete'))
                         ],

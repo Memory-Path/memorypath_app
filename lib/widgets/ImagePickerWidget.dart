@@ -166,12 +166,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   onFile: (File file) async {
                     final FilePickerCross imageData =
                         FilePickerCross(await file.readAsBytes());
-                    final String path =
-                        storagePath + DateTime.now().toString() + '.png';
-                    await imageData.saveToPath(path: path);
+                    final String newPath = await _storeImage(imageData);
                     Navigator.pop(context);
                     setState(() {
-                      _imagePathState = path;
+                      _imagePathState = newPath;
                       _imageState = imageData;
                       widget.onImageChanged(_imagePathState!);
                     });
@@ -181,16 +179,23 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   ///Handling the Process of selecting an Image from User-Storage
   Future<void> _imgFromStorage() async {
-    final FilePickerCross image =
+    final FilePickerCross imageData =
         await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-    final String path =
-        storagePath + DateTime.now().toString() + image.fileExtension;
-    await image.saveToPath(path: path);
+    final String newPath = await _storeImage(imageData);
     setState(() {
-      _imageState = image;
-      _imagePathState = path;
+      _imageState = imageData;
+      _imagePathState = newPath;
       widget.onImageChanged(_imagePathState!);
     });
+  }
+
+  Future<String> _storeImage(FilePickerCross imageData) async {
+    final String path = storagePath + DateTime.now().toString();
+    if (_imagePathState != null) {
+      await FilePickerCross.delete(path: _imagePathState!);
+    }
+    await imageData.saveToPath(path: path);
+    return path;
   }
 
   ///Handling the kind of Selection of an Image
