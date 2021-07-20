@@ -183,7 +183,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   Future<void> _imgFromStorage() async {
     final FilePickerCross image =
         await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-    final String path = storagePath + DateTime.now().toString() + '.png';
+    final String path =
+        storagePath + DateTime.now().toString() + image.fileExtension;
     await image.saveToPath(path: path);
     setState(() {
       _imageState = image;
